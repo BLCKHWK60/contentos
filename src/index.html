@@ -117,7 +117,11 @@ html,body{height:100%;background:var(--paper);color:var(--ink);font-family:var(-
 .sheet-kicker::after{content:'';flex:1;height:2px;background:var(--line)}
 .title-field{font-family:var(--d);font-weight:800;font-size:44px;line-height:0.98;letter-spacing:-1.5px;color:var(--ink);outline:none;margin-bottom:8px;min-height:48px}
 .title-field:empty::before{content:attr(data-ph);color:var(--ink-3);opacity:0.5}
-.byline{font-family:var(--mono);font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--ink-3);border-bottom:2px solid var(--line);padding-bottom:16px;margin-bottom:24px}
+.byline{font-family:var(--mono);font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--ink-3);padding-bottom:12px;margin-bottom:12px}
+.sched-row{display:flex;gap:18px;align-items:center;border-bottom:2px solid var(--line);padding-bottom:16px;margin-bottom:24px;font-family:var(--mono);font-size:9.5px;letter-spacing:1px;text-transform:uppercase;color:var(--ink-3)}
+.sched-row label{display:flex;align-items:center;gap:7px}
+.sched-row input[type=date]{font-family:var(--mono);font-size:11px;border:2px solid var(--line);background:var(--paper);color:var(--ink);padding:4px 7px;outline:none}
+.sched-row input[type=date]:focus{border-color:var(--accent)}
 .toolbar{display:flex;margin-bottom:18px;border:2px solid var(--line);width:fit-content}
 .tb{padding:7px 10px;background:transparent;border:none;border-right:1px solid var(--line);font-family:var(--mono);font-size:11px;font-weight:700;color:var(--ink-2);cursor:pointer;transition:all var(--ease);line-height:1}
 .tb:last-child{border-right:none}
@@ -159,6 +163,7 @@ html,body{height:100%;background:var(--paper);color:var(--ink);font-family:var(-
 .md-render code{font-family:var(--mono);font-size:14px;background:var(--paper);border:1px solid var(--line);padding:1px 5px}
 .md-render pre{font-family:var(--mono);font-size:13px;background:var(--ink);color:var(--paper-hi);padding:16px;overflow-x:auto;margin:16px 0;white-space:pre-wrap}
 .md-render a{color:var(--accent);text-decoration:underline}
+.md-render img{max-width:100%;height:auto;display:block;margin:14px 0;border:2px solid var(--line)}
 .md-render hr{border:none;border-top:2px solid var(--line);margin:24px 0}
 .md-render table{border-collapse:collapse;width:100%;margin:18px 0;border:2px solid var(--line)}
 .md-render th,.md-render td{border:1px solid var(--line);padding:8px 11px;text-align:left;vertical-align:top;font-family:var(--serif);font-size:15px;line-height:1.5}
@@ -291,6 +296,92 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 .ph-res{font-family:var(--mono);font-size:10.5px;line-height:1.55;color:var(--ink-2);padding:6px 0;border-top:1px solid var(--line)}
 .ph-res a{color:var(--accent);word-break:break-all}
 
+/* PLANNING WORKSPACE */
+.plan-modal{width:min(96vw,1500px)!important;height:90vh;min-width:720px;min-height:480px}
+.plan-tabs{display:flex;margin-left:14px}
+.plan-tab{padding:0 14px;height:42px;background:transparent;border:none;border-right:2px solid var(--line);font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--ink-3);cursor:pointer}
+.plan-tab:first-child{border-left:2px solid var(--line)}
+.plan-tab:hover{background:var(--card);color:var(--ink)}
+.plan-tab.active{background:var(--ink);color:var(--paper-hi)}
+.plan-bar{display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:2px solid var(--line);flex-shrink:0}
+.plan-scope{padding:6px 12px;background:transparent;border:2px solid var(--line);font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:0.5px;text-transform:uppercase;cursor:pointer;color:var(--ink)}
+.plan-scope:hover{background:var(--ink);color:var(--paper-hi)}
+.plan-search{flex:1;max-width:340px;padding:6px 10px;background:var(--paper);border:2px solid var(--line);font-family:var(--mono);font-size:11px;color:var(--ink);outline:none}
+.plan-search:focus{border-color:var(--accent)}
+.plan-count{margin-left:auto;font-family:var(--mono);font-size:9.5px;letter-spacing:1px;text-transform:uppercase;color:var(--ink-3)}
+.plan-body{flex:1;min-height:0;overflow:auto;padding:14px 16px}
+.pchip{display:inline-block;width:9px;height:9px;flex-shrink:0;vertical-align:middle}
+.dash-stats{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px}
+.dash-stat{border:2px solid var(--line);padding:9px 13px;min-width:84px}
+.dash-stat .n{font-family:var(--d);font-weight:800;font-size:24px;line-height:1}
+.dash-stat .l{font-family:var(--mono);font-size:8.5px;letter-spacing:1px;text-transform:uppercase;color:var(--ink-3);margin-top:3px}
+.dash-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.dash-card{border:2px solid var(--line)}
+.dash-ch{font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--accent);padding:9px 12px;border-bottom:2px solid var(--line)}
+.dash-item{display:flex;align-items:center;gap:8px;padding:7px 12px;border-bottom:1px solid var(--line);cursor:pointer;font-size:13px}
+.dash-item:hover{background:var(--card)}
+.dash-item .t{flex:1;font-family:var(--d);font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.dash-item .d{font-family:var(--mono);font-size:9px;color:var(--ink-3);text-transform:uppercase;white-space:nowrap}
+.dash-empty{padding:12px;font-family:var(--mono);font-size:10px;color:var(--ink-3)}
+.board{display:flex;gap:10px;align-items:flex-start;height:100%}
+.bcol{flex:0 0 222px;border:2px solid var(--line);background:var(--paper);display:flex;flex-direction:column;max-height:100%}
+.bcol-h{font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:8px 10px;border-bottom:2px solid var(--line);display:flex;gap:6px;align-items:center}
+.bcol-h .c{margin-left:auto;color:var(--ink-3)}
+.bcol-body{padding:8px;display:flex;flex-direction:column;gap:7px;overflow-y:auto;flex:1;min-height:50px}
+.bcol.over{outline:2px solid var(--accent);outline-offset:-2px}
+.pcard{border:2px solid var(--line);border-left-width:4px;background:var(--paper-hi);padding:8px 9px;cursor:grab}
+.pcard:hover{background:var(--card)}
+.pcard .pt2{font-family:var(--d);font-weight:600;font-size:12.5px;line-height:1.25;margin-bottom:5px}
+.pcard .pm{font-family:var(--mono);font-size:8.5px;letter-spacing:0.5px;text-transform:uppercase;color:var(--ink-3);display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.pbadge{border:1px solid var(--ink-3);padding:0 4px}
+.cal-head{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+.cal-nav{padding:5px 11px;border:2px solid var(--line);background:transparent;font-family:var(--mono);font-weight:700;cursor:pointer}
+.cal-nav:hover{background:var(--ink);color:var(--paper-hi)}
+.cal-title{font-family:var(--d);font-weight:800;font-size:20px;letter-spacing:-0.5px}
+.cal-wrap{display:flex;gap:14px;align-items:flex-start}
+.cal-grid{flex:1;display:grid;grid-template-columns:repeat(7,1fr);border-left:2px solid var(--line);border-top:2px solid var(--line)}
+.cal-dow{font-family:var(--mono);font-size:8.5px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--ink-3);padding:5px;border-right:2px solid var(--line);border-bottom:2px solid var(--line);text-align:center}
+.cal-cell{min-height:78px;border-right:2px solid var(--line);border-bottom:2px solid var(--line);padding:4px}
+.cal-cell.out{background:var(--paper)}
+.cal-dn{font-family:var(--mono);font-size:10px;color:var(--ink-3)}
+.cal-cell.today .cal-dn{color:var(--accent);font-weight:700}
+.cal-ev{display:flex;align-items:center;gap:4px;font-size:10.5px;margin-top:3px;cursor:pointer;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;font-family:var(--d);font-weight:600}
+.cal-ev:hover{color:var(--accent)}
+.cal-tray{flex:0 0 210px;border:2px solid var(--line);max-height:520px;overflow-y:auto}
+.cal-tray-h{font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--ink-3);padding:8px 10px;border-bottom:2px solid var(--line)}
+.ptable{width:100%;border-collapse:collapse;font-size:12px}
+.ptable th{font-family:var(--mono);font-size:8.5px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--ink-3);text-align:left;padding:7px 9px;border-bottom:2px solid var(--line);cursor:pointer;white-space:nowrap;position:sticky;top:0;background:var(--paper-hi)}
+.ptable th:hover{color:var(--ink)}
+.ptable td{padding:6px 9px;border-bottom:1px solid var(--line);vertical-align:middle}
+.ptable tr:hover td{background:var(--card)}
+.ptable .pt2{font-family:var(--d);font-weight:600;cursor:pointer;max-width:280px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ptable input[type=date]{font-family:var(--mono);font-size:10px;border:1px solid var(--line);background:var(--paper);padding:2px 4px;outline:none}
+.ptable .lk{color:var(--accent);text-transform:uppercase;font-family:var(--mono);font-size:9px;text-decoration:none}
+
+/* MEDIA STUDIO + COVER */
+.ms-modal{width:min(94vw,1000px)!important;height:88vh;min-width:520px;min-height:420px}
+.ms-tabs{display:flex;margin-left:14px}
+.ms-tab{padding:0 14px;height:42px;background:transparent;border:none;border-right:2px solid var(--line);font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--ink-3);cursor:pointer}
+.ms-tab:first-child{border-left:2px solid var(--line)}
+.ms-tab:hover{background:var(--card);color:var(--ink)}
+.ms-tab.active{background:var(--ink);color:var(--paper-hi)}
+.ms-body{flex:1;min-height:0;overflow:auto;padding:14px 16px}
+.ms-up{border:2px dashed var(--line);padding:18px;text-align:center;font-family:var(--mono);font-size:10.5px;letter-spacing:0.5px;text-transform:uppercase;color:var(--ink-3);cursor:pointer;margin-bottom:14px}
+.ms-up:hover,.ms-up.over{background:var(--card);border-color:var(--accent);color:var(--ink)}
+.ms-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px}
+.ms-cell{border:2px solid var(--line);background:var(--paper)}
+.ms-cell img{width:100%;height:120px;object-fit:cover;display:block;border-bottom:2px solid var(--line)}
+.ms-acts{display:flex}
+.ms-acts button{flex:1;padding:5px 0;background:transparent;border:none;border-right:1px solid var(--line);font-family:var(--mono);font-size:8.5px;font-weight:700;letter-spacing:0.5px;text-transform:uppercase;cursor:pointer;color:var(--ink-2)}
+.ms-acts button:last-child{border-right:none}
+.ms-acts button:hover{background:var(--ink);color:var(--paper-hi)}
+.ms-form{max-width:560px}
+.cover-banner{position:relative;margin-bottom:16px;display:none}
+.cover-banner img{width:100%;max-height:280px;object-fit:cover;border:2px solid var(--line);display:block}
+.cover-x{position:absolute;top:8px;right:8px;width:26px;height:26px;background:var(--ink);color:var(--paper-hi);border:none;cursor:pointer;font-size:13px}
+.cover-x:hover{background:var(--accent)}
+.pcard-cover{width:100%;height:74px;object-fit:cover;border:2px solid var(--line);margin-bottom:6px;display:block}
+
 /* DESK */
 .desk{width:0;overflow:hidden;border-left:0 solid var(--line);transition:width 260ms cubic-bezier(0.2,0,0,1);flex-shrink:0;background:var(--paper);display:flex;flex-direction:column;position:relative}
 .desk.open{width:var(--desk-w,344px);border-left-width:2px}
@@ -412,6 +503,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
         <button class="master-row" onclick="openMaster()">◈ Master Context <span style="margin-left:auto;opacity:0.6" id="masterCount">—</span></button>
         <div class="mast-icons">
           <button class="mast-icon" title="Guide" onclick="openGuide()">?</button>
+          <button class="mast-icon" title="Planning" onclick="openPlan()">📋</button>
           <button class="mast-icon" title="Workflow editor" onclick="openWorkflow()">🛠</button>
           <button class="mast-icon" title="Settings" onclick="openSettings()">⚙</button>
           <button class="mast-icon" title="Vault" onclick="openVault()">🗂</button>
@@ -454,6 +546,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
         </div>
         <div class="page-meta">
           <div class="meta-cell" id="wc">0 W</div>
+          <button class="ai-toggle" id="mediaBtn" onclick="openMediaStudio()" title="Media studio">🖼</button>
           <button class="ai-toggle on" id="aiToggle" onclick="toggleDesk()">✦ The Desk</button>
         </div>
       </div>
@@ -461,8 +554,10 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
         <div class="sheet-wrap">
           <div class="sheet" id="writeView">
             <div class="sheet-kicker" id="sheetKicker">Draft — Medium</div>
+            <div class="cover-banner" id="coverBanner"></div>
             <div class="title-field" id="titleField" contenteditable="true" data-ph="Headline goes here." oninput="onEdit()"></div>
             <div class="byline" id="byline">By Victor Chaidez — Draft</div>
+            <div class="sched-row"><label>Publish <input type="date" id="schedDate" onchange="onSchedChange()"></label><label>Due <input type="date" id="dueDate" onchange="onSchedChange()"></label></div>
             <div class="ed-bar">
               <div class="toolbar" id="mdToolbar" onmousedown="event.preventDefault()">
                 <button class="tb" onclick="mdWrap('**','**')" style="font-weight:700">B</button>
@@ -600,6 +695,15 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
       <div class="set-row"><label class="set-label">LinkedIn — Client ID</label><input class="set-input" id="setLiId" type="text" placeholder="from your LinkedIn developer app"></div>
       <div class="set-row"><label class="set-label">LinkedIn — Client Secret</label><input class="set-input" id="setLiSecret" type="password" placeholder="app redirect URI must be http://localhost:8723/callback"></div>
       <div class="set-row" style="display:flex;gap:10px;align-items:center"><button class="new-work" onclick="linkedinConnect()">Connect LinkedIn</button><span class="rec-status" id="liStatus"></span></div>
+      <div class="set-section">Images · AI generation</div>
+      <div class="set-row"><label class="set-label">Provider</label><select class="set-select" id="setImgProvider"><option value="openai">OpenAI (gpt-image)</option><option value="openrouter">OpenRouter (image models)</option><option value="custom">Custom (OpenAI-compatible)</option></select></div>
+      <div class="set-row"><label class="set-label">Image API key</label><input class="set-input" id="setImgKey" type="password" placeholder="key for image generation"></div>
+      <div class="set-row"><label class="set-label">Endpoint (optional)</label><input class="set-input" id="setImgUrl" type="text" placeholder="defaults per provider"></div>
+      <div class="set-row"><label class="set-label">Image model</label><input class="set-input" id="setImgModel" type="text" placeholder="gpt-image-1 · or an OpenRouter image model"></div>
+      <div class="set-section">Canva · experimental</div>
+      <div class="set-row"><label class="set-label">Canva Client ID</label><input class="set-input" id="setCanvaId" type="text" placeholder="from your Canva developer app"></div>
+      <div class="set-row"><label class="set-label">Canva Client Secret (if confidential app)</label><input class="set-input" id="setCanvaSecret" type="password" placeholder="app redirect URI: http://localhost:8723/callback"></div>
+      <div class="set-row" style="display:flex;gap:10px;align-items:center"><button class="new-work" onclick="canvaConnect()">Connect Canva</button><span class="rec-status" id="canvaStatus"></span></div>
       <div class="set-row" style="display:flex;gap:8px">
         <button class="new-work" style="flex:1" onclick="testConnection()">Test connection</button>
         <button class="new-work" style="flex:1" onclick="loadModels()">Load models ▾</button>
@@ -648,6 +752,41 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
         <button class="save-cap" onclick="submitInput()">OK</button>
       </div>
     </div>
+  </div>
+</div>
+<div class="overlay" id="msOverlay" onclick="msOverlayClick(event)">
+  <div class="modal set-modal ms-modal">
+    <div class="modal-head">
+      <div class="modal-title">🖼 Media Studio</div>
+      <div class="ms-tabs">
+        <button class="ms-tab" id="mstab-lib" onclick="setMsTab('lib')">Library</button>
+        <button class="ms-tab" id="mstab-gen" onclick="setMsTab('gen')">Generate</button>
+        <button class="ms-tab" id="mstab-card" onclick="setMsTab('card')">Card</button>
+        <button class="ms-tab" id="mstab-canva" onclick="setMsTab('canva')">Canva</button>
+      </div>
+      <button class="modal-x" onclick="closeMediaStudio()">✕</button>
+    </div>
+    <div class="ms-body" id="msBody"></div>
+  </div>
+</div>
+<div class="overlay" id="planOverlay" onclick="planOverlayClick(event)">
+  <div class="modal set-modal plan-modal">
+    <div class="modal-head">
+      <div class="modal-title">📋 Planning</div>
+      <div class="plan-tabs">
+        <button class="plan-tab" id="ptab-dash" onclick="setPlanView('dash')">Dashboard</button>
+        <button class="plan-tab" id="ptab-board" onclick="setPlanView('board')">Board</button>
+        <button class="plan-tab" id="ptab-cal" onclick="setPlanView('cal')">Calendar</button>
+        <button class="plan-tab" id="ptab-table" onclick="setPlanView('table')">Table</button>
+      </div>
+      <button class="modal-x" onclick="closePlan()">✕</button>
+    </div>
+    <div class="plan-bar">
+      <button class="plan-scope" id="planScopeBtn" onclick="togglePlanScope()">All brands</button>
+      <input class="plan-search" id="planSearch" placeholder="Search title + body…" oninput="planQuery=this.value;renderPlan()">
+      <span class="plan-count" id="planCount"></span>
+    </div>
+    <div class="plan-body" id="planBody"></div>
   </div>
 </div>
 <div class="overlay" id="phOverlay" onclick="phOverlayClick(event)">
@@ -828,6 +967,15 @@ function renderSettings(){
   document.getElementById('setLiId').value=(pc.li&&pc.li.clientId)||'';
   document.getElementById('setLiSecret').value=(pc.li&&pc.li.clientSecret)||'';
   updateLiStatus((pc.li&&pc.li.token)?'Connected ✓':'Not connected');
+  const ic=SETTINGS.images||{};
+  document.getElementById('setImgProvider').value=ic.provider||'openai';
+  document.getElementById('setImgKey').value=ic.key||'';
+  document.getElementById('setImgUrl').value=ic.endpoint||'';
+  document.getElementById('setImgModel').value=ic.model||'';
+  const cvs=SETTINGS.canva||{};
+  document.getElementById('setCanvaId').value=cvs.clientId||'';
+  document.getElementById('setCanvaSecret').value=cvs.clientSecret||'';
+  updateCanvaStatus(cvs.token?'Connected ✓':'Not connected');
   document.getElementById('setStages').innerHTML=PIPELINE.map(s=>`<div class="set-stage-row"><span class="set-stage-name">${s.label}</span><input class="set-input" list="modelList" data-stage="${s.id}" placeholder="(use default)" value="${(SETTINGS.models&&SETTINGS.models[s.id])||''}"></div>`).join('');
 }
 async function saveSettings(){
@@ -846,6 +994,14 @@ async function saveSettings(){
   if(document.getElementById('setMedium').value.trim()!==pc.mediumToken){pc.mediumUserId='';}
   pc.mediumToken=document.getElementById('setMedium').value.trim();
   pc.li=pc.li||{};pc.li.clientId=document.getElementById('setLiId').value.trim();pc.li.clientSecret=document.getElementById('setLiSecret').value.trim();
+  SETTINGS.images=SETTINGS.images||{};
+  SETTINGS.images.provider=document.getElementById('setImgProvider').value;
+  SETTINGS.images.key=document.getElementById('setImgKey').value.trim();
+  SETTINGS.images.endpoint=document.getElementById('setImgUrl').value.trim();
+  SETTINGS.images.model=document.getElementById('setImgModel').value.trim();
+  SETTINGS.canva=SETTINGS.canva||{};
+  SETTINGS.canva.clientId=document.getElementById('setCanvaId').value.trim();
+  SETTINGS.canva.clientSecret=document.getElementById('setCanvaSecret').value.trim();
   if(window.COS)await window.COS.saveSettings(SETTINGS);
   document.getElementById('setStatus').textContent='Saved ✓';
   setTimeout(()=>{document.getElementById('setStatus').textContent='';closeSettings();},700);
@@ -942,11 +1098,14 @@ function openWork(id){
   activeWorkId=id;const w=getWork();
   activeStage=w.stage;
   document.getElementById('titleField').innerText=w.title;
-  loadWorkBody(w);
+  document.getElementById('schedDate').value=w.scheduled||'';
+  document.getElementById('dueDate').value=w.due||'';
+  loadWorkBody(w);updateCoverBanner();
   renderWorks();renderRail();renderDesk();onEdit();
   document.getElementById('byline').textContent='By '+brands[cur].name+' — '+cap(w.stage);
 }
 function saveCurrent(){const w=getWork();if(!w)return;w.title=document.getElementById('titleField').innerText.trim();w.body=getBodyMd();w.platform=platform;w.updated=new Date().toISOString();if(window.COS)window.COS.saveWork(cur,w);}
+function onSchedChange(){const w=getWork();if(!w)return;w.scheduled=document.getElementById('schedDate').value||'';w.due=document.getElementById('dueDate').value||'';saveCurrent();}
 
 /* RAIL */
 function renderRail(){
@@ -979,6 +1138,7 @@ function renderDesk(){
 /* ===== Markdown editor: hand-rolled renderer + 3 modes ===== */
 function escapeHtml(s){return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 function mdInline(s){
+  s=s.replace(/!\[([^\]]*)\]\(([^)\s]+)\)/g,(m,alt,src)=>'<img alt="'+alt.replace(/"/g,'&quot;')+'" src="'+mediaResolve(src)+'">');
   s=s.replace(/`([^`]+)`/g,(m,c)=>'<code>'+c+'</code>');
   s=s.replace(/\*\*([^*]+)\*\*/g,'<strong>$1</strong>');
   s=s.replace(/__([^_]+)__/g,'<strong>$1</strong>');
@@ -987,6 +1147,18 @@ function mdInline(s){
   s=s.replace(/\[([^\]]+)\]\(([^)\s]+)\)/g,'<a href="$2" target="_blank" rel="noopener">$1</a>');
   return s;
 }
+function mediaResolve(src){
+  if(!src)return '';
+  if(/^(https?:|data:|asset:|blob:|tauri:)/i.test(src))return src;
+  const name=src.replace(/^\.?\/?media\//i,'').replace(/^\.\//,'');
+  if(window.__TAURI__&&window.__TAURI__.core&&window.__TAURI__.core.convertFileSrc&&window.COS&&window.COS.vault){
+    try{return window.__TAURI__.core.convertFileSrc(window.COS.vault+'/brands/'+cur+'/media/'+name);}catch(e){return src;}
+  }
+  return src;
+}
+function bytesToB64(bytes){let bin='';const a=new Uint8Array(bytes);const ch=0x8000;for(let i=0;i<a.length;i+=ch)bin+=String.fromCharCode.apply(null,a.subarray(i,i+ch));return btoa(bin);}
+function b64ToBytes(b64){const bin=atob(b64);const a=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)a[i]=bin.charCodeAt(i);return a;}
+function mimeOf(name){const e=(name.split('.').pop()||'png').toLowerCase();return e==='jpg'?'jpeg':e==='svg'?'svg+xml':e;}
 function mdToHtml(md){
   if(!md||!md.trim())return '';
   const lines=md.replace(/\r\n?/g,'\n').split('\n');let html='',i=0;
@@ -1123,6 +1295,7 @@ function renderMastRail(){
     '<div class="mr-chips">'+chips+'</div>'+
     '<div class="mr-icons">'+
       '<button class="mr-ic" title="Guide" onclick="openGuide()">?</button>'+
+      '<button class="mr-ic" title="Planning" onclick="openPlan()">📋</button>'+
       '<button class="mr-ic" title="Workflow editor" onclick="openWorkflow()">🛠</button>'+
       '<button class="mr-ic" title="Settings" onclick="openSettings()">⚙</button>'+
       '<button class="mr-ic" title="Vault" onclick="openVault()">🗂</button>'+
@@ -1314,7 +1487,7 @@ function useOutput(){
 }
 function copyOutput(){if(!aiContent){toast('Nothing to copy');return;}navigator.clipboard.writeText(aiContent).then(()=>toast('Copied'));}
 
-function newWork(){const id='w'+Date.now();const w={id:id,title:'',body:'',stage:'spark',platform:platform,updated:new Date().toISOString()};works[cur].unshift(w);if(window.COS)window.COS.saveWork(cur,w);renderWorks();openWork(id);document.getElementById('titleField').focus();toast('New work — Spark');}
+function newWork(){const id='w'+Date.now();const w={id:id,title:'',body:'',stage:'spark',platform:platform,scheduled:'',due:'',cover:'',updated:new Date().toISOString()};works[cur].unshift(w);if(window.COS)window.COS.saveWork(cur,w);renderWorks();openWork(id);document.getElementById('titleField').focus();toast('New work — Spark');}
 function openCapture(){document.getElementById('overlay').classList.add('open');setTimeout(()=>document.getElementById('capTA').focus(),120);}
 function closeCapture(){document.getElementById('overlay').classList.remove('open');document.getElementById('capTA').value='';if(recording)toggleRec();document.getElementById('recStatus').textContent='';}
 function overlayClick(e){if(e.target===e.currentTarget)closeCapture();}
@@ -1637,7 +1810,23 @@ function pubCfg(){return (SETTINGS.publish=SETTINGS.publish||{});}
 function workMarkdown(w){const b=w.body||'';return (looksHtml(b)?htmlToMd(b):b).trim();}
 function workTitle(w){return (w.title||'').trim()||((workMarkdown(w).split('\n')[0]||'Untitled').replace(/^#+\s*/,'').slice(0,80));}
 function exportMarkdown(w){const t=(w.title||'').trim();return (t?'# '+t+'\n\n':'')+workMarkdown(w)+'\n';}
-function exportHtml(w){const t=(w.title||'').trim();return '<!doctype html>\n<html><head><meta charset="utf-8"><title>'+esc(t||'Untitled')+'</title>\n<style>body{max-width:720px;margin:40px auto;padding:0 20px;font:18px/1.7 Georgia,serif;color:#15110A}h1,h2,h3{font-family:system-ui,sans-serif;line-height:1.15}img{max-width:100%}blockquote{border-left:4px solid #E5330C;padding-left:18px;color:#555;font-style:italic}pre{background:#15110A;color:#EAE6D9;padding:16px;overflow:auto}code{background:#eee;padding:1px 5px}table{border-collapse:collapse}td,th{border:1px solid #ccc;padding:6px 10px}</style></head>\n<body>'+(t?'<h1>'+esc(t)+'</h1>':'')+mdToHtml(workMarkdown(w))+'</body></html>\n';}
+async function inlineMediaMd(md){
+  const re=/!\[([^\]]*)\]\((media\/[^)\s]+|[^)\s]+\.(?:png|jpe?g|gif|webp|svg))\)/gi;
+  const seen=[...md.matchAll(re)];
+  for(const m of seen){
+    const src=m[2];if(/^(https?:|data:)/i.test(src))continue;
+    const name=src.replace(/^\.?\/?media\//i,'');
+    const bytes=window.COS&&await window.COS.readMediaBytes(cur,name);
+    if(bytes){md=md.split(m[0]).join('!['+m[1]+'](data:image/'+mimeOf(name)+';base64,'+bytesToB64(bytes)+')');}
+  }
+  return md;
+}
+async function exportHtml(w){
+  const t=(w.title||'').trim();
+  let md=workMarkdown(w);if(w.cover)md='!['+esc(t)+']('+w.cover+')\n\n'+md;
+  md=await inlineMediaMd(md);
+  return '<!doctype html>\n<html><head><meta charset="utf-8"><title>'+esc(t||'Untitled')+'</title>\n<style>body{max-width:720px;margin:40px auto;padding:0 20px;font:18px/1.7 Georgia,serif;color:#15110A}h1,h2,h3{font-family:system-ui,sans-serif;line-height:1.15}img{max-width:100%}blockquote{border-left:4px solid #E5330C;padding-left:18px;color:#555;font-style:italic}pre{background:#15110A;color:#EAE6D9;padding:16px;overflow:auto}code{background:#eee;padding:1px 5px}table{border-collapse:collapse}td,th{border:1px solid #ccc;padding:6px 10px}</style></head>\n<body>'+(t?'<h1>'+esc(t)+'</h1>':'')+mdToHtml(md)+'</body></html>\n';
+}
 function plainText(w){const d=document.createElement('div');d.innerHTML=mdToHtml(workMarkdown(w));return ((w.title?w.title+'\n\n':'')+(d.innerText||'')).trim();}
 function exportText(w){return plainText(w)+'\n';}
 const DESTINATIONS=[
@@ -1666,7 +1855,7 @@ function renderPublishHub(){
 }
 function phResult(msg,url){const el=document.getElementById('phResults');if(!el)return;el.innerHTML='<div class="ph-res">'+esc(msg)+(url?' — <a href="'+attr(url)+'" target="_blank" rel="noopener">'+esc(url)+'</a>':'')+'</div>'+el.innerHTML;}
 async function doExport(ext){
-  const w=pubHubWork;const content=ext==='html'?exportHtml(w):ext==='txt'?exportText(w):exportMarkdown(w);
+  const w=pubHubWork;const content=ext==='html'?(await exportHtml(w)):ext==='txt'?exportText(w):exportMarkdown(w);
   if(window.COS&&window.COS.isTauri){const f=await window.COS.saveExport(cur,workTitle(w),ext,content);phResult('Saved '+ext.toUpperCase()+' → '+(f||'published/'),null);toast('Exported '+ext.toUpperCase());}
   else{try{await navigator.clipboard.writeText(content);toast(ext.toUpperCase()+' copied (in-memory)');}catch(e){}}
 }
@@ -1744,6 +1933,268 @@ async function linkedinConnect(){
   }catch(e){updateLiStatus('Failed — '+((e&&e.message)||e));toast('LinkedIn connect failed');}
 }
 function updateLiStatus(t){const el=document.getElementById('liStatus');if(el)el.textContent=t;}
+
+/* ===== Planning & Organization workspace ===== */
+let planView='dash',planScope='all',planQuery='',calMonth=null,tableSort={key:'updated',dir:-1},_planDrag=null;
+function today0(){const d=new Date();d.setHours(0,0,0,0);return d;}
+function parseDay(s){if(!s)return null;const d=new Date(s+'T00:00:00');return isNaN(d.getTime())?null:d;}
+function wMtime(w){return w._mtime||Date.parse(w.updated)||0;}
+function brandChip(b){return '<span class="pchip" style="background:'+(brands[b]?brands[b].accent:'#888')+'"></span>';}
+function coverUrl(brand,name){if(name&&window.__TAURI__&&window.__TAURI__.core&&window.__TAURI__.core.convertFileSrc&&window.COS&&window.COS.vault){try{return window.__TAURI__.core.convertFileSrc(window.COS.vault+'/brands/'+brand+'/media/'+name);}catch(e){}}return '';}
+function openPlan(){renderPlan();document.getElementById('planOverlay').classList.add('open');const m=document.querySelector('.plan-modal');if(m){if(uiState.planW)m.style.width=uiState.planW+'px';if(uiState.planH)m.style.height=uiState.planH+'px';}}
+function planSaveSize(){const m=document.querySelector('.plan-modal');if(m&&m.offsetWidth){uiState.planW=m.offsetWidth;uiState.planH=m.offsetHeight;saveUIState();}}
+function closePlan(){planSaveSize();document.getElementById('planOverlay').classList.remove('open');}
+function planOverlayClick(e){if(e.target===e.currentTarget)closePlan();}
+function setPlanView(v){planView=v;renderPlan();}
+function togglePlanScope(){planScope=planScope==='all'?'cur':'all';renderPlan();}
+function planWorks(){const ids=planScope==='all'?Object.keys(brands):[cur];const q=planQuery.trim().toLowerCase();let out=[];for(const b of ids){(works[b]||[]).forEach(w=>out.push(Object.assign({},w,{brand:b})));}if(q)out=out.filter(w=>((w.title||'')+' '+stripTags(w.body||'')).toLowerCase().includes(q));return out;}
+function planOpen(b,id){closePlan();if(b!==cur)switchBrand(b);openWork(id);}
+function renderPlan(){
+  ['dash','board','cal','table'].forEach(v=>{const el=document.getElementById('ptab-'+v);if(el)el.classList.toggle('active',planView===v);});
+  document.getElementById('planScopeBtn').textContent=planScope==='all'?'All brands':brands[cur].name;
+  const list=planWorks();document.getElementById('planCount').textContent=list.length+' works';
+  const body=document.getElementById('planBody');
+  if(planView==='dash')body.innerHTML=renderDash(list);
+  else if(planView==='board')renderBoard(body,list);
+  else if(planView==='cal')renderCal(body,list);
+  else renderTable(body,list);
+}
+/* dashboard */
+function dashItem(w,field){
+  const dtxt=field==='scheduled'?(w.scheduled||''):field==='due'?(w.due||''):fmtWhen(w.updated);
+  const name=esc(w.title||stripTags(w.body).slice(0,40)||'Untitled');
+  return '<div class="dash-item" onclick="planOpen(\''+w.brand+'\',\''+w.id+'\')">'+brandChip(w.brand)+'<span class="t">'+name+'</span><span class="d">'+esc(dtxt)+'</span></div>';
+}
+function renderDash(list){
+  const t0=today0().getTime(),DAY=86400000;
+  const stats='<div class="dash-stats">'+PIPELINE.map(s=>'<div class="dash-stat"><div class="n">'+list.filter(w=>w.stage===s.id).length+'</div><div class="l">'+esc(s.label)+'</div></div>').join('')+'</div>';
+  const recent=[...list].sort((a,b)=>wMtime(b)-wMtime(a)).slice(0,6);
+  const upcoming=list.filter(w=>{const d=parseDay(w.scheduled);return d&&d.getTime()>=t0&&d.getTime()<=t0+14*DAY;}).sort((a,b)=>parseDay(a.scheduled)-parseDay(b.scheduled));
+  const overdue=list.filter(w=>{const d=parseDay(w.due);return d&&d.getTime()<t0&&w.stage!=='ship';}).sort((a,b)=>parseDay(a.due)-parseDay(b.due));
+  const stalled=list.filter(w=>w.stage!=='ship'&&wMtime(w)&&(t0-wMtime(w))>14*DAY).sort((a,b)=>wMtime(a)-wMtime(b)).slice(0,8);
+  const card=(title,items,field)=>'<div class="dash-card"><div class="dash-ch">'+title+' · '+items.length+'</div>'+(items.length?items.map(w=>dashItem(w,field)).join(''):'<div class="dash-empty">Nothing here.</div>')+'</div>';
+  return stats+'<div class="dash-grid">'+card('Recently updated',recent,'updated')+card('Upcoming · 14d',upcoming,'scheduled')+card('Overdue',overdue,'due')+card('Stalled · 14d+',stalled,'updated')+'</div>';
+}
+/* board */
+function boardCard(w){
+  const name=esc(w.title||stripTags(w.body).slice(0,50)||'Untitled spark');
+  const badges=(w.platform?'<span class="pbadge">'+esc(w.platform)+'</span>':'')+(w.scheduled?'<span>↗ '+esc(w.scheduled)+'</span>':'')+(w.due?'<span>⌛ '+esc(w.due)+'</span>':'');
+  const cv=w.cover?'<img class="pcard-cover" src="'+coverUrl(w.brand,w.cover)+'">':'';
+  return '<div class="pcard" draggable="true" style="border-left-color:'+(brands[w.brand]?brands[w.brand].accent:'#888')+'" ondragstart="pDragStart(event,\''+w.brand+'\',\''+w.id+'\')" onclick="planOpen(\''+w.brand+'\',\''+w.id+'\')">'+cv+'<div class="pt2">'+name+'</div><div class="pm">'+brandChip(w.brand)+badges+'</div></div>';
+}
+function renderBoard(container,list){
+  container.innerHTML='<div class="board">'+PIPELINE.map(s=>{
+    const cards=list.filter(w=>w.stage===s.id);
+    return '<div class="bcol" id="bcol-'+s.id+'" ondragover="pDragOver(event,\''+s.id+'\')" ondragleave="pDragLeave(\''+s.id+'\')" ondrop="pDrop(event,\''+s.id+'\')"><div class="bcol-h"><span>'+esc((s.glyph||'')+' '+s.label)+'</span><span class="c">'+cards.length+'</span></div><div class="bcol-body">'+cards.map(boardCard).join('')+'</div></div>';
+  }).join('')+'</div>';
+}
+function pDragStart(ev,b,id){_planDrag={brand:b,id:id};try{ev.dataTransfer.effectAllowed='move';ev.dataTransfer.setData('text/plain',id);}catch(e){}}
+function pDragOver(ev,stage){ev.preventDefault();const el=document.getElementById('bcol-'+stage);if(el)el.classList.add('over');}
+function pDragLeave(stage){const el=document.getElementById('bcol-'+stage);if(el)el.classList.remove('over');}
+function pDrop(ev,stage){ev.preventDefault();const el=document.getElementById('bcol-'+stage);if(el)el.classList.remove('over');const d=_planDrag;_planDrag=null;if(!d)return;const w=(works[d.brand]||[]).find(x=>x.id===d.id);if(!w||w.stage===stage)return;w.stage=stage;w.updated=new Date().toISOString();if(window.COS)window.COS.saveWork(d.brand,w);if(d.brand===cur){if(d.id===activeWorkId){activeStage=stage;renderRail();renderDesk();}renderWorks();}renderPlan();}
+/* calendar */
+function calNav(d){if(d===0){const n=new Date();calMonth=new Date(n.getFullYear(),n.getMonth(),1);}else{calMonth=new Date(calMonth.getFullYear(),calMonth.getMonth()+d,1);}renderPlan();}
+function renderCal(container,list){
+  if(!calMonth){const n=new Date();calMonth=new Date(n.getFullYear(),n.getMonth(),1);}
+  const y=calMonth.getFullYear(),m=calMonth.getMonth(),startDow=new Date(y,m,1).getDay(),days=new Date(y,m+1,0).getDate(),t0=today0();
+  const byDay={};list.forEach(w=>{const d=parseDay(w.scheduled);if(d&&d.getFullYear()===y&&d.getMonth()===m)(byDay[d.getDate()]=byDay[d.getDate()]||[]).push(w);});
+  const dow=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].map(d=>'<div class="cal-dow">'+d+'</div>').join('');
+  let cells='';for(let i=0;i<startDow;i++)cells+='<div class="cal-cell out"></div>';
+  for(let day=1;day<=days;day++){
+    const isT=t0.getFullYear()===y&&t0.getMonth()===m&&t0.getDate()===day;
+    const evs=(byDay[day]||[]).map(w=>'<div class="cal-ev" onclick="planOpen(\''+w.brand+'\',\''+w.id+'\')">'+brandChip(w.brand)+esc((w.title||'Untitled').slice(0,18))+'</div>').join('');
+    cells+='<div class="cal-cell'+(isT?' today':'')+'"><div class="cal-dn">'+day+'</div>'+evs+'</div>';
+  }
+  const unsched=list.filter(w=>!parseDay(w.scheduled));
+  const tray='<div class="cal-tray"><div class="cal-tray-h">Unscheduled · '+unsched.length+'</div>'+(unsched.length?unsched.map(w=>'<div class="dash-item" onclick="planOpen(\''+w.brand+'\',\''+w.id+'\')">'+brandChip(w.brand)+'<span class="t">'+esc(w.title||stripTags(w.body).slice(0,30)||'Untitled')+'</span></div>').join(''):'<div class="dash-empty">All scheduled.</div>')+'</div>';
+  container.innerHTML='<div class="cal-head"><button class="cal-nav" onclick="calNav(-1)">‹</button><div class="cal-title">'+esc(calMonth.toLocaleDateString('en-US',{month:'long',year:'numeric'}))+'</div><button class="cal-nav" onclick="calNav(1)">›</button><button class="cal-nav" onclick="calNav(0)">Today</button></div><div class="cal-wrap"><div class="cal-grid">'+dow+cells+'</div>'+tray+'</div>';
+}
+/* table */
+function cmpWork(a,b){
+  const k=tableSort.key,dir=tableSort.dir;let av,bv;
+  if(k==='brand'){av=brands[a.brand].name;bv=brands[b.brand].name;}
+  else if(k==='stage'){av=stageIndex(a.stage);bv=stageIndex(b.stage);}
+  else if(k==='updated'){av=wMtime(a);bv=wMtime(b);}
+  else if(k==='pub'){av=pubLog.filter(r=>r.work===a.id).length;bv=pubLog.filter(r=>r.work===b.id).length;}
+  else{av=(a[k]||'').toString().toLowerCase();bv=(b[k]||'').toString().toLowerCase();}
+  return av<bv?-dir:av>bv?dir:0;
+}
+function planSort(k){if(tableSort.key===k)tableSort.dir*=-1;else{tableSort.key=k;tableSort.dir=1;}renderPlan();}
+function planSetDate(b,id,field,val){const w=(works[b]||[]).find(x=>x.id===id);if(!w)return;w[field]=val||'';if(window.COS)window.COS.saveWork(b,w);if(b===cur&&id===activeWorkId){const el=document.getElementById(field==='scheduled'?'schedDate':'dueDate');if(el)el.value=val||'';}renderPlan();}
+function renderTable(container,list){
+  const cols=[['title','Title'],['brand','Brand'],['stage','Stage'],['platform','Platform'],['scheduled','Publish'],['due','Due'],['updated','Updated'],['pub','Published']];
+  const sorted=[...list].sort(cmpWork);
+  const head=cols.map(c=>'<th onclick="planSort(\''+c[0]+'\')">'+c[1]+(tableSort.key===c[0]?(tableSort.dir>0?' ▲':' ▼'):'')+'</th>').join('');
+  const rows=sorted.map(w=>{
+    const dests=[...new Set(pubLog.filter(r=>r.work===w.id).map(r=>r.dest))];
+    const stg=PIPELINE.find(s=>s.id===w.stage);
+    return '<tr><td class="pt2" onclick="planOpen(\''+w.brand+'\',\''+w.id+'\')">'+esc(w.title||stripTags(w.body).slice(0,40)||'Untitled')+'</td><td>'+brandChip(w.brand)+' '+esc(brands[w.brand].name)+'</td><td>'+esc(stg?stg.label:w.stage)+'</td><td>'+esc(w.platform||'')+'</td><td><input type="date" value="'+attr(w.scheduled||'')+'" onchange="planSetDate(\''+w.brand+'\',\''+w.id+'\',\'scheduled\',this.value)"></td><td><input type="date" value="'+attr(w.due||'')+'" onchange="planSetDate(\''+w.brand+'\',\''+w.id+'\',\'due\',this.value)"></td><td>'+esc(fmtWhen(w.updated))+'</td><td>'+(dests.length?'<span class="lk">'+esc(dests.join(', '))+'</span>':'—')+'</td></tr>';
+  }).join('');
+  container.innerHTML='<table class="ptable"><thead><tr>'+head+'</tr></thead><tbody>'+rows+'</tbody></table>';
+}
+
+/* ===== Visual / Media layer ===== */
+let msTab='lib',msMedia=[],cardSize='og';
+const CARD_SIZES={og:[1200,630],square:[1080,1080],story:[1080,1920]};
+async function addMediaFile(file){const buf=new Uint8Array(await file.arrayBuffer());const base=(file.name||'image.png').replace(/[^\w.\-]/g,'_');const name=Date.now().toString(36)+'-'+base;if(window.COS)await window.COS.saveMedia(cur,name,buf);return name;}
+async function addMediaBytes(bytes,ext){const name=Date.now().toString(36)+'-img.'+(ext||'png');if(window.COS)await window.COS.saveMedia(cur,name,bytes);return name;}
+function insertIntoBody(text){const ta=document.getElementById('edSource');if(edMode==='source'&&ta){const a=ta.selectionStart,v=ta.value;ta.value=v.slice(0,a)+text+v.slice(a);mdBody=ta.value;onEdit();}else{mdBody=getBodyMd()+text;setBodyMd(mdBody);}saveCurrent();}
+function insertImageMd(n){insertIntoBody('\n\n![](media/'+n+')\n\n');}
+function setCover(n){const w=getWork();if(!w)return;w.cover=n||'';if(window.COS)window.COS.saveWork(cur,w);updateCoverBanner();renderWorks();}
+function updateCoverBanner(){const w=getWork();const el=document.getElementById('coverBanner');if(!el)return;if(w&&w.cover){el.innerHTML='<img src="'+mediaResolve('media/'+w.cover)+'"><button class="cover-x" onclick="setCover(\'\')" title="Remove cover">✕</button>';el.style.display='block';}else{el.innerHTML='';el.style.display='none';}}
+/* studio */
+function openMediaStudio(){if(getWork())saveCurrent();msTab='lib';loadMsMedia().then(()=>{renderMediaStudio();document.getElementById('msOverlay').classList.add('open');const m=document.querySelector('.ms-modal');if(m){if(uiState.msW)m.style.width=uiState.msW+'px';if(uiState.msH)m.style.height=uiState.msH+'px';}});}
+async function loadMsMedia(){msMedia=(window.COS&&await window.COS.listMedia(cur))||[];}
+function closeMediaStudio(){const m=document.querySelector('.ms-modal');if(m&&m.offsetWidth){uiState.msW=m.offsetWidth;uiState.msH=m.offsetHeight;saveUIState();}document.getElementById('msOverlay').classList.remove('open');}
+function msOverlayClick(e){if(e.target===e.currentTarget)closeMediaStudio();}
+function setMsTab(t){msTab=t;renderMediaStudio();}
+function renderMediaStudio(){
+  ['lib','gen','card','canva'].forEach(t=>{const el=document.getElementById('mstab-'+t);if(el)el.classList.toggle('active',msTab===t);});
+  const body=document.getElementById('msBody');
+  if(msTab==='lib')body.innerHTML=renderMsLib();
+  else if(msTab==='gen')body.innerHTML=renderMsGen();
+  else if(msTab==='card')renderMsCard(body);
+  else body.innerHTML=renderMsCanva();
+}
+function renderMsLib(){
+  const up='<div class="ms-up" id="msDrop" ondragover="event.preventDefault();this.classList.add(\'over\')" ondragleave="this.classList.remove(\'over\')" ondrop="msDropFiles(event)" onclick="msPick()">⬆ Drop images here, or click to choose</div>';
+  if(!msMedia.length)return up+'<div class="dash-empty">No media for '+esc(brands[cur].name)+' yet.</div>';
+  return up+'<div class="ms-grid">'+msMedia.map(n=>'<div class="ms-cell"><img src="'+mediaResolve('media/'+n)+'" loading="lazy"><div class="ms-acts"><button onclick="msInsert(\''+n+'\')">Insert</button><button onclick="msCover(\''+n+'\')">Cover</button><button onclick="msDelete(\''+n+'\')">✕</button></div></div>').join('')+'</div>';
+}
+function msPick(){const inp=document.createElement('input');inp.type='file';inp.accept='image/*';inp.multiple=true;inp.onchange=()=>msAddFiles([...inp.files]);inp.click();}
+async function msDropFiles(ev){ev.preventDefault();const el=document.getElementById('msDrop');if(el)el.classList.remove('over');await msAddFiles([...(ev.dataTransfer.files||[])].filter(f=>/^image\//.test(f.type)));}
+async function msAddFiles(files){if(!files.length)return;for(const f of files)await addMediaFile(f);await loadMsMedia();renderMediaStudio();toast(files.length+' image(s) added');}
+function msInsert(n){if(!getWork()){toast('Open a work first');return;}insertImageMd(n);toast('Inserted into body');}
+function msCover(n){if(!getWork()){toast('Open a work first');return;}setCover(n);toast('Cover set');}
+async function msDelete(n){if(!confirm('Delete this image from the vault?'))return;if(window.COS)await window.COS.deleteMedia(cur,n);await loadMsMedia();renderMediaStudio();}
+/* AI generation */
+function renderMsGen(){
+  const cfg=SETTINGS.images||{};const seed=getWork()?workTitle(getWork()):'';
+  return '<div class="ms-form">'+(cfg.key?'':'<div class="set-hint" style="margin-bottom:10px">Add an image API key in Settings → Images first.</div>')+
+    '<label class="set-label">Prompt</label><textarea class="wf-ta" id="msPrompt" style="min-height:90px">'+esc(seed)+'</textarea>'+
+    '<div class="ph-row" style="margin-top:8px"><button class="ph-btn pri" onclick="msGenerate(this)">Generate</button><span class="rec-status" id="msGenStatus"></span></div>'+
+    '<div id="msGenOut"></div></div>';
+}
+async function msGenerate(btn){
+  const cfg=SETTINGS.images||{};if(!cfg.key){toast('Add an image API key in Settings');return;}
+  const prompt=document.getElementById('msPrompt').value.trim();if(!prompt){toast('Enter a prompt');return;}
+  const st=document.getElementById('msGenStatus');st.textContent='Generating…';if(btn)btn.disabled=true;
+  try{const name=await generateImage(prompt);st.textContent='Done ✓';document.getElementById('msGenOut').innerHTML='<div class="ms-cell" style="max-width:340px;margin-top:12px"><img src="'+mediaResolve('media/'+name)+'"><div class="ms-acts"><button onclick="msInsert(\''+name+'\')">Insert</button><button onclick="msCover(\''+name+'\')">Cover</button></div></div>';await loadMsMedia();}
+  catch(e){st.textContent='Failed — '+((e&&e.message)||e);}
+  finally{if(btn)btn.disabled=false;}
+}
+async function generateImage(prompt){
+  const cfg=SETTINGS.images||{},prov=cfg.provider||'openai';
+  const base=(cfg.endpoint||(prov==='openrouter'?'https://openrouter.ai/api/v1':'https://api.openai.com/v1')).replace(/\/$/,'');
+  if(prov==='openrouter'){
+    const r=await httpReq('POST',base+'/chat/completions',{'Authorization':'Bearer '+cfg.key,'Content-Type':'application/json','HTTP-Referer':'https://zedialabs.com','X-Title':'ContentOS'},{model:cfg.model||'google/gemini-2.5-flash-image-preview',messages:[{role:'user',content:prompt}],modalities:['image','text']});
+    let d={};try{d=JSON.parse(r.body||'{}');}catch(e){}
+    const imgs=d.choices&&d.choices[0]&&d.choices[0].message&&d.choices[0].message.images;
+    if(imgs&&imgs[0]){const u=imgs[0].image_url?imgs[0].image_url.url:imgs[0];return await saveImageRef(u);}
+    throw new Error((d.error&&(d.error.message||d.error))||'no image returned');
+  }
+  const r=await httpReq('POST',base+'/images/generations',{'Authorization':'Bearer '+cfg.key,'Content-Type':'application/json'},{model:cfg.model||'gpt-image-1',prompt:prompt,size:cfg.size||'1024x1024',n:1});
+  let d={};try{d=JSON.parse(r.body||'{}');}catch(e){}
+  if(d.data&&d.data[0]){if(d.data[0].b64_json)return await addMediaBytes(b64ToBytes(d.data[0].b64_json),'png');if(d.data[0].url)return await saveImageRef(d.data[0].url);}
+  throw new Error((d.error&&(d.error.message||d.error))||('HTTP '+r.status+' '+(r.body||'').slice(0,120)));
+}
+async function saveImageRef(url){
+  if(/^data:/i.test(url)){const ext=(url.match(/^data:image\/([\w+]+)/i)||[])[1]||'png';return await addMediaBytes(b64ToBytes(url.split(',')[1]),ext.replace('+xml','').replace('jpeg','jpg'));}
+  const resp=await fetch(url);const buf=new Uint8Array(await resp.arrayBuffer());return await addMediaBytes(buf,'png');
+}
+/* social card (on-device Canvas) */
+function renderMsCard(container){
+  const w=getWork();
+  container.innerHTML='<div class="ms-form"><div class="ph-row" style="margin-bottom:10px">'+Object.keys(CARD_SIZES).map(k=>'<button class="ph-btn'+(cardSize===k?' pri':'')+'" onclick="setCardSize(\''+k+'\')">'+k.toUpperCase()+' '+CARD_SIZES[k][0]+'×'+CARD_SIZES[k][1]+'</button>').join('')+'</div>'+
+    '<label class="set-label">Title</label><input class="wf-in" id="cardTitle" value="'+attr(w?workTitle(w):'')+'" oninput="drawCard()">'+
+    '<label class="set-label" style="margin-top:8px">Kicker</label><input class="wf-in" id="cardKicker" value="'+attr(brands[cur].name.toUpperCase())+'" oninput="drawCard()">'+
+    '<div style="margin-top:12px"><canvas id="cardCanvas" style="max-width:100%;border:2px solid var(--line)"></canvas></div>'+
+    '<div class="ph-row" style="margin-top:10px"><button class="ph-btn" onclick="cardDownload()">Download PNG</button><button class="ph-btn" onclick="cardSave()">Save to media</button><button class="ph-btn pri" onclick="cardSetCover()">Save + set cover</button></div></div>';
+  if(document.fonts&&document.fonts.ready)document.fonts.ready.then(drawCard);
+  setTimeout(drawCard,60);
+}
+function setCardSize(k){cardSize=k;drawCard();}
+function wrapText(x,text,px,py,maxW,lh){const words=(text||'').split(/\s+/);let line='',y=py;for(const wd of words){const t=line?line+' '+wd:wd;if(x.measureText(t).width>maxW&&line){x.fillText(line,px,y);line=wd;y+=lh;}else line=t;}if(line)x.fillText(line,px,y);return y;}
+function drawCard(){
+  const cv=document.getElementById('cardCanvas');if(!cv)return;const sz=CARD_SIZES[cardSize],W=sz[0],H=sz[1];cv.width=W;cv.height=H;
+  const x=cv.getContext('2d'),acc=brands[cur].accent;
+  x.fillStyle='#EAE6D9';x.fillRect(0,0,W,H);x.fillStyle=acc;x.fillRect(0,0,W,Math.round(H*0.022));x.fillRect(0,H-Math.round(H*0.022),W,Math.round(H*0.022));
+  const pad=Math.round(W*0.07);
+  x.fillStyle=acc;x.font='700 '+Math.round(W*0.026)+'px "Space Mono",monospace';x.fillText(((document.getElementById('cardKicker')||{}).value||'').toUpperCase(),pad,Math.round(H*0.17));
+  x.fillStyle='#15110A';const fs=Math.round(W*0.07);x.font='800 '+fs+'px "Bricolage Grotesque",sans-serif';
+  wrapText(x,(document.getElementById('cardTitle')||{}).value||'',pad,Math.round(H*0.30),W-pad*2,fs*1.06);
+  x.fillStyle='#8C8472';x.font='400 '+Math.round(W*0.02)+'px "Space Mono",monospace';x.fillText('CONTENTOS',pad,H-Math.round(H*0.07));
+}
+function cardDownload(){const cv=document.getElementById('cardCanvas');const a=document.createElement('a');a.download='card.png';a.href=cv.toDataURL('image/png');a.click();}
+function cardSave(){return new Promise(res=>{document.getElementById('cardCanvas').toBlob(async b=>{const n=await addMediaBytes(new Uint8Array(await b.arrayBuffer()),'png');await loadMsMedia();toast('Card saved to media');res(n);},'image/png');});}
+async function cardSetCover(){const n=await cardSave();if(getWork())setCover(n);toast('Card set as cover');}
+/* Canva (OAuth PKCE — best-effort) */
+function b64url(buf){return btoa(String.fromCharCode.apply(null,new Uint8Array(buf))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');}
+async function pkce(){const v=b64url(crypto.getRandomValues(new Uint8Array(48)));const h=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(v));return {verifier:v,challenge:b64url(h)};}
+function updateCanvaStatus(t){['canvaStatus','msCanvaStatus'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=t;});}
+async function canvaConnect(){
+  const c=SETTINGS.canva||(SETTINGS.canva={});
+  c.clientId=(document.getElementById('setCanvaId')||{}).value||c.clientId;c.clientSecret=(document.getElementById('setCanvaSecret')||{}).value||c.clientSecret;
+  if(!c.clientId){toast('Enter your Canva client id');return;}
+  if(!(window.__TAURI__&&window.__TAURI__.core)){toast('Desktop app required');return;}
+  const port=8723,redirect='http://localhost:'+port+'/callback';const p=await pkce();c._verifier=p.verifier;
+  updateCanvaStatus('Opening browser…');
+  try{
+    await window.__TAURI__.core.invoke('oauth_listen',{port:port});
+    const url='https://www.canva.com/api/oauth/authorize?response_type=code&client_id='+encodeURIComponent(c.clientId)+'&redirect_uri='+encodeURIComponent(redirect)+'&scope='+encodeURIComponent('design:content:read design:content:write asset:read asset:write brandtemplate:meta:read brandtemplate:content:read profile:read')+'&code_challenge='+p.challenge+'&code_challenge_method=S256&state=cos';
+    const op=window.__TAURI__.opener;if(op&&op.openUrl)await op.openUrl(url);else if(op&&op.openPath)await op.openPath(url);
+    updateCanvaStatus('Waiting for authorization…');
+    const code=await window.__TAURI__.core.invoke('oauth_await');
+    const body='grant_type=authorization_code&code='+encodeURIComponent(code)+'&code_verifier='+encodeURIComponent(c._verifier)+'&redirect_uri='+encodeURIComponent(redirect)+'&client_id='+encodeURIComponent(c.clientId)+(c.clientSecret?('&client_secret='+encodeURIComponent(c.clientSecret)):'');
+    const tok=await httpReq('POST','https://api.canva.com/rest/v1/oauth/token',{'Content-Type':'application/x-www-form-urlencoded'},body);
+    let td={};try{td=JSON.parse(tok.body||'{}');}catch(e){}
+    if(!td.access_token)throw new Error(td.error_description||td.error||('HTTP '+tok.status));
+    c.token=td.access_token;c.refresh=td.refresh_token||'';c.expiry=Date.now()+((td.expires_in||0)*1000);delete c._verifier;
+    if(window.COS)window.COS.saveSettings(SETTINGS);updateCanvaStatus('Connected ✓');toast('Canva connected');
+  }catch(e){updateCanvaStatus('Failed — '+((e&&e.message)||e));toast('Canva connect failed');}
+}
+function renderMsCanva(){
+  const c=SETTINGS.canva||{};
+  if(!c.token)return '<div class="ms-form"><div class="set-hint" style="margin-bottom:10px">Connect Canva in Settings → Canva to create designs from your brand templates. (Experimental — needs your own Canva app + scopes.)</div><button class="ph-btn pri" onclick="closeMediaStudio();openSettings()">Open Settings</button></div>';
+  return '<div class="ms-form"><div class="ph-row"><button class="ph-btn" onclick="canvaLoadTemplates()">Load brand templates</button><span class="rec-status" id="msCanvaStatus">Connected ✓</span></div><div id="canvaList" style="margin-top:12px"></div></div>';
+}
+async function canvaLoadTemplates(){
+  const c=SETTINGS.canva||{},out=document.getElementById('canvaList');out.innerHTML='Loading…';
+  try{const r=await httpReq('GET','https://api.canva.com/rest/v1/brand-templates',{'Authorization':'Bearer '+c.token},null);let d={};try{d=JSON.parse(r.body||'{}');}catch(e){}const items=d.items||[];
+    out.innerHTML=items.length?items.map(t=>'<div class="ph-dest"><div class="ph-dlabel">'+esc((t.title)||(t.id))+'</div><button class="ph-btn pri" onclick="canvaCreate(\''+t.id+'\')">Create + export</button></div>').join(''):'<div class="dash-empty">No brand templates (needs a Canva paid plan + the brandtemplate scope).</div>';
+  }catch(e){out.innerHTML='Failed — '+esc((e&&e.message)||e);}
+}
+async function canvaPoll(url,token){for(let i=0;i<40;i++){await new Promise(r=>setTimeout(r,2000));const r=await httpReq('GET',url,{'Authorization':'Bearer '+token},null);let d={};try{d=JSON.parse(r.body||'{}');}catch(e){}const job=d.job||d;if(job.status==='success'||job.status==='completed')return job.result||job;if(job.status==='failed')throw new Error('job failed');}throw new Error('timed out');}
+async function canvaCreate(templateId){
+  const c=SETTINGS.canva||{},st=document.getElementById('msCanvaStatus');st.textContent='Creating…';
+  try{
+    const af=await httpReq('POST','https://api.canva.com/rest/v1/autofills',{'Authorization':'Bearer '+c.token,'Content-Type':'application/json'},{brand_template_id:templateId,data:{}});
+    let ad={};try{ad=JSON.parse(af.body||'{}');}catch(e){}if(!ad.job)throw new Error(ad.message||'autofill failed');
+    const design=await canvaPoll('https://api.canva.com/rest/v1/autofills/'+ad.job.id,c.token);
+    const designId=design.design&&design.design.id;if(!designId)throw new Error('no design id');
+    st.textContent='Exporting…';
+    const ex=await httpReq('POST','https://api.canva.com/rest/v1/exports',{'Authorization':'Bearer '+c.token,'Content-Type':'application/json'},{design_id:designId,format:{type:'png'}});
+    let ed={};try{ed=JSON.parse(ex.body||'{}');}catch(e){}if(!ed.job)throw new Error('export failed');
+    const done=await canvaPoll('https://api.canva.com/rest/v1/exports/'+ed.job.id,c.token);
+    const url=done.urls&&done.urls[0];if(!url)throw new Error('no export url');
+    const resp=await fetch(url);await addMediaBytes(new Uint8Array(await resp.arrayBuffer()),'png');
+    await loadMsMedia();st.textContent='Imported ✓';toast('Canva design imported');setMsTab('lib');
+  }catch(e){st.textContent='Failed — '+((e&&e.message)||e);}
+}
+/* paste / drop an image straight into the editor */
+document.addEventListener('paste',async function(e){
+  if(mode!=='write'||!getWork())return;
+  const items=(e.clipboardData&&e.clipboardData.items)||[];
+  for(const it of items){if(it.type&&it.type.indexOf('image/')===0){const f=it.getAsFile();if(f){e.preventDefault();const n=await addMediaFile(f);insertImageMd(n);await loadMsMedia();toast('Image pasted in');return;}}}
+});
+document.addEventListener('dragover',function(e){const ed=document.getElementById('editor');if(ed&&ed.contains(e.target)&&e.dataTransfer&&[...e.dataTransfer.types].includes('Files'))e.preventDefault();});
+document.addEventListener('drop',async function(e){
+  const ed=document.getElementById('editor');if(!ed||!ed.contains(e.target)||!getWork())return;
+  const files=[...((e.dataTransfer&&e.dataTransfer.files)||[])].filter(f=>/^image\//.test(f.type));
+  if(!files.length)return;e.preventDefault();
+  for(const f of files){const n=await addMediaFile(f);insertImageMd(n);}
+  await loadMsMedia();toast(files.length+' image(s) added');
+});
 
 /* ---- Master Context (cross-brand) ---- */
 function openMaster(){renderMaster();document.getElementById('masterOverlay').classList.add('open');}

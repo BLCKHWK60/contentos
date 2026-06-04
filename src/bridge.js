@@ -53,6 +53,7 @@
       for (const b of BRANDS) {
         await fs.mkdir(await path.join(this.vault, "brands", b, "works"), { recursive: true }).catch(() => {});
         await fs.mkdir(await path.join(this.vault, "brands", b, "context"), { recursive: true }).catch(() => {});
+        await fs.mkdir(await path.join(this.vault, "brands", b, "media"), { recursive: true }).catch(() => {});
       }
     },
 
@@ -255,6 +256,37 @@
       return file;
     },
 
+    // ---- media (images stored per brand under media/) ----
+    async saveMedia(brand, name, bytes) {
+      if (!isTauri || !this.vault) return null;
+      const { fs, path } = T;
+      const dir = await path.join(this.vault, "brands", brand, "media");
+      await fs.mkdir(dir, { recursive: true }).catch(() => {});
+      const safe = (name || "img").replace(/[^\w.\-]/g, "_");
+      await fs.writeFile(await path.join(dir, safe), bytes);
+      return safe;
+    },
+    async listMedia(brand) {
+      if (!isTauri || !this.vault) return [];
+      const { fs, path } = T;
+      const dir = await path.join(this.vault, "brands", brand, "media");
+      let entries = [];
+      try { entries = await fs.readDir(dir); } catch (e) { return []; }
+      return entries.filter((e) => e.name && /\.(png|jpe?g|gif|webp|svg)$/i.test(e.name)).map((e) => e.name);
+    },
+    async deleteMedia(brand, name) {
+      if (!isTauri || !this.vault) return;
+      const { fs, path } = T;
+      const safe = (name || "").replace(/[^\w.\-]/g, "_");
+      try { await fs.remove(await path.join(this.vault, "brands", brand, "media", safe)); } catch (e) {}
+    },
+    async readMediaBytes(brand, name) {
+      if (!isTauri || !this.vault) return null;
+      const { fs, path } = T;
+      const safe = (name || "").replace(/[^\w.\-]/g, "_");
+      try { return await fs.readFile(await path.join(this.vault, "brands", brand, "media", safe)); } catch (e) { return null; }
+    },
+
     // ---- publish log (what was published where, when, returned URL) ----
     async loadPublishLog() {
       if (!isTauri || !this.vault) return [];
@@ -311,6 +343,9 @@
       "title: " + (w.title || "").replace(/\n/g, " "),
       "stage: " + w.stage,
       "platform: " + (w.platform || "medium"),
+      "scheduled: " + (w.scheduled || ""),
+      "due: " + (w.due || ""),
+      "cover: " + (w.cover || ""),
       "updated: " + (w.updated || new Date().toISOString()),
       "---",
       "",
@@ -334,6 +369,9 @@
       title: meta.title || "",
       stage: meta.stage || "spark",
       platform: meta.platform || "medium",
+      scheduled: meta.scheduled || "",
+      due: meta.due || "",
+      cover: meta.cover || "",
       updated: meta.updated || "—",
       body: body,
       _mtime: Date.parse(meta.updated) || 0,
