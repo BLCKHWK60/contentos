@@ -243,6 +243,34 @@
       return name + ".md";
     },
 
+    // ---- export a finished work to a file under published/{brand} ----
+    async saveExport(brand, name, ext, content) {
+      if (!isTauri || !this.vault) return null;
+      const { fs, path } = T;
+      const dir = await path.join(this.vault, "published", brand);
+      await fs.mkdir(dir, { recursive: true }).catch(() => {});
+      const safe = slugify(name) || "export";
+      const file = await path.join(dir, safe + "." + (ext || "md"));
+      await fs.writeTextFile(file, content || "");
+      return file;
+    },
+
+    // ---- publish log (what was published where, when, returned URL) ----
+    async loadPublishLog() {
+      if (!isTauri || !this.vault) return [];
+      const { fs, path } = T;
+      const p = await path.join(this.vault, "published-log.json");
+      if (await fs.exists(p).catch(() => false)) {
+        try { return JSON.parse(await fs.readTextFile(p)); } catch (e) { return []; }
+      }
+      return [];
+    },
+    async savePublishLog(list) {
+      if (!isTauri || !this.vault) return;
+      const { fs, path } = T;
+      await fs.writeTextFile(await path.join(this.vault, "published-log.json"), JSON.stringify(list || [], null, 2));
+    },
+
     // ---- reveal the vault folder in the OS file browser ----
     async revealVault() {
       if (!isTauri || !this.vault) return false;

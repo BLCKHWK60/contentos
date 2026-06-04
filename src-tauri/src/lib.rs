@@ -5,6 +5,7 @@ use tauri::{
 };
 
 mod stt;
+mod publish;
 
 // Show (and create focus on) a window by label.
 fn show_window(app: &tauri::AppHandle, label: &str) {
@@ -26,7 +27,10 @@ pub fn run() {
             stt::transcribe,
             stt::list_models,
             stt::download_model,
-            stt::delete_model
+            stt::delete_model,
+            publish::http_request,
+            publish::oauth_listen,
+            publish::oauth_await
         ])
         .setup(|app| {
             // ----- Menu-bar (tray) menu -----

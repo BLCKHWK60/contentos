@@ -274,6 +274,23 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 .wf-apply{margin-top:8px;padding:5px 10px;background:transparent;border:2px solid var(--line);font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:0.5px;text-transform:uppercase;cursor:pointer;color:var(--ink)}
 .wf-apply:hover{background:var(--accent);color:var(--paper-hi);border-color:var(--accent)}
 
+/* PUBLISH HUB */
+.ph-modal{width:min(94vw,720px)!important;max-height:90vh;min-width:380px;min-height:360px}
+.ph-body{padding:14px 16px;overflow-y:auto;flex:1;min-height:0}
+.ph-sec{font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--ink-3);margin:16px 0 9px;padding-top:13px;border-top:2px solid var(--line)}
+.ph-sec:first-child{padding-top:0;border-top:none;margin-top:0}
+.ph-row{display:flex;flex-wrap:wrap;gap:7px}
+.ph-btn{padding:7px 12px;background:transparent;border:2px solid var(--line);font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:0.5px;text-transform:uppercase;cursor:pointer;color:var(--ink);transition:all var(--ease)}
+.ph-btn:hover{background:var(--ink);color:var(--paper-hi)}
+.ph-btn.pri{background:var(--accent);color:var(--paper-hi);border-color:var(--accent)}
+.ph-btn.pri:hover{background:var(--ink);border-color:var(--ink)}
+.ph-dest{display:flex;align-items:center;gap:8px;border:2px solid var(--line);padding:8px 11px;margin-bottom:7px}
+.ph-dlabel{flex:1;font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:0.3px;text-transform:uppercase;color:var(--ink)}
+.ph-hint{display:block;font-size:9px;font-weight:400;color:var(--ink-3);letter-spacing:0.3px;text-transform:none;margin-top:2px}
+.ph-results{margin-top:14px}
+.ph-res{font-family:var(--mono);font-size:10.5px;line-height:1.55;color:var(--ink-2);padding:6px 0;border-top:1px solid var(--line)}
+.ph-res a{color:var(--accent);word-break:break-all}
+
 /* DESK */
 .desk{width:0;overflow:hidden;border-left:0 solid var(--line);transition:width 260ms cubic-bezier(0.2,0,0,1);flex-shrink:0;background:var(--paper);display:flex;flex-direction:column;position:relative}
 .desk.open{width:var(--desk-w,344px);border-left-width:2px}
@@ -495,7 +512,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
             <button class="ctx-toggle" id="searchToggle" onclick="toggleSearch()" style="margin-top:-7px">⌖ Web Search <span class="pip" id="searchPip">OFF</span></button>
             <div class="desk-actions" id="deskActions"></div>
             <button class="advance" id="advanceBtn" onclick="advanceStage()">Advance to next stage →</button>
-            <button class="advance" id="publishBtn" onclick="publishWork()" style="display:none;border-style:solid;background:var(--accent);color:var(--paper-hi);border-color:var(--accent)">✓ Publish — copy + save final</button>
+            <button class="advance" id="publishBtn" onclick="openPublishHub()" style="display:none;border-style:solid;background:var(--accent);color:var(--paper-hi);border-color:var(--accent)">✓ Publish / Distribute →</button>
             <div class="out-wrap"><div class="out empty" id="out">Pick an operation above. The Desk's tools change with each stage of the pipeline.</div></div>
             <div class="desk-foot">
               <button class="foot-btn" onclick="useOutput()">↙ Use in Page</button>
@@ -575,6 +592,14 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
         <div id="sttModels" class="stt-models"></div>
         <div class="set-hint">Models download once and run fully on-device. Used by the ⏺ Record button in Capture.</div>
       </div>
+      <div class="set-section">Publishing</div>
+      <div class="set-row"><label class="set-label">Dev.to — API key</label><input class="set-input" id="setDevto" type="password" placeholder="dev.to → Settings → Extensions → API keys"></div>
+      <div class="set-row"><label class="set-label">Hashnode — Personal Access Token</label><input class="set-input" id="setHashTok" type="password" placeholder="hashnode.com → Developer settings"></div>
+      <div class="set-row"><label class="set-label">Hashnode — Publication ID</label><input class="set-input" id="setHashPub" type="text" placeholder="your blog's publication id"></div>
+      <div class="set-row"><label class="set-label">Medium — integration token (unofficial API)</label><input class="set-input" id="setMedium" type="password" placeholder="medium.com → Settings → Security → Integration tokens"></div>
+      <div class="set-row"><label class="set-label">LinkedIn — Client ID</label><input class="set-input" id="setLiId" type="text" placeholder="from your LinkedIn developer app"></div>
+      <div class="set-row"><label class="set-label">LinkedIn — Client Secret</label><input class="set-input" id="setLiSecret" type="password" placeholder="app redirect URI must be http://localhost:8723/callback"></div>
+      <div class="set-row" style="display:flex;gap:10px;align-items:center"><button class="new-work" onclick="linkedinConnect()">Connect LinkedIn</button><span class="rec-status" id="liStatus"></span></div>
       <div class="set-row" style="display:flex;gap:8px">
         <button class="new-work" style="flex:1" onclick="testConnection()">Test connection</button>
         <button class="new-work" style="flex:1" onclick="loadModels()">Load models ▾</button>
@@ -623,6 +648,16 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
         <button class="save-cap" onclick="submitInput()">OK</button>
       </div>
     </div>
+  </div>
+</div>
+<div class="overlay" id="phOverlay" onclick="phOverlayClick(event)">
+  <div class="modal set-modal ph-modal">
+    <div class="modal-head">
+      <div class="modal-title">✓ Publish / Distribute</div>
+      <div class="modal-brand" id="phTitle">—</div>
+      <button class="modal-x" onclick="closePublishHub()">✕</button>
+    </div>
+    <div class="ph-body" id="phBody"></div>
   </div>
 </div>
 <div class="overlay" id="wfOverlay" onclick="wfOverlayClick(event)">
@@ -785,6 +820,14 @@ function renderSettings(){
   document.getElementById('setModel').value=(SETTINGS.models&&SETTINGS.models.default)||'';
   document.getElementById('setMaxTokens').value=SETTINGS.maxTokens||'';
   document.getElementById('setSearchKey').value=SETTINGS.searchKey||'';
+  const pc=pubCfg();
+  document.getElementById('setDevto').value=pc.devtoToken||'';
+  document.getElementById('setHashTok').value=pc.hashnodeToken||'';
+  document.getElementById('setHashPub').value=pc.hashnodePub||'';
+  document.getElementById('setMedium').value=pc.mediumToken||'';
+  document.getElementById('setLiId').value=(pc.li&&pc.li.clientId)||'';
+  document.getElementById('setLiSecret').value=(pc.li&&pc.li.clientSecret)||'';
+  updateLiStatus((pc.li&&pc.li.token)?'Connected ✓':'Not connected');
   document.getElementById('setStages').innerHTML=PIPELINE.map(s=>`<div class="set-stage-row"><span class="set-stage-name">${s.label}</span><input class="set-input" list="modelList" data-stage="${s.id}" placeholder="(use default)" value="${(SETTINGS.models&&SETTINGS.models[s.id])||''}"></div>`).join('');
 }
 async function saveSettings(){
@@ -796,6 +839,13 @@ async function saveSettings(){
   SETTINGS.models=models;
   SETTINGS.maxTokens=document.getElementById('setMaxTokens').value.trim();
   SETTINGS.searchKey=document.getElementById('setSearchKey').value.trim();
+  const pc=pubCfg();
+  pc.devtoToken=document.getElementById('setDevto').value.trim();
+  pc.hashnodeToken=document.getElementById('setHashTok').value.trim();
+  pc.hashnodePub=document.getElementById('setHashPub').value.trim();
+  if(document.getElementById('setMedium').value.trim()!==pc.mediumToken){pc.mediumUserId='';}
+  pc.mediumToken=document.getElementById('setMedium').value.trim();
+  pc.li=pc.li||{};pc.li.clientId=document.getElementById('setLiId').value.trim();pc.li.clientSecret=document.getElementById('setLiSecret').value.trim();
   if(window.COS)await window.COS.saveSettings(SETTINGS);
   document.getElementById('setStatus').textContent='Saved ✓';
   setTimeout(()=>{document.getElementById('setStatus').textContent='';closeSettings();},700);
@@ -1574,26 +1624,126 @@ function renderPublished(){
   if(!list.length){el.innerHTML='<div class="ctx-empty" style="padding:24px 16px">Nothing shipped yet for '+brands[cur].name+'.<br>Walk a work to the Ship stage, then hit Publish in The Desk.</div>';return;}
   el.innerHTML=list.map(w=>{
     const name=(w.title||stripTags(w.body).slice(0,46)||'Untitled').replace(/</g,'&lt;');
-    return`<div class="work-row" onclick="openPublishedWork('${w.id}')"><div class="wr-top"><span class="wr-stage">✓ Ship</span><span class="wr-name">${name}</span></div><div class="wr-meta">Updated ${fmtWhen(w.updated)}</div></div>`;
+    const logs=pubLog.filter(r=>r.work===w.id);
+    const meta=logs.length?('Published: '+[...new Set(logs.map(r=>r.dest))].join(', ')):('Updated '+fmtWhen(w.updated));
+    return`<div class="work-row" style="cursor:default"><div class="wr-top"><span class="wr-stage">✓ Ship</span><span class="wr-name" style="cursor:pointer" onclick="openPublishedWork('${w.id}')">${name}</span><button class="ph-btn" style="padding:3px 9px;font-size:9px" onclick="publishFromManager('${w.id}')">Publish…</button></div><div class="wr-meta">${esc(meta)}</div></div>`;
   }).join('');
 }
 function openPublishedWork(id){closePublished();openWork(id);}
-async function publishWork(){
-  saveCurrent();
-  const w=getWork();
-  if(!w){toast('No work to publish');return;}
-  const title=document.getElementById('titleField').innerText.trim();
-  const bodyText=getBodyMd().trim();
-  const out=(title?title+'\n\n':'')+bodyText;
-  if(!out.trim()){toast('Nothing to publish yet');return;}
-  try{await navigator.clipboard.writeText(out);}catch(e){}
-  if(window.COS&&window.COS.isTauri){
-    await window.COS.savePublished(cur,w);
-    toast('Published ✓ — copied + saved to vault/published');
-  }else{
-    toast('Copied ✓ — in-memory (no file written)');
-  }
+function publishFromManager(id){closePublished();openWork(id);openPublishHub();}
+/* ===== Distribution & Publishing ===== */
+let pubLog=[],pubHubWork=null;
+function pubCfg(){return (SETTINGS.publish=SETTINGS.publish||{});}
+function workMarkdown(w){const b=w.body||'';return (looksHtml(b)?htmlToMd(b):b).trim();}
+function workTitle(w){return (w.title||'').trim()||((workMarkdown(w).split('\n')[0]||'Untitled').replace(/^#+\s*/,'').slice(0,80));}
+function exportMarkdown(w){const t=(w.title||'').trim();return (t?'# '+t+'\n\n':'')+workMarkdown(w)+'\n';}
+function exportHtml(w){const t=(w.title||'').trim();return '<!doctype html>\n<html><head><meta charset="utf-8"><title>'+esc(t||'Untitled')+'</title>\n<style>body{max-width:720px;margin:40px auto;padding:0 20px;font:18px/1.7 Georgia,serif;color:#15110A}h1,h2,h3{font-family:system-ui,sans-serif;line-height:1.15}img{max-width:100%}blockquote{border-left:4px solid #E5330C;padding-left:18px;color:#555;font-style:italic}pre{background:#15110A;color:#EAE6D9;padding:16px;overflow:auto}code{background:#eee;padding:1px 5px}table{border-collapse:collapse}td,th{border:1px solid #ccc;padding:6px 10px}</style></head>\n<body>'+(t?'<h1>'+esc(t)+'</h1>':'')+mdToHtml(workMarkdown(w))+'</body></html>\n';}
+function plainText(w){const d=document.createElement('div');d.innerHTML=mdToHtml(workMarkdown(w));return ((w.title?w.title+'\n\n':'')+(d.innerText||'')).trim();}
+function exportText(w){return plainText(w)+'\n';}
+const DESTINATIONS=[
+  {id:'devto',label:'Dev.to',hint:'API key',ready:()=>!!pubCfg().devtoToken},
+  {id:'hashnode',label:'Hashnode',hint:'token + publication id',ready:()=>!!(pubCfg().hashnodeToken&&pubCfg().hashnodePub)},
+  {id:'medium',label:'Medium · unofficial',hint:'integration token',ready:()=>!!pubCfg().mediumToken},
+  {id:'linkedin',label:'LinkedIn',hint:'OAuth connect',ready:()=>!!(pubCfg().li&&pubCfg().li.token)}
+];
+async function httpReq(method,url,headers,body){
+  if(!(window.__TAURI__&&window.__TAURI__.core))throw new Error('Desktop app required');
+  return await window.__TAURI__.core.invoke('http_request',{req:{method:method,url:url,headers:headers||{},body:body==null?null:(typeof body==='string'?body:JSON.stringify(body))}});
 }
+function openPublishHub(){saveCurrent();const w=getWork();if(!w){toast('No work to publish');return;}pubHubWork=w;renderPublishHub();document.getElementById('phOverlay').classList.add('open');}
+function closePublishHub(){document.getElementById('phOverlay').classList.remove('open');}
+function phOverlayClick(e){if(e.target===e.currentTarget)closePublishHub();}
+function renderPublishHub(){
+  const w=pubHubWork;document.getElementById('phTitle').textContent=workTitle(w);
+  const dest=DESTINATIONS.map(d=>{const ok=d.ready();return '<div class="ph-dest"><div class="ph-dlabel">'+esc(d.label)+'<span class="ph-hint">'+esc(d.hint)+'</span></div>'+
+    (ok?'<button class="ph-btn" onclick="publishTo(\''+d.id+'\',\'draft\')">Draft</button><button class="ph-btn pri" onclick="publishTo(\''+d.id+'\',\'live\')">Publish</button>'
+       :'<button class="ph-btn" onclick="closePublishHub();openSettings()">Configure…</button>')+'</div>';}).join('');
+  document.getElementById('phBody').innerHTML=
+    '<div class="ph-sec">Export file → vault/published</div><div class="ph-row"><button class="ph-btn" onclick="doExport(\'md\')">Markdown</button><button class="ph-btn" onclick="doExport(\'html\')">HTML</button><button class="ph-btn" onclick="doExport(\'txt\')">Plain text</button><button class="ph-btn" onclick="revealVault()">Reveal folder</button></div>'+
+    '<div class="ph-sec">Copy formatted for platform</div><div class="ph-row">'+['medium','linkedin','reddit','blog','github'].map(p=>'<button class="ph-btn" onclick="copyForPlatform(\''+p+'\')">'+cap(p)+'</button>').join('')+'</div>'+
+    '<div class="ph-sec">Post to the web</div>'+dest+
+    '<div class="ph-results" id="phResults"></div>';
+}
+function phResult(msg,url){const el=document.getElementById('phResults');if(!el)return;el.innerHTML='<div class="ph-res">'+esc(msg)+(url?' — <a href="'+attr(url)+'" target="_blank" rel="noopener">'+esc(url)+'</a>':'')+'</div>'+el.innerHTML;}
+async function doExport(ext){
+  const w=pubHubWork;const content=ext==='html'?exportHtml(w):ext==='txt'?exportText(w):exportMarkdown(w);
+  if(window.COS&&window.COS.isTauri){const f=await window.COS.saveExport(cur,workTitle(w),ext,content);phResult('Saved '+ext.toUpperCase()+' → '+(f||'published/'),null);toast('Exported '+ext.toUpperCase());}
+  else{try{await navigator.clipboard.writeText(content);toast(ext.toUpperCase()+' copied (in-memory)');}catch(e){}}
+}
+function copyForPlatform(p){
+  const w=pubHubWork;const text=(p==='linkedin')?plainText(w):exportMarkdown(w).trim();
+  navigator.clipboard.writeText(text).then(()=>{phResult('Copied for '+cap(p),null);toast('Copied for '+cap(p));}).catch(()=>toast('Copy failed'));
+}
+function recordPublish(dest,mode,url){const rec={work:pubHubWork.id,brand:cur,title:workTitle(pubHubWork),dest:dest,mode:mode,url:url||'',at:new Date().toISOString()};pubLog.unshift(rec);if(window.COS)window.COS.savePublishLog(pubLog);}
+async function publishTo(dest,mode){
+  const w=pubHubWork;if(!w)return;
+  if(!(window.COS&&window.COS.isTauri)){toast('Posting needs the desktop app');return;}
+  phResult('Publishing to '+dest+'…',null);
+  try{
+    let url='';
+    if(dest==='devto')url=await postDevto(w,mode);
+    else if(dest==='hashnode')url=await postHashnode(w,mode);
+    else if(dest==='medium')url=await postMedium(w,mode);
+    else if(dest==='linkedin')url=await postLinkedin(w);
+    recordPublish(dest,mode,url);phResult('✓ '+dest+' ('+mode+')',url);toast('Posted to '+dest);
+  }catch(e){phResult('✗ '+dest+' — '+((e&&e.message)||e),null);toast(dest+' failed');}
+}
+async function postDevto(w,mode){
+  const r=await httpReq('POST','https://dev.to/api/articles',{'api-key':pubCfg().devtoToken,'Content-Type':'application/json'},{article:{title:workTitle(w),body_markdown:workMarkdown(w),published:mode==='live'}});
+  let d={};try{d=JSON.parse(r.body||'{}');}catch(e){}
+  if(r.status>=200&&r.status<300)return d.url||'https://dev.to/dashboard';
+  throw new Error(d.error||('HTTP '+r.status));
+}
+async function postHashnode(w,mode){
+  const q='mutation($input:PublishPostInput!){publishPost(input:$input){post{url}}}';
+  const r=await httpReq('POST','https://gql.hashnode.com/',{'Authorization':pubCfg().hashnodeToken,'Content-Type':'application/json'},{query:q,variables:{input:{title:workTitle(w),contentMarkdown:workMarkdown(w),publicationId:pubCfg().hashnodePub,tags:[]}}});
+  let d={};try{d=JSON.parse(r.body||'{}');}catch(e){}
+  if(d.errors&&d.errors.length)throw new Error(d.errors[0].message);
+  return (d.data&&d.data.publishPost&&d.data.publishPost.post&&d.data.publishPost.post.url)||'';
+}
+async function postMedium(w,mode){
+  const cfg=pubCfg();const H={'Authorization':'Bearer '+cfg.mediumToken,'Content-Type':'application/json','Accept':'application/json'};
+  let uid=cfg.mediumUserId;
+  if(!uid){const me=await httpReq('GET','https://api.medium.com/v1/me',H,null);let md={};try{md=JSON.parse(me.body||'{}');}catch(e){}if(me.status>=300||!md.data)throw new Error('auth failed (HTTP '+me.status+')');uid=md.data.id;cfg.mediumUserId=uid;if(window.COS)window.COS.saveSettings(SETTINGS);}
+  const r=await httpReq('POST','https://api.medium.com/v1/users/'+uid+'/posts',H,{title:workTitle(w),contentFormat:'markdown',content:exportMarkdown(w),publishStatus:mode==='live'?'public':'draft'});
+  let d={};try{d=JSON.parse(r.body||'{}');}catch(e){}
+  if(r.status>=300)throw new Error((d.errors&&d.errors[0]&&d.errors[0].message)||('HTTP '+r.status));
+  return (d.data&&d.data.url)||'';
+}
+async function postLinkedin(w){
+  const li=pubCfg().li||{};if(!li.token)throw new Error('Connect LinkedIn in Settings first');if(!li.urn)throw new Error('identity missing — reconnect');
+  const body={author:li.urn,commentary:plainText(w),visibility:'PUBLIC',distribution:{feedDistribution:'MAIN_FEED',targetEntities:[],thirdPartyDistributionChannels:[]},lifecycleState:'PUBLISHED',isReshareDisabledByAuthor:false};
+  const r=await httpReq('POST','https://api.linkedin.com/rest/posts',{'Authorization':'Bearer '+li.token,'Content-Type':'application/json','LinkedIn-Version':'202405','X-Restli-Protocol-Version':'2.0.0'},body);
+  if(r.status>=200&&r.status<300)return 'https://www.linkedin.com/in/me/recent-activity/all/';
+  let d={};try{d=JSON.parse(r.body||'{}');}catch(e){}
+  throw new Error(d.message||('HTTP '+r.status+' '+(r.body||'').slice(0,140)));
+}
+async function linkedinConnect(){
+  const li=pubCfg().li||(pubCfg().li={});
+  li.clientId=(document.getElementById('setLiId')||{}).value||li.clientId;
+  li.clientSecret=(document.getElementById('setLiSecret')||{}).value||li.clientSecret;
+  if(!li.clientId||!li.clientSecret){toast('Enter LinkedIn client id + secret first');return;}
+  if(!(window.__TAURI__&&window.__TAURI__.core)){toast('Desktop app required');return;}
+  const port=8723,redirect='http://localhost:'+port+'/callback';
+  updateLiStatus('Opening browser…');
+  try{
+    await window.__TAURI__.core.invoke('oauth_listen',{port:port});
+    const authUrl='https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id='+encodeURIComponent(li.clientId)+'&redirect_uri='+encodeURIComponent(redirect)+'&scope='+encodeURIComponent('openid profile w_member_social')+'&state=cos';
+    const op=window.__TAURI__.opener;if(op&&op.openUrl)await op.openUrl(authUrl);else if(op&&op.openPath)await op.openPath(authUrl);
+    updateLiStatus('Waiting for authorization…');
+    const code=await window.__TAURI__.core.invoke('oauth_await');
+    const tok=await httpReq('POST','https://www.linkedin.com/oauth/v2/accessToken',{'Content-Type':'application/x-www-form-urlencoded'},'grant_type=authorization_code&code='+encodeURIComponent(code)+'&redirect_uri='+encodeURIComponent(redirect)+'&client_id='+encodeURIComponent(li.clientId)+'&client_secret='+encodeURIComponent(li.clientSecret));
+    let td={};try{td=JSON.parse(tok.body||'{}');}catch(e){}
+    if(!td.access_token)throw new Error(td.error_description||td.error||('HTTP '+tok.status));
+    li.token=td.access_token;li.expiry=Date.now()+((td.expires_in||0)*1000);
+    const ui=await httpReq('GET','https://api.linkedin.com/v2/userinfo',{'Authorization':'Bearer '+li.token},null);
+    let uid={};try{uid=JSON.parse(ui.body||'{}');}catch(e){}
+    if(uid.sub)li.urn='urn:li:person:'+uid.sub;
+    if(window.COS)window.COS.saveSettings(SETTINGS);
+    updateLiStatus('Connected ✓'+(uid.name?(' — '+uid.name):''));toast('LinkedIn connected');
+  }catch(e){updateLiStatus('Failed — '+((e&&e.message)||e));toast('LinkedIn connect failed');}
+}
+function updateLiStatus(t){const el=document.getElementById('liStatus');if(el)el.textContent=t;}
 
 /* ---- Master Context (cross-brand) ---- */
 function openMaster(){renderMaster();document.getElementById('masterOverlay').classList.add('open');}
@@ -1635,6 +1785,7 @@ async function loadAllFromVault(){
   const s=await window.COS.loadSettings();
   if(s) SETTINGS=Object.assign(SETTINGS,s);
   const pl=await window.COS.loadPipeline(); if(pl&&Array.isArray(pl.stages)&&pl.stages.length){PIPELINE=pl.stages;pipelineNotes=pl.notes||'';}
+  const plog=await window.COS.loadPublishLog(); if(plog&&plog.length)pubLog=plog;
   const mx=await window.COS.loadMaster(); if(mx) masterFiles=mx;
   for(const b in brands){
     try{
