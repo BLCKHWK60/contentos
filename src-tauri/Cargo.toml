@@ -1,0 +1,26 @@
+[package]
+name = "contentos"
+version = "0.3.0"
+description = "ContentOS — content orchestration platform"
+authors = ["Victor Chaidez"]
+edition = "2021"
+
+[lib]
+name = "contentos_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+tauri = { version = "2", features = ["tray-icon"] }
+tauri-plugin-fs = "2"
+tauri-plugin-dialog = "2"
+tauri-plugin-shell = "2"
+tauri-plugin-opener = "2"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+parakeet-rs = "0.3"
+hound = "3"
+ureq = "2"
+whisper-rs = { version = "0.14", features = ["metal"] }

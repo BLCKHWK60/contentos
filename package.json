@@ -1,0 +1,15 @@
+{
+  "name": "contentos",
+  "version": "0.3.0",
+  "description": "ContentOS — content orchestration platform",
+  "private": true,
+  "scripts": {
+    "tauri": "tauri",
+    "dev": "tauri dev",
+    "build": "tauri build",
+    "icon": "tauri icon src-tauri/app-icon.png"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "^2"
+  }
+}

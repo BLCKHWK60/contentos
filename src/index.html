@@ -1,0 +1,1661 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>ContentOS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800&family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;1,6..72,300&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#EAE6D9;--paper-hi:#F4F1E7;--card:#F1EDE2;
+  --ink:#15110A;--ink-2:#4C463A;--ink-3:#8C8472;--line:#15110A;
+  --accent:#E5330C;--accent-soft:rgba(229,51,12,0.12);
+  --d:'Bricolage Grotesque',sans-serif;--serif:'Newsreader',Georgia,serif;--mono:'Space Mono',monospace;
+  --ease:200ms cubic-bezier(0.2,0,0,1);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:var(--paper);color:var(--ink);font-family:var(--d);font-size:14px;-webkit-font-smoothing:antialiased;overflow:hidden}
+.grain{position:fixed;inset:0;z-index:9999;pointer-events:none;opacity:0.05;mix-blend-mode:multiply;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+
+.shell{display:flex;flex-direction:column;height:100vh;overflow:hidden}
+.issue-bar{display:flex;align-items:center;height:34px;border-bottom:2px solid var(--line);background:var(--paper);flex-shrink:0;font-family:var(--mono);font-size:10.5px;letter-spacing:1.5px;text-transform:uppercase}
+.issue-seg{padding:0 16px;height:100%;display:flex;align-items:center;border-right:2px solid var(--line);color:var(--ink-2);white-space:nowrap}
+.issue-seg.accentseg{background:var(--accent);color:var(--paper-hi);font-weight:700;transition:background var(--ease)}
+.issue-spacer{flex:1}
+.issue-clock{padding:0 16px;color:var(--ink-3);border-left:2px solid var(--line);height:100%;display:flex;align-items:center}
+.app{flex:1;display:grid;grid-template-columns:var(--col-masthead,230px) var(--col-index,280px) 1fr;overflow:hidden;min-height:0}
+
+/* MASTHEAD */
+.masthead{border-right:2px solid var(--line);display:flex;flex-direction:column;overflow:hidden;background:var(--paper);animation:rise 400ms cubic-bezier(0.2,0,0,1) both}
+.wordmark{padding:18px 16px 14px;border-bottom:2px solid var(--line);flex-shrink:0}
+.wm-top{font-family:var(--d);font-weight:800;font-size:24px;line-height:0.92;letter-spacing:-1px}
+.wm-bot{font-family:var(--d);font-weight:800;font-size:24px;line-height:0.92;letter-spacing:-1px;display:inline-block;background:var(--ink);color:var(--paper-hi);padding:0 6px;margin-top:2px}
+.kicker{font-family:var(--mono);font-size:9.5px;letter-spacing:2px;text-transform:uppercase;color:var(--ink-3);padding:13px 16px 7px;flex-shrink:0}
+.brand-stack{flex:1;overflow-y:auto;scrollbar-width:none}.brand-stack::-webkit-scrollbar{display:none}
+.brand-row{padding:12px 16px;border-bottom:1px solid var(--line);cursor:pointer;transition:background var(--ease),color var(--ease)}
+.brand-row:hover{background:var(--card)}
+.brand-row.active{background:var(--ink);color:var(--paper-hi)}
+.brand-row.active .br-tag,.brand-row.active .br-num{color:rgba(244,241,231,0.55)}
+.br-head{display:flex;align-items:center;gap:8px;margin-bottom:3px}
+.br-num{font-family:var(--mono);font-size:10px;font-weight:700;color:var(--ink-3);transition:color var(--ease)}
+.br-sq{width:9px;height:9px;background:var(--brandc,#E5330C);margin-left:auto;flex-shrink:0}
+.br-name{font-family:var(--d);font-weight:700;font-size:17px;line-height:1.04;letter-spacing:-0.4px;text-transform:uppercase}
+.br-tag{font-family:var(--mono);font-size:9px;letter-spacing:0.5px;color:var(--ink-3);margin-top:4px;text-transform:uppercase;transition:color var(--ease)}
+.masthead-foot{flex-shrink:0;border-top:2px solid var(--line)}
+.master-row{width:100%;padding:11px 16px;background:transparent;border:none;border-bottom:1px solid var(--line);cursor:pointer;display:flex;align-items:center;gap:8px;font-family:var(--mono);font-size:9.5px;letter-spacing:1.5px;text-transform:uppercase;color:var(--ink-3);transition:all var(--ease);text-align:left}
+.master-row:hover{background:var(--ink);color:var(--paper-hi)}
+.mast-icons{display:flex}
+.mast-icon{flex:1;padding:10px;background:transparent;border:none;border-right:1px solid var(--line);cursor:pointer;font-size:13px;color:var(--ink-2);transition:all var(--ease)}
+.mast-icon:last-child{border-right:none}
+.mast-icon:hover{background:var(--ink);color:var(--paper-hi)}
+
+/* INDEX */
+.index{border-right:2px solid var(--line);display:flex;flex-direction:column;overflow:hidden;background:var(--paper);animation:rise 400ms cubic-bezier(0.2,0,0,1) 60ms both}
+.index-head{padding:16px 18px 13px;border-bottom:2px solid var(--line);flex-shrink:0}
+.index-kicker{font-family:var(--mono);font-size:9.5px;letter-spacing:2px;text-transform:uppercase;color:var(--ink-3);margin-bottom:6px}
+.index-title{font-family:var(--d);font-weight:800;font-size:27px;line-height:0.95;letter-spacing:-1px;text-transform:uppercase;margin-bottom:13px}
+.idx-btns{display:flex;gap:8px}
+.capture-btn{flex:1;padding:10px 12px;background:var(--ink);color:var(--paper-hi);border:2px solid var(--ink);font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;cursor:pointer;display:flex;align-items:center;gap:6px;justify-content:center;box-shadow:3px 3px 0 var(--accent);transition:all var(--ease)}
+.capture-btn:hover{transform:translate(-2px,-2px);box-shadow:5px 5px 0 var(--accent)}
+.capture-btn:active{transform:translate(0,0)}
+.new-work{padding:10px 12px;background:transparent;color:var(--ink);border:2px solid var(--ink);font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;cursor:pointer;transition:all var(--ease)}
+.new-work:hover{background:var(--ink);color:var(--paper-hi)}
+.stage-filter{display:flex;border-bottom:2px solid var(--line);flex-shrink:0;overflow-x:auto;scrollbar-width:none}
+.stage-filter::-webkit-scrollbar{display:none}
+.sf-btn{padding:8px 9px;background:transparent;border:none;border-right:1px solid var(--line);font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:0.5px;text-transform:uppercase;color:var(--ink-3);cursor:pointer;transition:all var(--ease);white-space:nowrap}
+.sf-btn:hover{background:var(--card);color:var(--ink)}
+.sf-btn.active{background:var(--ink);color:var(--paper-hi)}
+.work-stack{flex:1;overflow-y:auto;scrollbar-width:none}.work-stack::-webkit-scrollbar{display:none}
+.work-row{padding:13px 18px;border-bottom:1px solid var(--line);cursor:pointer;transition:background var(--ease),color var(--ease)}
+.work-row:hover{background:var(--ink);color:var(--paper-hi)}
+.work-row:hover .wr-meta{color:rgba(244,241,231,0.6)}
+.work-row.active{background:var(--accent);color:var(--paper-hi)}
+.work-row.active .wr-meta{color:rgba(244,241,231,0.75)}
+.wr-top{display:flex;align-items:baseline;gap:9px;margin-bottom:5px}
+.wr-stage{font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;flex-shrink:0;border:1.5px solid currentColor;padding:1px 5px}
+.wr-name{font-family:var(--d);font-weight:600;font-size:14px;line-height:1.25;letter-spacing:-0.2px;flex:1;min-width:0}
+.wr-meta{font-family:var(--mono);font-size:9px;letter-spacing:0.5px;text-transform:uppercase;color:var(--ink-3);transition:color var(--ease)}
+.work-empty{padding:32px 18px;font-family:var(--mono);font-size:10.5px;letter-spacing:0.5px;text-transform:uppercase;color:var(--ink-3);line-height:1.9}
+
+/* PAGE */
+.page{display:flex;flex-direction:column;overflow:hidden;background:var(--paper-hi);min-width:0;animation:rise 400ms cubic-bezier(0.2,0,0,1) 120ms both}
+
+/* PIPELINE RAIL */
+.rail{display:flex;border-bottom:2px solid var(--line);flex-shrink:0;background:var(--paper);overflow-x:auto;scrollbar-width:none}
+.rail::-webkit-scrollbar{display:none}
+.stage-cell{flex:1;min-width:96px;padding:9px 11px;background:transparent;border:none;border-right:2px solid var(--line);cursor:pointer;transition:all var(--ease);text-align:left;position:relative}
+.stage-cell:last-child{border-right:none}
+.stage-cell:hover{background:var(--card)}
+.stage-cell.done{background:var(--ink);color:var(--paper-hi)}
+.stage-cell.current{background:var(--accent);color:var(--paper-hi)}
+.sc-top{display:flex;align-items:center;gap:6px;margin-bottom:3px}
+.sc-glyph{font-size:13px;line-height:1}
+.sc-num{font-family:var(--mono);font-size:8.5px;font-weight:700;letter-spacing:0.5px;margin-left:auto;opacity:0.7}
+.sc-label{font-family:var(--d);font-weight:700;font-size:12px;letter-spacing:-0.2px;text-transform:uppercase;line-height:1}
+.rail-caption{padding:8px 18px;border-bottom:2px solid var(--line);flex-shrink:0;background:var(--paper-hi);display:flex;align-items:center;gap:10px}
+.rc-glyph{font-size:13px}
+.rc-text{font-family:var(--mono);font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--ink-2)}
+.rc-text b{color:var(--accent)}
+
+.page-bar{display:flex;align-items:center;border-bottom:2px solid var(--line);flex-shrink:0;height:40px;background:var(--paper)}
+.plat-wrap{display:flex;align-items:center;height:100%;padding-left:14px}
+.plat-label{font-family:var(--mono);font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--ink-3);margin-right:9px}
+.plat-btn{padding:5px 9px;background:transparent;border:1.5px solid var(--line);border-right-width:0;font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:0.5px;text-transform:uppercase;color:var(--ink-2);cursor:pointer;transition:all var(--ease)}
+.plat-btn:last-of-type{border-right-width:1.5px}
+.plat-btn:hover{background:var(--card)}
+.plat-btn.active{background:var(--accent);color:var(--paper-hi);border-color:var(--accent)}
+.page-meta{margin-left:auto;display:flex;align-items:center;height:100%}
+.meta-cell{padding:0 13px;height:100%;display:flex;align-items:center;border-left:2px solid var(--line);font-family:var(--mono);font-size:9.5px;letter-spacing:0.5px;text-transform:uppercase;color:var(--ink-3)}
+.ai-toggle{padding:0 15px;height:100%;background:transparent;border:none;border-left:2px solid var(--line);font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--ink-2);cursor:pointer;transition:all var(--ease);display:flex;align-items:center;gap:6px}
+.ai-toggle:hover{background:var(--card);color:var(--ink)}
+.ai-toggle.on{background:var(--ink);color:var(--paper-hi)}
+.page-body{flex:1;display:flex;overflow:hidden;min-height:0}
+.sheet-wrap{flex:1;overflow-y:auto;min-width:0;scrollbar-width:thin;scrollbar-color:var(--ink-3) transparent}
+.sheet{max-width:740px;margin:0 auto;padding:40px 56px 120px}
+.sheet-kicker{font-family:var(--mono);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--accent);font-weight:700;margin-bottom:16px;display:flex;align-items:center;gap:10px}
+.sheet-kicker::after{content:'';flex:1;height:2px;background:var(--line)}
+.title-field{font-family:var(--d);font-weight:800;font-size:44px;line-height:0.98;letter-spacing:-1.5px;color:var(--ink);outline:none;margin-bottom:8px;min-height:48px}
+.title-field:empty::before{content:attr(data-ph);color:var(--ink-3);opacity:0.5}
+.byline{font-family:var(--mono);font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--ink-3);border-bottom:2px solid var(--line);padding-bottom:16px;margin-bottom:24px}
+.toolbar{display:flex;margin-bottom:18px;border:2px solid var(--line);width:fit-content}
+.tb{padding:7px 10px;background:transparent;border:none;border-right:1px solid var(--line);font-family:var(--mono);font-size:11px;font-weight:700;color:var(--ink-2);cursor:pointer;transition:all var(--ease);line-height:1}
+.tb:last-child{border-right:none}
+.tb:hover{background:var(--ink);color:var(--paper-hi)}
+.body-field{font-family:var(--serif);font-size:18px;line-height:1.72;color:var(--ink);outline:none;min-height:280px}
+.body-field:empty::before{content:attr(data-ph);color:var(--ink-3);opacity:0.6;font-style:italic}
+.body-field h2{font-family:var(--d);font-weight:700;font-size:24px;letter-spacing:-0.6px;margin:28px 0 12px;line-height:1.1}
+.body-field p{margin-bottom:16px}.body-field strong{font-weight:600}.body-field em{font-style:italic}
+.body-field blockquote{border-left:4px solid var(--accent);padding-left:18px;margin:18px 0;font-style:italic;color:var(--ink-2)}
+.body-field ul{padding-left:22px;margin-bottom:16px}.body-field li{margin-bottom:6px}
+.body-field code{font-family:var(--mono);font-size:14px;background:var(--paper);border:1px solid var(--line);padding:1px 5px}
+.body-field pre{font-family:var(--mono);font-size:13px;background:var(--ink);color:var(--paper-hi);padding:16px;overflow-x:auto;margin:16px 0;white-space:pre-wrap}
+
+/* MARKDOWN EDITOR (source / reading / live-lite) */
+.ed-bar{display:flex;align-items:center;gap:12px;margin-bottom:18px;flex-wrap:wrap}
+.ed-bar .toolbar{margin-bottom:0}
+.ed-modes{display:flex;border:2px solid var(--line);margin-left:auto}
+.edm{padding:7px 11px;background:transparent;border:none;border-right:1px solid var(--line);font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:0.5px;text-transform:uppercase;color:var(--ink-2);cursor:pointer;transition:all var(--ease)}
+.edm:last-child{border-right:none}
+.edm:hover{background:var(--card)}
+.edm.active{background:var(--ink);color:var(--paper-hi)}
+.editor{min-height:280px}
+.ed-source{width:100%;min-height:440px;background:var(--paper);border:2px solid var(--line);padding:16px 18px;font-family:var(--mono);font-size:14px;line-height:1.7;color:var(--ink);outline:none;resize:vertical;white-space:pre-wrap}
+.ed-source:focus{border-color:var(--accent)}
+.ed-raw{width:100%;background:var(--paper);border:1px solid var(--accent);padding:8px 10px;font-family:var(--mono);font-size:14px;line-height:1.62;color:var(--ink);outline:none;resize:none;overflow:hidden;margin:3px 0;display:block}
+.ed-block{cursor:text;padding:1px 3px;border:1px solid transparent;margin:1px 0}
+.ed-block:hover{border-color:var(--ink-3)}
+.ed-add{margin-top:12px;font-family:var(--mono);font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--ink-3);cursor:pointer;padding:6px 0}
+.ed-add:hover{color:var(--accent)}
+.ed-ph,.ed-empty{color:var(--ink-3);font-style:italic;font-family:var(--serif);font-size:18px}
+.md-render{font-family:var(--serif);font-size:18px;line-height:1.72;color:var(--ink)}
+.md-render h1{font-family:var(--d);font-weight:800;font-size:30px;letter-spacing:-0.8px;margin:24px 0 12px;line-height:1.05}
+.md-render h2{font-family:var(--d);font-weight:700;font-size:24px;letter-spacing:-0.6px;margin:24px 0 12px;line-height:1.1}
+.md-render h3{font-family:var(--d);font-weight:700;font-size:19px;letter-spacing:-0.3px;margin:20px 0 10px}
+.md-render p{margin-bottom:16px}
+.md-render strong{font-weight:700}.md-render em{font-style:italic}
+.md-render blockquote{border-left:4px solid var(--accent);padding-left:18px;margin:18px 0;font-style:italic;color:var(--ink-2)}
+.md-render ul,.md-render ol{padding-left:22px;margin-bottom:16px}.md-render li{margin-bottom:6px}
+.md-render code{font-family:var(--mono);font-size:14px;background:var(--paper);border:1px solid var(--line);padding:1px 5px}
+.md-render pre{font-family:var(--mono);font-size:13px;background:var(--ink);color:var(--paper-hi);padding:16px;overflow-x:auto;margin:16px 0;white-space:pre-wrap}
+.md-render a{color:var(--accent);text-decoration:underline}
+.md-render hr{border:none;border-top:2px solid var(--line);margin:24px 0}
+.md-render table{border-collapse:collapse;width:100%;margin:18px 0;border:2px solid var(--line)}
+.md-render th,.md-render td{border:1px solid var(--line);padding:8px 11px;text-align:left;vertical-align:top;font-family:var(--serif);font-size:15px;line-height:1.5}
+.md-render th{background:var(--card);font-family:var(--mono);font-size:10.5px;letter-spacing:0.5px;text-transform:uppercase;font-weight:700;color:var(--ink)}
+.md-render tbody tr:nth-child(even){background:rgba(21,17,10,0.03)}
+
+/* COLLAPSIBLE + RESIZABLE PANELS */
+.masthead,.index{position:relative}
+.rz{position:absolute;top:0;bottom:0;right:0;width:6px;cursor:col-resize;z-index:60;transition:background 120ms}
+.rz.rz-left{right:auto;left:0}
+.rz::after{content:'';position:absolute;top:50%;right:1px;width:2px;height:26px;transform:translateY(-50%);background:var(--ink-3);opacity:0.3;transition:opacity 120ms}
+.rz.rz-left::after{right:auto;left:1px}
+.rz:hover{background:var(--accent)}
+.rz:hover::after{opacity:0}
+/* keyboard accessibility — visible focus without affecting mouse users */
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,[contenteditable]:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.panel-x{background:transparent;border:1.5px solid var(--line);width:19px;height:19px;line-height:1;font-size:12px;cursor:pointer;color:var(--ink-2);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all var(--ease)}
+.panel-x:hover{background:var(--ink);color:var(--paper-hi)}
+/* masthead collapsed rail */
+.mast-rail{display:none}
+.masthead.collapsed .wordmark,.masthead.collapsed .kicker,.masthead.collapsed .brand-stack,.masthead.collapsed .masthead-foot{display:none}
+.masthead.collapsed .mast-rail{display:flex;flex-direction:column;align-items:stretch;height:100%}
+.mr-x{padding:10px 0;background:transparent;border:none;border-bottom:2px solid var(--line);font-size:14px;cursor:pointer;color:var(--ink-2)}
+.mr-x:hover{background:var(--ink);color:var(--paper-hi)}
+.mr-chips{display:flex;flex-direction:column;align-items:center;gap:9px;padding:13px 0;flex:1}
+.mr-chip{width:18px;height:18px;background:var(--brandc,#888);border:2px solid transparent;cursor:pointer;padding:0;transition:box-shadow 120ms}
+.mr-chip.active{box-shadow:0 0 0 2px var(--ink)}
+.mr-icons{display:flex;flex-direction:column;border-top:2px solid var(--line)}
+.mr-ic{padding:10px 0;background:transparent;border:none;border-bottom:1px solid var(--line);cursor:pointer;font-size:12px;color:var(--ink-2);transition:all var(--ease)}
+.mr-ic:last-child{border-bottom:none}
+.mr-ic:hover{background:var(--ink);color:var(--paper-hi)}
+/* index collapsed rail */
+.idx-rail{display:none}
+.index.collapsed .index-head,.index.collapsed .stage-filter,.index.collapsed .work-stack{display:none}
+.index.collapsed .idx-rail{display:flex;flex-direction:column;align-items:center;padding:10px 0;gap:10px}
+.idx-rail .vlabel{writing-mode:vertical-rl;font-family:var(--mono);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--ink-3)}
+
+/* GUIDE */
+.g-sec{margin-bottom:20px}
+.g-h{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--accent);margin-bottom:8px;border-bottom:2px solid var(--line);padding-bottom:5px}
+.g-sec p{font-family:var(--serif);font-size:14.5px;line-height:1.62;color:var(--ink-2);margin-bottom:8px}
+.g-sec b{color:var(--ink);font-weight:600}
+.g-stage{display:flex;gap:10px;align-items:flex-start;padding:7px 0;border-bottom:1px solid var(--line)}
+.g-glyph{font-size:14px;width:18px;flex-shrink:0;color:var(--accent)}
+.g-stage b{font-family:var(--d);font-size:14px}
+.g-cap{font-family:var(--mono);font-size:9.5px;letter-spacing:0.3px;text-transform:uppercase;color:var(--ink-3);margin-top:2px;line-height:1.5}
+.g-ops{color:var(--accent)}
+.g-note{font-family:var(--mono)!important;font-size:9.5px!important;letter-spacing:0.3px;text-transform:uppercase;color:var(--ink-3)!important;margin-top:10px;line-height:1.6}
+.g-sec code{font-family:var(--mono);font-size:12px;background:var(--paper);border:1px solid var(--line);padding:1px 4px}
+
+/* LOCAL TRANSCRIPTION (STT) MODEL MANAGER */
+.stt-models{display:flex;flex-direction:column;gap:8px}
+.stt-row{border:2px solid var(--line);padding:9px 11px}
+.stt-top{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.stt-name{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:0.3px;color:var(--ink);flex:1;min-width:120px}
+.stt-size{font-family:var(--mono);font-size:9.5px;color:var(--ink-3)}
+.stt-btn{padding:5px 10px;background:transparent;border:2px solid var(--line);font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:0.5px;text-transform:uppercase;cursor:pointer;color:var(--ink);transition:all var(--ease)}
+.stt-btn:hover{background:var(--ink);color:var(--paper-hi)}
+.stt-btn.active{background:var(--accent);color:var(--paper-hi);border-color:var(--accent)}
+.stt-bar{height:6px;background:var(--paper);border:1px solid var(--line);margin-top:8px;display:none}
+.stt-bar.show{display:block}
+.stt-bar i{display:block;height:100%;background:var(--accent);width:0;transition:width 200ms}
+.stt-status{font-family:var(--mono);font-size:9px;color:var(--ink-3);margin-top:5px;min-height:11px}
+
+/* WORKFLOW EDITOR */
+.wf-modal{width:min(96vw,1480px);height:90vh;min-width:720px;min-height:460px;max-width:98vw;max-height:96vh;display:flex;flex-direction:column;resize:both;overflow:hidden}
+.wf-main{grid-template-columns:minmax(200px,260px) 1fr}
+.wf-main{flex:1;display:grid;grid-template-columns:240px 1fr;overflow:hidden;min-height:0}
+.wf-stages,.wf-detail-wrap{overflow-y:auto;scrollbar-width:thin;scrollbar-color:var(--ink-3) transparent}
+.wf-stages{border-right:2px solid var(--line);display:flex;flex-direction:column}
+.wf-section-h{font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--ink-3);padding:11px 13px 7px}
+.wf-srow{display:flex;align-items:center;gap:5px;padding:8px 11px;border-bottom:1px solid var(--line);cursor:pointer}
+.wf-srow:hover{background:var(--card)}
+.wf-srow.sel{background:var(--ink);color:var(--paper-hi)}
+.wf-srow .g{width:16px;text-align:center;flex-shrink:0;font-size:12px}
+.wf-srow .t{flex:1;font-family:var(--d);font-weight:600;font-size:13px;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.wf-mini{background:transparent;border:none;color:inherit;cursor:pointer;font-size:11px;opacity:0.55;padding:0 2px;font-family:var(--mono)}
+.wf-mini:hover{opacity:1}
+.wf-add{margin:9px 11px;padding:8px;border:2px dashed var(--line);background:transparent;font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--ink-2);cursor:pointer}
+.wf-add:hover{background:var(--ink);color:var(--paper-hi);border-style:solid}
+.wf-detail{padding:14px 16px}
+.wf-fld{margin-bottom:12px}
+.wf-fld label{display:block;font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--ink-3);margin-bottom:5px}
+.wf-in{width:100%;padding:8px 10px;background:var(--paper);border:2px solid var(--line);font-family:var(--mono);font-size:12px;color:var(--ink);outline:none}
+.wf-in:focus{border-color:var(--accent)}
+.wf-ta{width:100%;min-height:150px;padding:10px 12px;background:var(--paper);border:2px solid var(--line);font-family:var(--mono);font-size:12px;line-height:1.55;color:var(--ink);outline:none;resize:vertical;white-space:pre-wrap}
+.wf-ta:focus{border-color:var(--accent)}
+.wf-row2{display:flex;gap:10px}
+.wf-kind{display:flex;border:2px solid var(--line);width:fit-content}
+.wf-kind button{padding:7px 11px;background:transparent;border:none;border-right:2px solid var(--line);font-family:var(--mono);font-size:9.5px;font-weight:700;text-transform:uppercase;cursor:pointer;color:var(--ink-2)}
+.wf-kind button:last-child{border-right:none}
+.wf-kind button.on{background:var(--accent);color:var(--paper-hi)}
+.wf-tokens{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px}
+.wf-tok{font-family:var(--mono);font-size:9.5px;padding:2px 6px;border:1.5px solid var(--line);cursor:pointer;color:var(--ink-2)}
+.wf-tok:hover{background:var(--accent);color:var(--paper-hi);border-color:var(--accent)}
+.wf-detail-head{display:flex;align-items:center;gap:8px;margin:16px 0 12px;padding-top:14px;border-top:2px solid var(--line)}
+.wf-detail-head .k{font-family:var(--mono);font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--accent);font-weight:700;flex:1}
+.wf-gen{padding:6px 11px;background:var(--ink);color:var(--paper-hi);border:none;font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:0.5px;text-transform:uppercase;cursor:pointer}
+.wf-gen:hover{background:var(--accent)}
+.wf-notes-toggle{font-family:var(--mono);font-size:9px;letter-spacing:1px;text-transform:uppercase;color:var(--accent);cursor:pointer;margin-bottom:12px;display:inline-block}
+.wf-foot{display:flex;align-items:center;gap:8px;padding:11px 14px;border-top:2px solid var(--line);flex-shrink:0;flex-wrap:wrap}
+.wf-fbtn{padding:8px 13px;background:transparent;border:2px solid var(--line);font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:0.5px;text-transform:uppercase;cursor:pointer;color:var(--ink)}
+.wf-fbtn:hover{background:var(--ink);color:var(--paper-hi)}
+.wf-save{margin-left:auto;padding:8px 18px;background:var(--ink);color:var(--paper-hi);border:2px solid var(--ink);font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;box-shadow:3px 3px 0 var(--accent);transition:transform 120ms,box-shadow 120ms}
+.wf-save:hover{transform:translate(-2px,-2px);box-shadow:5px 5px 0 var(--accent)}
+.wf-results{max-height:32vh;overflow-y:auto;border-top:2px solid var(--line);padding:12px 14px;display:none;background:var(--paper);flex-shrink:0}
+.wf-results.show{display:block}
+.wf-results-h{display:flex;align-items:center;gap:8px;margin-bottom:10px;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--accent)}
+.wf-finding{border:2px solid var(--line);padding:9px 11px;margin-bottom:8px}
+.wf-finding .sev{font-family:var(--mono);font-size:8.5px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:1px 5px;border:1.5px solid currentColor;margin-right:7px}
+.wf-finding .where{font-family:var(--mono);font-size:10px;color:var(--ink-3)}
+.wf-finding .issue{font-family:var(--serif);font-size:13.5px;line-height:1.5;margin-top:5px;color:var(--ink-2)}
+.wf-apply{margin-top:8px;padding:5px 10px;background:transparent;border:2px solid var(--line);font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:0.5px;text-transform:uppercase;cursor:pointer;color:var(--ink)}
+.wf-apply:hover{background:var(--accent);color:var(--paper-hi);border-color:var(--accent)}
+
+/* DESK */
+.desk{width:0;overflow:hidden;border-left:0 solid var(--line);transition:width 260ms cubic-bezier(0.2,0,0,1);flex-shrink:0;background:var(--paper);display:flex;flex-direction:column;position:relative}
+.desk.open{width:var(--desk-w,344px);border-left-width:2px}
+.desk.noanim{transition:none}
+.desk-in{width:100%;min-width:260px;display:flex;flex-direction:column;height:100%;overflow:hidden}
+.desk-head{padding:15px 16px 13px;border-bottom:2px solid var(--line);flex-shrink:0}
+.desk-kicker{font-family:var(--mono);font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--ink-3);margin-bottom:5px;display:flex;align-items:center;gap:7px}
+.live-dot{width:7px;height:7px;background:var(--accent);border-radius:50%;animation:blink 2.4s ease-in-out infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.2}}
+.desk-title{font-family:var(--d);font-weight:800;font-size:22px;letter-spacing:-0.8px;text-transform:uppercase;line-height:0.95;display:flex;align-items:baseline;gap:8px}
+.desk-stage-tag{font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:1px;color:var(--accent);text-transform:uppercase}
+.vp-block{margin:13px 16px;border:2px solid var(--line);flex-shrink:0}
+.vp-bar{background:var(--accent);color:var(--paper-hi);font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;padding:5px 10px;transition:background var(--ease)}
+.vp-body{padding:9px 11px;font-family:var(--serif);font-size:12.5px;line-height:1.5;color:var(--ink-2);display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.desk-actions{padding:2px 16px 13px;display:flex;flex-direction:column;gap:7px;flex-shrink:0;border-bottom:2px solid var(--line);max-height:38vh;overflow-y:auto;scrollbar-width:none}
+.desk-actions::-webkit-scrollbar{display:none}
+.act{padding:10px 12px;border:2px solid var(--line);font-family:var(--mono);font-size:10.5px;font-weight:700;letter-spacing:0.5px;text-transform:uppercase;cursor:pointer;transition:all var(--ease);display:flex;align-items:center;gap:9px;text-align:left}
+.act.pri{background:var(--accent);color:var(--paper-hi);border-color:var(--accent);box-shadow:3px 3px 0 var(--ink)}
+.act.pri:hover{transform:translate(-2px,-2px);box-shadow:5px 5px 0 var(--ink)}
+.act.pri:active{transform:translate(0,0)}
+.act.sec{background:transparent;color:var(--ink)}
+.act.sec:hover{background:var(--ink);color:var(--paper-hi)}
+.act:disabled{opacity:0.4;cursor:not-allowed;pointer-events:none}
+.act-glyph{font-size:12px;flex-shrink:0}
+.advance{margin:0 16px 13px;padding:10px;border:2px dashed var(--line);background:transparent;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--ink-2);cursor:pointer;transition:all var(--ease);flex-shrink:0}
+.advance:hover{background:var(--ink);color:var(--paper-hi);border-style:solid}
+.out-wrap{flex:1;overflow-y:auto;padding:15px 16px;scrollbar-width:thin;scrollbar-color:var(--ink-3) transparent}
+.out{font-family:var(--serif);font-size:14px;line-height:1.62;color:var(--ink-2);white-space:pre-wrap}
+.out.empty{font-family:var(--mono);font-size:10px;letter-spacing:0.5px;text-transform:uppercase;color:var(--ink-3);line-height:1.9}
+.desk-foot{display:flex;border-top:2px solid var(--line);flex-shrink:0}
+.foot-btn{flex:1;padding:11px;background:transparent;border:none;border-right:2px solid var(--line);font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--ink-2);cursor:pointer;transition:all var(--ease)}
+.foot-btn:last-child{border-right:none}
+.foot-btn:hover{background:var(--ink);color:var(--paper-hi)}
+
+/* MODAL + TOAST */
+.overlay{position:fixed;inset:0;background:rgba(21,17,10,0.55);backdrop-filter:blur(2px);display:flex;align-items:center;justify-content:center;z-index:1000;opacity:0;pointer-events:none;transition:opacity var(--ease)}
+.overlay.open{opacity:1;pointer-events:all}
+.modal{width:520px;background:var(--paper-hi);border:2px solid var(--line);box-shadow:8px 8px 0 var(--ink);transform:translate(6px,6px);transition:transform 200ms cubic-bezier(0.2,0,0,1)}
+.overlay.open .modal{transform:translate(0,0)}
+.modal-head{display:flex;align-items:stretch;border-bottom:2px solid var(--line);height:42px}
+.modal-title{padding:0 16px;display:flex;align-items:center;font-family:var(--d);font-weight:800;font-size:16px;letter-spacing:-0.4px;text-transform:uppercase}
+.modal-brand{margin-left:auto;padding:0 14px;display:flex;align-items:center;background:var(--accent);color:var(--paper-hi);font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:1px;text-transform:uppercase;transition:background var(--ease)}
+.modal-x{padding:0 16px;background:transparent;border:none;border-left:2px solid var(--line);font-size:15px;cursor:pointer;color:var(--ink);transition:all var(--ease)}
+.modal-x:hover{background:var(--ink);color:var(--paper-hi)}
+.modal-body{padding:16px}
+.cap-ta{width:100%;height:140px;min-height:90px;background:var(--paper);border:2px solid var(--line);color:var(--ink);font-family:var(--serif);font-size:15px;line-height:1.6;padding:12px 14px;resize:vertical;outline:none}
+.cap-ta::placeholder{color:var(--ink-3);font-style:italic}
+.cap-foot{margin-top:14px;display:flex;align-items:center;gap:10px}
+.rec-btn{padding:9px 14px;background:transparent;border:2px solid var(--line);font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;cursor:pointer;color:var(--ink);transition:all var(--ease);display:flex;align-items:center;gap:7px}
+.rec-btn:hover{background:var(--ink);color:var(--paper-hi)}
+.rec-btn.rec{background:var(--accent);color:var(--paper-hi);border-color:var(--accent);animation:blink 1.2s ease-in-out infinite}
+.rec-status{font-family:var(--mono);font-size:10px;color:var(--ink-3)}
+.save-cap{margin-left:auto;padding:9px 20px;background:var(--ink);color:var(--paper-hi);border:2px solid var(--ink);font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;box-shadow:3px 3px 0 var(--accent);transition:all var(--ease)}
+.save-cap:hover{transform:translate(-2px,-2px);box-shadow:5px 5px 0 var(--accent)}
+.toast{position:fixed;bottom:22px;right:22px;background:var(--ink);color:var(--paper-hi);border:2px solid var(--ink);box-shadow:4px 4px 0 var(--accent);padding:12px 18px;font-family:var(--mono);font-size:10.5px;font-weight:700;letter-spacing:1px;text-transform:uppercase;z-index:2000;transform:translateY(70px);opacity:0;transition:all 260ms cubic-bezier(0.2,0,0,1);pointer-events:none}
+.set-modal{width:600px;max-width:96vw;max-height:92vh;min-width:420px;min-height:340px;display:flex;flex-direction:column;resize:both;overflow:hidden}
+.set-body{flex:1;min-height:0;overflow-y:auto;scrollbar-width:thin;scrollbar-color:var(--ink-3) transparent}
+.set-row{margin-bottom:15px}
+.set-label{display:block;font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--ink-3);margin-bottom:6px}
+.set-input,.set-select{width:100%;padding:9px 11px;background:var(--paper);border:2px solid var(--line);font-family:var(--mono);font-size:12px;color:var(--ink);outline:none;transition:border-color var(--ease)}
+.set-input:focus,.set-select:focus{border-color:var(--accent)}
+.set-hint{font-family:var(--mono);font-size:9px;letter-spacing:0.5px;text-transform:uppercase;color:var(--ink-3);margin-top:5px}
+.set-stage-row{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+.set-stage-name{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;width:84px;flex-shrink:0;color:var(--ink-2)}
+.set-stage-row .set-input{flex:1}
+.set-section{font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--accent);margin:18px 0 13px;padding-top:14px;border-top:2px solid var(--line)}
+.set-section:first-child{padding-top:0;border-top:none;margin-top:0}
+.toast.show{transform:translateY(0);opacity:1}
+.spin{display:inline-block;width:11px;height:11px;border:2px solid rgba(244,241,231,0.35);border-top-color:var(--paper-hi);border-radius:50%;animation:spin 0.6s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.mode-tabs{display:flex;height:100%}
+.mode-tab{padding:0 13px;height:100%;background:transparent;border:none;border-right:2px solid var(--line);font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--ink-3);cursor:pointer;transition:all var(--ease)}
+.mode-tab:hover{background:var(--card);color:var(--ink)}
+.mode-tab.active{background:var(--ink);color:var(--paper-hi)}
+.view{max-width:740px;margin:0 auto;padding:40px 56px 120px}
+.view-kicker{font-family:var(--mono);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--accent);font-weight:700;margin-bottom:16px;display:flex;align-items:center;gap:10px}
+.view-kicker::after{content:'';flex:1;height:2px;background:var(--line)}
+.view-title{font-family:var(--d);font-weight:800;font-size:40px;line-height:0.98;letter-spacing:-1.4px;margin-bottom:8px;text-transform:uppercase}
+.view-sub{font-family:var(--mono);font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--ink-3);border-bottom:2px solid var(--line);padding-bottom:16px;margin-bottom:24px}
+.voice-ta{width:100%;min-height:220px;background:var(--paper);border:2px solid var(--line);padding:16px 18px;font-family:var(--serif);font-size:17px;line-height:1.6;color:var(--ink);outline:none;resize:vertical}
+.voice-ta:focus{border-color:var(--accent)}
+.btn-ink{margin-top:16px;padding:11px 22px;background:var(--ink);color:var(--paper-hi);border:2px solid var(--ink);font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;box-shadow:3px 3px 0 var(--accent);transition:all var(--ease)}
+.btn-ink:hover{transform:translate(-2px,-2px);box-shadow:5px 5px 0 var(--accent)}
+.ctx-add{margin-bottom:18px;padding:10px 16px;background:transparent;color:var(--ink);border:2px dashed var(--line);font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;cursor:pointer;transition:all var(--ease)}
+.ctx-add:hover{background:var(--ink);color:var(--paper-hi);border-style:solid}
+.ctx-card{border:2px solid var(--line);margin-bottom:14px}
+.ctx-card-head{display:flex;align-items:stretch;border-bottom:2px solid var(--line)}
+.ctx-name{flex:1;padding:9px 12px;background:var(--paper);border:none;font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:0.5px;text-transform:uppercase;color:var(--ink);outline:none}
+.ctx-del{padding:0 14px;background:transparent;border:none;border-left:2px solid var(--line);cursor:pointer;color:var(--ink);font-size:13px;transition:all var(--ease)}
+.ctx-del:hover{background:var(--accent);color:var(--paper-hi)}
+.ctx-body{width:100%;min-height:120px;background:var(--paper-hi);border:none;padding:12px 14px;font-family:var(--serif);font-size:15px;line-height:1.55;color:var(--ink);outline:none;resize:vertical}
+.ctx-save{width:100%;padding:8px;background:transparent;border:none;border-top:2px solid var(--line);font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--ink-2);cursor:pointer;transition:all var(--ease)}
+.ctx-save:hover{background:var(--ink);color:var(--paper-hi)}
+.ctx-empty{font-family:var(--mono);font-size:10.5px;letter-spacing:0.5px;text-transform:uppercase;color:var(--ink-3);line-height:1.9;padding:20px 0}
+.ctx-toggle{margin:0 16px 13px;padding:8px 11px;border:2px solid var(--line);background:transparent;font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--ink-2);cursor:pointer;transition:all var(--ease);display:flex;align-items:center;justify-content:space-between;gap:8px;flex-shrink:0}
+.ctx-toggle:hover{border-color:var(--accent)}
+.ctx-toggle.on{background:var(--ink);color:var(--paper-hi);border-color:var(--ink)}
+.ctx-toggle .pip{font-family:var(--mono);font-size:9px;padding:1px 6px;border:1.5px solid currentColor}
+::-webkit-scrollbar{width:8px;height:8px}::-webkit-scrollbar-track{background:var(--paper)}::-webkit-scrollbar-thumb{background:var(--ink-3)}
+</style>
+</head>
+<body>
+<div class="grain"></div>
+<div class="shell">
+  <div class="issue-bar">
+    <div class="issue-seg">ContentOS</div>
+    <div class="issue-seg">Issue Nº01</div>
+    <div class="issue-seg accentseg" id="issueBrand">VICTOR CHAIDEZ</div>
+    <div class="issue-spacer"></div>
+    <div class="issue-clock" id="issueClock">—</div>
+  </div>
+  <div class="app">
+    <aside class="masthead collapsed" id="masthead">
+      <div class="wordmark"><div class="wm-top">CONTENT</div><div class="wm-bot">OS</div></div>
+      <div class="kicker" style="display:flex;align-items:center;justify-content:space-between;gap:8px">Workspaces — Siloed <button class="panel-x" onclick="toggleMasthead()" title="Collapse">‹</button></div>
+      <div class="brand-stack" id="brandStack"></div>
+      <div class="masthead-foot">
+        <button class="master-row" onclick="openMaster()">◈ Master Context <span style="margin-left:auto;opacity:0.6" id="masterCount">—</span></button>
+        <div class="mast-icons">
+          <button class="mast-icon" title="Guide" onclick="openGuide()">?</button>
+          <button class="mast-icon" title="Workflow editor" onclick="openWorkflow()">🛠</button>
+          <button class="mast-icon" title="Settings" onclick="openSettings()">⚙</button>
+          <button class="mast-icon" title="Vault" onclick="openVault()">🗂</button>
+          <button class="mast-icon" title="Published" onclick="openPublished()">✓</button>
+        </div>
+      </div>
+      <div class="mast-rail" id="mastRail"></div>
+      <div class="rz" id="mhRz" onmousedown="startRz(event,'masthead')"></div>
+    </aside>
+    <aside class="index" id="index">
+      <div class="index-head">
+        <div class="index-kicker" style="display:flex;align-items:center;justify-content:space-between;gap:8px">The Index <button class="panel-x" onclick="toggleIndex()" title="Collapse">‹</button></div>
+        <div class="index-title" id="indexTitle">Victor<br>Chaidez</div>
+        <div class="idx-btns">
+          <button class="capture-btn" onclick="openCapture()">⚡ Capture</button>
+          <button class="new-work" onclick="newWork()" title="New Work">+</button>
+        </div>
+      </div>
+      <div class="stage-filter" id="stageFilter"></div>
+      <div class="work-stack" id="workStack"></div>
+      <div class="idx-rail" id="idxRail"><button class="panel-x" onclick="toggleIndex()" title="Expand">›</button><div class="vlabel">Index</div></div>
+      <div class="rz" id="ixRz" onmousedown="startRz(event,'index')"></div>
+    </aside>
+    <main class="page">
+      <div class="rail" id="rail"></div>
+      <div class="rail-caption" id="railCaption"></div>
+      <div class="page-bar">
+        <div class="mode-tabs">
+          <button class="mode-tab active" id="modeWrite" onclick="switchMode(this,'write')">Write</button>
+          <button class="mode-tab" id="modeVoice" onclick="switchMode(this,'voice')">Voice</button>
+          <button class="mode-tab" id="modeContext" onclick="switchMode(this,'context')">Context</button>
+        </div>
+        <div class="plat-wrap" id="platWrap">
+          <span class="plat-label">Format</span>
+          <button class="plat-btn active" onclick="setPlat(this,'medium')">Medium</button>
+          <button class="plat-btn" onclick="setPlat(this,'reddit')">Reddit</button>
+          <button class="plat-btn" onclick="setPlat(this,'linkedin')">LinkedIn</button>
+          <button class="plat-btn" onclick="setPlat(this,'blog')">Blog</button>
+          <button class="plat-btn" onclick="setPlat(this,'github')">GitHub</button>
+        </div>
+        <div class="page-meta">
+          <div class="meta-cell" id="wc">0 W</div>
+          <button class="ai-toggle on" id="aiToggle" onclick="toggleDesk()">✦ The Desk</button>
+        </div>
+      </div>
+      <div class="page-body">
+        <div class="sheet-wrap">
+          <div class="sheet" id="writeView">
+            <div class="sheet-kicker" id="sheetKicker">Draft — Medium</div>
+            <div class="title-field" id="titleField" contenteditable="true" data-ph="Headline goes here." oninput="onEdit()"></div>
+            <div class="byline" id="byline">By Victor Chaidez — Draft</div>
+            <div class="ed-bar">
+              <div class="toolbar" id="mdToolbar" onmousedown="event.preventDefault()">
+                <button class="tb" onclick="mdWrap('**','**')" style="font-weight:700">B</button>
+                <button class="tb" onclick="mdWrap('_','_')" style="font-style:italic">I</button>
+                <button class="tb" onclick="mdPrefix('## ')">H2</button>
+                <button class="tb" onclick="mdPrefix('- ')">• LIST</button>
+                <button class="tb" onclick="mdPrefix('> ')">QUOTE</button>
+                <button class="tb" onclick="mdWrap('`','`')">CODE</button>
+                <button class="tb" onclick="mdLink()">LINK</button>
+              </div>
+              <div class="ed-modes">
+                <button class="edm" id="edmLive" onclick="setEdMode('live')" title="Live preview — the block you're editing shows Markdown source">Live</button>
+                <button class="edm" id="edmSource" onclick="setEdMode('source')" title="Raw Markdown">Source</button>
+                <button class="edm" id="edmRead" onclick="setEdMode('read')" title="Rendered, read-only">Reading</button>
+              </div>
+            </div>
+            <div class="editor" id="editor"></div>
+          </div>
+          <div class="view" id="voiceView" style="display:none">
+            <div class="view-kicker">Voice Profile</div>
+            <div class="view-title" id="voiceViewTitle">Victor Chaidez</div>
+            <div class="view-sub">Injected into every operation for this brand — this is how The Desk sounds like you.</div>
+            <textarea class="voice-ta" id="voiceTA" placeholder="Describe this brand's voice: tone, perspective, who it speaks to, what it never does…"></textarea>
+            <button class="btn-ink" onclick="saveVoice()">Save Voice Profile</button>
+          </div>
+          <div class="view" id="contextView" style="display:none">
+            <div class="view-kicker">Context Library</div>
+            <div class="view-title" id="contextViewTitle">Victor Chaidez</div>
+            <div class="view-sub">Reference files the AI can draw on — story, facts, past work, style notes. Toggle them on in The Desk.</div>
+            <button class="ctx-add" onclick="addContext()">+ Add context file</button>
+            <div id="ctxList"></div>
+          </div>
+        </div>
+        <div class="desk open" id="desk">
+          <div class="rz rz-left" onmousedown="startRz(event,'desk')"></div>
+          <div class="desk-in">
+            <div class="desk-head">
+              <div class="desk-kicker"><span class="live-dot"></span> claude-sonnet-4 · live</div>
+              <div class="desk-title">The Desk <span class="desk-stage-tag" id="deskStageTag">/ DRAFT</span></div>
+            </div>
+            <div class="vp-block">
+              <div class="vp-bar" id="vpBar">Active Voice — Victor Chaidez</div>
+              <div class="vp-body" id="vpBody">—</div>
+            </div>
+            <button class="ctx-toggle" id="ctxToggle" onclick="toggleContext()">Context Injection <span class="pip" id="ctxPip">OFF · 0</span></button>
+            <button class="ctx-toggle" id="masterToggle" onclick="toggleMaster()" style="margin-top:-7px">◈ Master Context <span class="pip" id="masterPip">OFF · 0</span></button>
+            <button class="ctx-toggle" id="searchToggle" onclick="toggleSearch()" style="margin-top:-7px">⌖ Web Search <span class="pip" id="searchPip">OFF</span></button>
+            <div class="desk-actions" id="deskActions"></div>
+            <button class="advance" id="advanceBtn" onclick="advanceStage()">Advance to next stage →</button>
+            <button class="advance" id="publishBtn" onclick="publishWork()" style="display:none;border-style:solid;background:var(--accent);color:var(--paper-hi);border-color:var(--accent)">✓ Publish — copy + save final</button>
+            <div class="out-wrap"><div class="out empty" id="out">Pick an operation above. The Desk's tools change with each stage of the pipeline.</div></div>
+            <div class="desk-foot">
+              <button class="foot-btn" onclick="useOutput()">↙ Use in Page</button>
+              <button class="foot-btn" onclick="copyOutput()">⎘ Copy</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+<div class="overlay" id="overlay" onclick="overlayClick(event)">
+  <div class="modal">
+    <div class="modal-head">
+      <div class="modal-title">⚡ Quick Capture</div>
+      <div class="modal-brand" id="modalBrand">VICTOR CHAIDEZ</div>
+      <button class="modal-x" onclick="closeCapture()">✕</button>
+    </div>
+    <div class="modal-body">
+      <textarea class="cap-ta" id="capTA" placeholder="Type a note, paste a fragment, dump the thought before it's gone. Lands as a new Spark."></textarea>
+      <div class="cap-foot">
+        <button class="rec-btn" id="recBtn" onclick="toggleRec()" title="Record a voice memo — transcribed locally on-device">⏺ Record</button>
+        <span class="rec-status" id="recStatus"></span>
+        <button class="save-cap" onclick="saveCapture()">Save → Spark</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="overlay" id="setOverlay" onclick="setOverlayClick(event)">
+  <div class="modal set-modal">
+    <div class="modal-head">
+      <div class="modal-title">⚙ Settings</div>
+      <div class="modal-brand" id="setVault">VAULT —</div>
+      <button class="modal-x" onclick="closeSettings()">✕</button>
+    </div>
+    <div class="modal-body set-body">
+      <div class="set-section">Provider &amp; Generation</div>
+      <div class="set-row">
+        <label class="set-label">AI Provider</label>
+        <select class="set-select" id="setProvider" onchange="onProviderChange()">
+          <option value="openrouter">OpenRouter</option>
+          <option value="anthropic">Anthropic (direct)</option>
+          <option value="custom">Custom (OpenAI-compatible)</option>
+        </select>
+      </div>
+      <div class="set-row">
+        <label class="set-label">API Key</label>
+        <input class="set-input" id="setKey" type="password" placeholder="sk-or-… (stored in vault/settings.json)">
+        <div class="set-hint">Written to your vault, never bundled in the app.</div>
+      </div>
+      <div class="set-row">
+        <label class="set-label">Endpoint</label>
+        <input class="set-input" id="setUrl" type="text" placeholder="https://…">
+      </div>
+      <div class="set-row">
+        <label class="set-label">Default Model</label>
+        <input class="set-input" id="setModel" type="text" list="modelList" placeholder="anthropic/claude-sonnet-4">
+        <datalist id="modelList"></datalist>
+        <div class="set-hint">Use "Load models" to pull the live list for this provider.</div>
+      </div>
+      <div class="set-row">
+        <label class="set-label">Max tokens per response</label>
+        <input class="set-input" id="setMaxTokens" type="text" placeholder="4000">
+      </div>
+      <div class="set-row">
+        <label class="set-label">Per-stage model overrides (optional)</label>
+        <div id="setStages"></div>
+      </div>
+      <div class="set-section">Web Search</div>
+      <div class="set-row">
+        <label class="set-label">Tavily API key (optional)</label>
+        <input class="set-input" id="setSearchKey" type="password" placeholder="tvly-…">
+        <div class="set-hint">OpenRouter & Anthropic search natively (no key needed). Other providers use this Tavily key.</div>
+      </div>
+      <div class="set-section">Local Transcription · offline voice → text</div>
+      <div class="set-row">
+        <div id="sttModels" class="stt-models"></div>
+        <div class="set-hint">Models download once and run fully on-device. Used by the ⏺ Record button in Capture.</div>
+      </div>
+      <div class="set-row" style="display:flex;gap:8px">
+        <button class="new-work" style="flex:1" onclick="testConnection()">Test connection</button>
+        <button class="new-work" style="flex:1" onclick="loadModels()">Load models ▾</button>
+      </div>
+      <div class="cap-foot">
+        <span class="rec-status" id="setStatus"></span>
+        <button class="save-cap" onclick="saveSettings()">Save Settings</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="overlay" id="pubOverlay" onclick="pubOverlayClick(event)">
+  <div class="modal set-modal">
+    <div class="modal-head">
+      <div class="modal-title">✓ Published</div>
+      <div class="modal-brand" id="pubBrand">VICTOR CHAIDEZ</div>
+      <button class="modal-x" onclick="closePublished()">✕</button>
+    </div>
+    <div class="modal-body set-body" id="pubBody"></div>
+  </div>
+</div>
+<div class="overlay" id="masterOverlay" onclick="masterOverlayClick(event)">
+  <div class="modal set-modal">
+    <div class="modal-head">
+      <div class="modal-title">◈ Master Context</div>
+      <div class="modal-brand" style="background:var(--ink)">CROSS-BRAND</div>
+      <button class="modal-x" onclick="closeMaster()">✕</button>
+    </div>
+    <div class="modal-body set-body">
+      <div class="set-hint" style="margin-bottom:14px;line-height:1.6">Shared across every brand — the one place context crosses silos. Toggle it on per-operation in The Desk. Use sparingly.</div>
+      <button class="ctx-add" onclick="addMaster()">+ Add master file</button>
+      <div id="masterList"></div>
+    </div>
+  </div>
+</div>
+<div class="overlay" id="inputOverlay" onclick="inputOverlayClick(event)">
+  <div class="modal" style="width:420px">
+    <div class="modal-head">
+      <div class="modal-title" id="inputTitle">Name</div>
+      <button class="modal-x" onclick="closeInput()">✕</button>
+    </div>
+    <div class="modal-body">
+      <input class="set-input" id="inputField" type="text" onkeydown="inputKey(event)">
+      <div class="cap-foot">
+        <span class="rec-status" id="inputHint"></span>
+        <button class="save-cap" onclick="submitInput()">OK</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="overlay" id="wfOverlay" onclick="wfOverlayClick(event)">
+  <div class="modal wf-modal">
+    <div class="modal-head">
+      <div class="modal-title">🛠 Workflow Editor</div>
+      <div class="modal-brand" id="wfDirty" style="background:var(--ink)">SAVED</div>
+      <button class="modal-x" onclick="wfClose()">✕</button>
+    </div>
+    <div class="wf-main">
+      <div class="wf-stages" id="wfStages"></div>
+      <div class="wf-detail-wrap" id="wfDetail"></div>
+    </div>
+    <div class="wf-results" id="wfResults"></div>
+    <div class="wf-foot">
+      <button class="wf-fbtn" onclick="wfReset()">Reset to default</button>
+      <button class="wf-fbtn" onclick="wfAudit()">⚖ Audit workflow</button>
+      <button class="wf-fbtn" onclick="wfSuggest()">✨ Suggest stages/tasks</button>
+      <button class="wf-save" onclick="wfSave()">Save workflow</button>
+    </div>
+  </div>
+</div>
+<div class="overlay" id="guideOverlay" onclick="guideOverlayClick(event)">
+  <div class="modal set-modal" style="width:640px">
+    <div class="modal-head">
+      <div class="modal-title">? How ContentOS works</div>
+      <button class="modal-x" onclick="closeGuide()">✕</button>
+    </div>
+    <div class="modal-body set-body" id="guideBody"></div>
+    <div class="modal-body" style="border-top:2px solid var(--line);display:flex;padding-top:14px"><button class="save-cap" style="margin-left:auto" onclick="closeGuide()">Got it →</button></div>
+  </div>
+</div>
+<div class="overlay" id="vaultOverlay" onclick="vaultOverlayClick(event)">
+  <div class="modal">
+    <div class="modal-head">
+      <div class="modal-title">🗂 Vault</div>
+      <button class="modal-x" onclick="closeVault()">✕</button>
+    </div>
+    <div class="modal-body">
+      <label class="set-label">Current vault folder</label>
+      <div id="vaultPath" style="font-family:var(--mono);font-size:11px;line-height:1.5;word-break:break-all;border:2px solid var(--line);background:var(--paper);padding:10px 12px;margin-bottom:14px">—</div>
+      <div style="display:flex;gap:8px">
+        <button class="new-work" style="flex:1" onclick="revealVaultFromModal()">Reveal in Finder</button>
+        <button class="new-work" style="flex:1" onclick="doChangeVault()">Change vault…</button>
+      </div>
+      <div class="set-hint" style="margin-top:10px;line-height:1.6">Your files live here as plain Markdown + JSON. Changing the vault reloads everything from the new folder.</div>
+    </div>
+  </div>
+</div>
+<div id="memBanner" style="display:none;position:fixed;bottom:22px;left:22px;z-index:2000;background:var(--accent);color:var(--paper-hi);border:2px solid var(--ink);box-shadow:4px 4px 0 var(--ink);padding:9px 14px;font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:1px;text-transform:uppercase;max-width:300px;line-height:1.55;cursor:pointer" onclick="this.style.display='none'"></div>
+<div class="toast" id="toast"></div>
+
+<script src="bridge.js"></script>
+<script>
+/* ============================================================
+   PIPELINE — the orchestration model. Stages and their AI
+   operations are pure data. Add/remove stages or ops here and
+   the entire UI (rail, filters, Desk) adapts. ctx gives each
+   prompt the brand voice, work content, and chosen format.
+   ============================================================ */
+/* DEFAULT_PIPELINE — the shipped workflow. Op `prompt`s are string TEMPLATES with
+   {{tokens}} ({{text}} {{brand}} {{voiceLine}} {{platform}} {{guide}}) so they can be
+   edited, persisted to the vault, and AI-generated. The live PIPELINE is seeded from
+   this and overridden by vault/pipeline.json. PIPELINE stays "data, not code". */
+const DEFAULT_PIPELINE=[
+  {id:'spark',label:'Spark',glyph:'✶',caption:'Capture the raw idea — no judgment yet.',ops:[
+    {id:'angles',label:'Find the angles',glyph:'✶',kind:'pri',prompt:"{{voiceLine}}\nHere is a raw spark:\n\n{{text}}\n\nBrainstorm 5 distinct angles or directions this could become, each one sentence. Punchy. No preamble."},
+    {id:'thread',label:'Find the strongest thread',glyph:'→',kind:'sec',prompt:"{{voiceLine}}\nRaw spark:\n\n{{text}}\n\nIdentify the single strongest narrative thread worth pursuing and explain in 2-3 sentences why it lands for this audience."},
+    {id:'questions',label:'Questions to answer',glyph:'?',kind:'sec',prompt:"{{voiceLine}}\nSpark:\n\n{{text}}\n\nList the 5 questions a reader will want answered if I write this. No preamble."}
+  ]},
+  {id:'research',label:'Research',glyph:'◎',caption:'Gather the angles, points, and counterpoints.',ops:[
+    {id:'outline',label:'Build an outline',glyph:'◎',kind:'pri',prompt:"{{voiceLine}}\nTopic / notes:\n\n{{text}}\n\nBuild a tight outline for a {{platform}} piece. Use H2-style section headers and one line under each. No preamble."},
+    {id:'points',label:'Core points to make',glyph:'•',kind:'sec',prompt:"{{voiceLine}}\nNotes:\n\n{{text}}\n\nExtract the 4-6 core arguments this piece must make, ranked by impact."},
+    {id:'counter',label:'Counterpoints & gaps',glyph:'⚔',kind:'sec',prompt:"{{voiceLine}}\nNotes:\n\n{{text}}\n\nWhat would a sharp skeptic say against this? List 3-4 counterpoints I should address to make it credible."}
+  ]},
+  {id:'draft',label:'Draft',glyph:'✎',caption:'Shape the first full version in your voice.',ops:[
+    {id:'generate',label:'Generate full draft',glyph:'✦',kind:'pri',prompt:"{{voiceLine}}\nFormat: {{platform}}. {{guide}}\n\nFrom these notes, write a polished, publication-ready draft for {{brand}}. Apply the voice naturally. Write only the content, no preamble:\n\n{{text}}"},
+    {id:'expand',label:'Expand & deepen',glyph:'+',kind:'sec',prompt:"{{voiceLine}}\nFormat: {{platform}}.\n\nTake this draft and deepen it — add specificity, concrete detail, and texture without padding. Return the improved version:\n\n{{text}}"},
+    {id:'restructure',label:'Restructure for flow',glyph:'⤵',kind:'sec',prompt:"{{voiceLine}}\n\nReorganize this draft for the strongest narrative flow. Keep the voice. Return only the restructured version:\n\n{{text}}"}
+  ]},
+  {id:'optimize',label:'Optimize',glyph:'◇',caption:'Sharpen for discovery — SEO and AI-search (AIO).',ops:[
+    {id:'titles',label:'Headline options',glyph:'◇',kind:'pri',prompt:"{{voiceLine}}\nFor a {{platform}} piece below, write 7 headline options: a mix of curiosity, clarity, and SEO-strength. Number them. Then mark which one you'd pick and why in one line.\n\n{{text}}"},
+    {id:'meta',label:'SEO meta description',glyph:'≡',kind:'sec',prompt:"Write a compelling 150-character SEO meta description for this piece. Return only the description:\n\n{{text}}"},
+    {id:'keywords',label:'Keywords & entities',glyph:'#',kind:'sec',prompt:"Extract target SEO keywords and the named entities/topics an AI answer-engine would index for this piece. Group as KEYWORDS and ENTITIES.\n\n{{text}}"},
+    {id:'aio',label:'AI-search rewrite (AIO)',glyph:'✷',kind:'sec',prompt:"Rewrite the opening 2 paragraphs so an AI answer-engine (ChatGPT, Perplexity, Google AI) would cite this as a clear, authoritative source — direct, factual, quotable. Return only the rewritten opening:\n\n{{text}}"}
+  ]},
+  {id:'polish',label:'Polish',glyph:'◆',caption:'Tighten the prose and lock the voice.',ops:[
+    {id:'lineedit',label:'Line edit',glyph:'◆',kind:'pri',prompt:"{{voiceLine}}\nLine-edit this for rhythm, clarity, and punch. Keep my voice; cut clichés and hedging. Return only the edited version:\n\n{{text}}"},
+    {id:'voicecheck',label:'Voice check',glyph:'♪',kind:'sec',prompt:"{{voiceLine}}\nReview the draft below against that voice. Flag any lines that sound off-brand or generic, and suggest a fix for each. Be specific.\n\n{{text}}"},
+    {id:'cut',label:'Cut 20%',glyph:'✂',kind:'sec',prompt:"Cut roughly 20% of this without losing meaning or voice. Tighter is better. Return only the trimmed version:\n\n{{text}}"}
+  ]},
+  {id:'distribute',label:'Distribute',glyph:'⇄',caption:'Adapt into platform-native posts, quotes, and comments.',ops:[
+    {id:'adapt',label:'Adapt for format',glyph:'⇄',kind:'pri',prompt:"{{voiceLine}}\nAdapt the piece below into a native {{platform}} post. {{guide}}\nReturn only the adapted version:\n\n{{text}}"},
+    {id:'teaser',label:'Social teaser',glyph:'❯',kind:'sec',prompt:"{{voiceLine}}\nWrite a short, scroll-stopping social teaser that drives clicks to this piece. 2-3 lines.\n\n{{text}}"},
+    {id:'quotes',label:'Pull-quotes',glyph:'❝',kind:'sec',prompt:"Extract 4 short, shareable pull-quotes from this piece. One line each.\n\n{{text}}"},
+    {id:'comments',label:'Comment seeds',glyph:'❮',kind:'sec',prompt:"{{voiceLine}}\nDraft 3 thoughtful comment/reply seeds I can use to spark discussion when this is posted. Conversational, not promotional.\n\n{{text}}"}
+  ]},
+  {id:'ship',label:'Ship',glyph:'✓',caption:'Final review, then it goes out the door.',ops:[
+    {id:'check',label:'Pre-flight checklist',glyph:'✓',kind:'pri',prompt:"Give a tight pre-publish checklist for this {{platform}} piece: headline, hook, structure, CTA, formatting. Mark each PASS or FIX with one line.\n\n{{text}}"},
+    {id:'summary',label:'One-line summary',glyph:'≈',kind:'sec',prompt:"Write a single sharp sentence summarizing this piece, for my own archive.\n\n{{text}}"}
+  ]}
+];
+function clonePipeline(p){return JSON.parse(JSON.stringify(p));}
+let PIPELINE=clonePipeline(DEFAULT_PIPELINE);
+let pipelineNotes='';
+function stageIndex(id){const i=PIPELINE.findIndex(s=>s.id===id);return i<0?0:i;}
+function fillTemplate(tpl,ctx){return String(tpl==null?'':tpl).replace(/\{\{(\w+)\}\}/g,(m,k)=>ctx[k]!=null?ctx[k]:'');}
+
+const platformGuide={
+  medium:'Long-form, narrative, H2 headers, 600-1500 words.',
+  reddit:'Conversational, direct, no fluff, leads with the point.',
+  linkedin:'150-300 words, bold opener, short paragraphs, ends with an insight.',
+  blog:'Practical, clear structure, H2 headers, human-first.',
+  github:'Technical, structured, code blocks where relevant, honest tradeoffs.'
+};
+
+const brands={
+  victor:{id:'victor',name:'Victor Chaidez',titleHTML:'Victor<br>Chaidez',tag:'Personal',accent:'#E5330C',accentSoft:'rgba(229,51,12,0.12)',voice:'Direct, analytical, veteran. US Army vet turned remote consultant, slow-traveling Europe with wife and dog. Real numbers, no BS, earned the hard way.'},
+  bricks:{id:'bricks',name:'Bricks & Borders',titleHTML:'Bricks &amp;<br>Borders',tag:'Travel/expat',accent:'#0E7A52',accentSoft:'rgba(14,122,82,0.12)',voice:'Warm, adventurous, practical. US expat crossing borders slowly with Gina and Buddy the dog. Real costs, real logistics, beautiful chaos.'},
+  zedia:{id:'zedia',name:'ZediaLabs',titleHTML:'Zedia<br>Labs',tag:'AI products',accent:'#1452E8',accentSoft:'rgba(20,82,232,0.12)',voice:'Technical, builder-focused, irreverent. Show the code, show the receipts. No vaporware. Tools that matter in the AI era.'},
+  zediatech:{id:'zediatech',name:'ZediaTech',titleHTML:'Zedia<br>Tech',tag:'Genesys',accent:'#7A2BD6',accentSoft:'rgba(122,43,214,0.12)',voice:'Professional, precise, authoritative. 10 years of Genesys Cloud expertise. For ops directors and contact center managers who need real solutions.'}
+};
+
+let works={
+  victor:[
+    {id:'w1',title:'Living on $100K with $30K in debt abroad',body:'',stage:'draft',updated:'Today'},
+    {id:'w2',title:'The real cost of slow travel in Europe',body:'',stage:'optimize',updated:'May 28'},
+    {id:'w3',title:'',body:'Voice memo: thoughts on FEIE vs FTC and what I keep getting wrong',stage:'spark',updated:'Today'}
+  ],
+  bricks:[
+    {id:'b1',title:'Albania month one — the honest review',body:'',stage:'polish',updated:'May 30'},
+    {id:'b2',title:'Traveling the Balkans with a dog',body:'',stage:'draft',updated:'May 25'}
+  ],
+  zedia:[
+    {id:'z1',title:"I shipped LEDGER — here's what happened",body:'',stage:'distribute',updated:'Jun 1'},
+    {id:'z2',title:'Why I chose Tauri over Electron',body:'',stage:'research',updated:'Today'},
+    {id:'z3',title:'',body:'ContentOS concept — orchestration not organization',stage:'spark',updated:'Today'}
+  ],
+  zediatech:[
+    {id:'t1',title:'Genesys Cloud reporting — the missing manual',body:'',stage:'draft',updated:'May 20'}
+  ]
+};
+
+let cur='victor',platform='medium',filterStage='all',activeWorkId=null,activeStage='draft',deskOpen=true,busy=false,aiContent='',recording=false,mr=null;
+let SETTINGS={provider:'openrouter',apiKey:'',baseUrl:'https://openrouter.ai/api/v1/chat/completions',models:{default:'anthropic/claude-sonnet-4'}};
+let mode='write',useContext=false,useMaster=false,useSearch=false;
+let contextFiles={victor:[],bricks:[],zedia:[],zediatech:[]};
+let masterFiles=[];
+let edMode='live',mdBody='',liveBlocks=[''],activeBlock=null;
+function providerDefaults(p){if(p==='anthropic')return{baseUrl:'https://api.anthropic.com/v1/messages',model:'claude-sonnet-4-20250514'};if(p==='openrouter')return{baseUrl:'https://openrouter.ai/api/v1/chat/completions',model:'anthropic/claude-sonnet-4'};return{baseUrl:'',model:''};}
+function openSettings(){renderSettings();renderSttModels();document.getElementById('setOverlay').classList.add('open');}
+function closeSettings(){document.getElementById('setOverlay').classList.remove('open');}
+function setOverlayClick(e){if(e.target===e.currentTarget)closeSettings();}
+function onProviderChange(){const p=document.getElementById('setProvider').value;const d=providerDefaults(p);document.getElementById('setUrl').value=d.baseUrl;if(!document.getElementById('setModel').value)document.getElementById('setModel').value=d.model;}
+function renderSettings(){
+  document.getElementById('setVault').textContent='VAULT — '+((window.COS&&window.COS.vault)?'SET':'MEMORY');
+  document.getElementById('setProvider').value=SETTINGS.provider;
+  document.getElementById('setKey').value=SETTINGS.apiKey||'';
+  document.getElementById('setUrl').value=SETTINGS.baseUrl||'';
+  document.getElementById('setModel').value=(SETTINGS.models&&SETTINGS.models.default)||'';
+  document.getElementById('setMaxTokens').value=SETTINGS.maxTokens||'';
+  document.getElementById('setSearchKey').value=SETTINGS.searchKey||'';
+  document.getElementById('setStages').innerHTML=PIPELINE.map(s=>`<div class="set-stage-row"><span class="set-stage-name">${s.label}</span><input class="set-input" list="modelList" data-stage="${s.id}" placeholder="(use default)" value="${(SETTINGS.models&&SETTINGS.models[s.id])||''}"></div>`).join('');
+}
+async function saveSettings(){
+  SETTINGS.provider=document.getElementById('setProvider').value;
+  SETTINGS.apiKey=document.getElementById('setKey').value.trim();
+  SETTINGS.baseUrl=document.getElementById('setUrl').value.trim()||providerDefaults(SETTINGS.provider).baseUrl;
+  const models={default:document.getElementById('setModel').value.trim()||providerDefaults(SETTINGS.provider).model};
+  document.querySelectorAll('#setStages .set-input').forEach(inp=>{const v=inp.value.trim();if(v)models[inp.dataset.stage]=v;});
+  SETTINGS.models=models;
+  SETTINGS.maxTokens=document.getElementById('setMaxTokens').value.trim();
+  SETTINGS.searchKey=document.getElementById('setSearchKey').value.trim();
+  if(window.COS)await window.COS.saveSettings(SETTINGS);
+  document.getElementById('setStatus').textContent='Saved ✓';
+  setTimeout(()=>{document.getElementById('setStatus').textContent='';closeSettings();},700);
+  toast('Settings saved');
+}
+function settingsFromForm(){
+  const provider=document.getElementById('setProvider').value;
+  const apiKey=document.getElementById('setKey').value.trim();
+  const baseUrl=document.getElementById('setUrl').value.trim()||providerDefaults(provider).baseUrl;
+  const model=document.getElementById('setModel').value.trim()||providerDefaults(provider).model;
+  return {provider,apiKey,baseUrl,model};
+}
+async function testConnection(){
+  const s=settingsFromForm();const st=document.getElementById('setStatus');
+  if(!s.apiKey){st.textContent='Add a key first';return;}
+  st.textContent='Testing…';
+  try{
+    let res,d;
+    if(s.provider==='anthropic'){
+      res=await fetch(s.baseUrl,{method:'POST',headers:{'Content-Type':'application/json','x-api-key':s.apiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:s.model,max_tokens:1,messages:[{role:'user',content:'ping'}]})});
+    }else{
+      res=await fetch(s.baseUrl,{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+s.apiKey,'HTTP-Referer':'https://zedialabs.com','X-Title':'ContentOS'},body:JSON.stringify({model:s.model,max_tokens:1,messages:[{role:'user',content:'ping'}]})});
+    }
+    d=await res.json().catch(()=>({}));
+    if(res.ok&&!d.error)st.textContent='Connected ✓';
+    else st.textContent='Failed — '+((d.error&&(d.error.message||d.error))||('HTTP '+res.status));
+  }catch(e){st.textContent='Failed — '+(e.message||'network error');}
+}
+function modelsUrl(s){
+  if(s.provider==='openrouter')return 'https://openrouter.ai/api/v1/models';
+  const u=s.baseUrl||'';
+  if(s.provider==='anthropic')return u.replace(/\/messages$/,'/models')||'https://api.anthropic.com/v1/models';
+  return u.replace(/\/chat\/completions$/,'/models').replace(/\/completions$/,'/models');
+}
+async function loadModels(){
+  const s=settingsFromForm();const st=document.getElementById('setStatus');
+  st.textContent='Loading models…';
+  try{
+    const headers={'Content-Type':'application/json'};
+    if(s.provider==='anthropic'){headers['x-api-key']=s.apiKey;headers['anthropic-version']='2023-06-01';headers['anthropic-dangerous-direct-browser-access']='true';}
+    else if(s.apiKey){headers['Authorization']='Bearer '+s.apiKey;}
+    const res=await fetch(modelsUrl(s),{headers});
+    const d=await res.json().catch(()=>({}));
+    if(!res.ok){st.textContent='Failed — '+((d.error&&(d.error.message||d.error))||('HTTP '+res.status));return;}
+    const arr=(d.data||d.models||[]).map(m=>(m&&(m.id||m.name))||m).filter(Boolean).sort();
+    if(!arr.length){st.textContent='No models returned';return;}
+    document.getElementById('modelList').innerHTML=arr.map(id=>`<option value="${(''+id).replace(/"/g,'&quot;')}"></option>`).join('');
+    st.textContent=arr.length+' models loaded ▾';
+  }catch(e){st.textContent='Models load failed — '+(e.message||'network');}
+}
+
+function init(){applyUI();renderBrands();renderMastRail();applyTheme();updateHeaders();renderStageFilter();renderWorks();selectFirstWork();updateVP();updateCtxPip();updateMasterCount();updateMasterPip();updateSearchPip();setupSttProgress();tickClock();setInterval(tickClock,30000);}
+function tickClock(){document.getElementById('issueClock').textContent=new Date().toLocaleDateString('en-US',{month:'short',day:'2-digit',year:'numeric'}).toUpperCase();}
+function cap(s){return s.charAt(0).toUpperCase()+s.slice(1);}
+function fmtWhen(v){
+  if(!v)return '';
+  const d=new Date(v);if(isNaN(d))return v; // seed strings ("Today","May 28") pass through
+  const now=new Date(),ms=now-d;
+  if(d.toDateString()===now.toDateString()){if(ms<3600000)return Math.max(1,Math.round(ms/60000))+'m ago';return d.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'});}
+  const yest=new Date(now.getTime()-86400000);if(d.toDateString()===yest.toDateString())return 'Yesterday';
+  return d.toLocaleDateString('en-US',d.getFullYear()===now.getFullYear()?{month:'short',day:'numeric'}:{month:'short',day:'numeric',year:'numeric'});
+}
+
+function renderBrands(){document.getElementById('brandStack').innerHTML=Object.values(brands).map((b,i)=>`<div class="brand-row ${b.id===cur?'active':''}" style="--brandc:${b.accent}" onclick="switchBrand('${b.id}')"><div class="br-head"><span class="br-num">Nº0${i+1}</span><span class="br-sq"></span></div><div class="br-name">${b.name}</div><div class="br-tag">${b.tag} · ${works[b.id].length} works</div></div>`).join('');}
+function switchBrand(id){cur=id;filterStage='all';renderBrands();renderMastRail();applyTheme();updateHeaders();renderStageFilter();renderWorks();selectFirstWork();updateVP();updateCtxPip();if(mode==='voice')renderVoiceView();if(mode==='context')renderContextView();}
+function applyTheme(){const b=brands[cur];document.documentElement.style.setProperty('--accent',b.accent);document.documentElement.style.setProperty('--accent-soft',b.accentSoft);}
+function updateHeaders(){const b=brands[cur];document.getElementById('issueBrand').textContent=b.name.toUpperCase();document.getElementById('indexTitle').innerHTML=b.titleHTML;document.getElementById('modalBrand').textContent=b.name.toUpperCase();document.getElementById('vpBar').textContent='Active Voice — '+b.name;}
+function updateVP(){document.getElementById('vpBody').textContent=brands[cur].voice;}
+
+function renderStageFilter(){
+  const cells=['<button class="sf-btn '+(filterStage==='all'?'active':'')+'" onclick="setFilter(\'all\')">All</button>']
+    .concat(PIPELINE.map(s=>`<button class="sf-btn ${filterStage===s.id?'active':''}" onclick="setFilter('${s.id}')">${s.label}</button>`));
+  document.getElementById('stageFilter').innerHTML=cells.join('');
+}
+function setFilter(s){filterStage=s;renderStageFilter();renderWorks();}
+
+function renderWorks(){
+  let list=works[cur];
+  if(filterStage!=='all')list=list.filter(w=>w.stage===filterStage);
+  const st=document.getElementById('workStack');
+  if(!list.length){st.innerHTML='<div class="work-empty">No works in this stage.<br>Capture a spark to begin.</div>';return;}
+  st.innerHTML=list.map(w=>{
+    const si=PIPELINE.findIndex(s=>s.id===w.stage);
+    const stg=si>=0?PIPELINE[si]:{glyph:'⌫',label:w.stage};
+    const name=w.title||w.body.slice(0,46)||'Untitled spark';
+    return`<div class="work-row ${w.id===activeWorkId?'active':''}" onclick="openWork('${w.id}')"><div class="wr-top"><span class="wr-stage">${stg.glyph} ${stg.label}</span><span class="wr-name">${name}</span></div><div class="wr-meta">Updated ${fmtWhen(w.updated)}</div></div>`;
+  }).join('');
+}
+
+function selectFirstWork(){const list=works[cur];if(list.length)openWork(list[0].id);else{activeWorkId=null;document.getElementById('titleField').innerHTML='';setBodyMd('');}}
+function getWork(){return works[cur].find(w=>w.id===activeWorkId);}
+function openWork(id){
+  saveCurrent();
+  activeWorkId=id;const w=getWork();
+  activeStage=w.stage;
+  document.getElementById('titleField').innerText=w.title;
+  loadWorkBody(w);
+  renderWorks();renderRail();renderDesk();onEdit();
+  document.getElementById('byline').textContent='By '+brands[cur].name+' — '+cap(w.stage);
+}
+function saveCurrent(){const w=getWork();if(!w)return;w.title=document.getElementById('titleField').innerText.trim();w.body=getBodyMd();w.platform=platform;w.updated=new Date().toISOString();if(window.COS)window.COS.saveWork(cur,w);}
+
+/* RAIL */
+function renderRail(){
+  const ci=stageIndex(activeStage);
+  document.getElementById('rail').innerHTML=PIPELINE.map((s,i)=>{
+    let cls=i<ci?'done':(i===ci?'current':'');
+    return`<button class="stage-cell ${cls}" onclick="goStage('${s.id}')"><div class="sc-top"><span class="sc-glyph">${s.glyph}</span><span class="sc-num">0${i+1}</span></div><div class="sc-label">${s.label}</div></button>`;
+  }).join('');
+  const stg=PIPELINE[ci];
+  document.getElementById('railCaption').innerHTML=`<span class="rc-glyph">${stg.glyph}</span><span class="rc-text"><b>${stg.label}</b> — ${stg.caption}</span>`;
+  document.getElementById('sheetKicker').textContent=cap(activeStage)+' — '+cap(platform);
+  document.getElementById('deskStageTag').textContent='/ '+stg.label.toUpperCase();
+}
+function goStage(id){const w=getWork();if(w){w.stage=id;w.updated=new Date().toISOString();if(window.COS)window.COS.saveWork(cur,w);}activeStage=id;renderRail();renderDesk();renderWorks();}
+function advanceStage(){const ci=stageIndex(activeStage);if(ci<PIPELINE.length-1)goStage(PIPELINE[ci+1].id);else toast('Already at Ship');}
+
+/* DESK (stage-aware) */
+function renderDesk(){
+  const stg=PIPELINE[stageIndex(activeStage)];
+  document.getElementById('deskActions').innerHTML=stg.ops.map(op=>`<button class="act ${op.kind}" onclick="runOp('${op.id}')"><span class="act-glyph">${op.glyph}</span>${op.label}</button>`).join('');
+  const adv=document.getElementById('advanceBtn');
+  const ci=stageIndex(activeStage);
+  const isFinal=ci>=PIPELINE.length-1;
+  adv.textContent=isFinal?'Final stage':('Advance to '+PIPELINE[ci+1].label+' →');
+  adv.disabled=isFinal;
+  adv.style.display=isFinal?'none':'block';
+  document.getElementById('publishBtn').style.display=isFinal?'block':'none';
+}
+
+/* ===== Markdown editor: hand-rolled renderer + 3 modes ===== */
+function escapeHtml(s){return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function mdInline(s){
+  s=s.replace(/`([^`]+)`/g,(m,c)=>'<code>'+c+'</code>');
+  s=s.replace(/\*\*([^*]+)\*\*/g,'<strong>$1</strong>');
+  s=s.replace(/__([^_]+)__/g,'<strong>$1</strong>');
+  s=s.replace(/(^|[^*])\*([^*\n]+)\*/g,'$1<em>$2</em>');
+  s=s.replace(/(^|[^_\w])_([^_\n]+)_/g,'$1<em>$2</em>');
+  s=s.replace(/\[([^\]]+)\]\(([^)\s]+)\)/g,'<a href="$2" target="_blank" rel="noopener">$1</a>');
+  return s;
+}
+function mdToHtml(md){
+  if(!md||!md.trim())return '';
+  const lines=md.replace(/\r\n?/g,'\n').split('\n');let html='',i=0;
+  const special=/^(#{1,6}\s|>\s?|[-*+]\s|\d+\.\s|```|(-{3,}|\*{3,}|_{3,})\s*$)/;
+  const isSep=s=>s.indexOf('|')>=0&&s.indexOf('-')>=0&&/^\s*\|?[\s:|-]+\|?\s*$/.test(s);
+  const isTable=idx=>idx+1<lines.length&&lines[idx].indexOf('|')>=0&&isSep(lines[idx+1]);
+  const cells=r=>r.replace(/^\s*\|/,'').replace(/\|\s*$/,'').split('|').map(c=>c.trim());
+  while(i<lines.length){
+    let line=lines[i];
+    if(/^```/.test(line)){let code=[];i++;while(i<lines.length&&!/^```/.test(lines[i])){code.push(lines[i]);i++;}i++;html+='<pre>'+escapeHtml(code.join('\n'))+'</pre>';continue;}
+    if(isTable(i)){
+      const heads=cells(line);
+      const al=cells(lines[i+1]).map(s=>{const l=s.startsWith(':'),r=s.endsWith(':');return l&&r?'center':r?'right':l?'left':'';});
+      i+=2;const rows=[];
+      while(i<lines.length&&!/^\s*$/.test(lines[i])&&lines[i].indexOf('|')>=0){rows.push(cells(lines[i]));i++;}
+      const sty=ci=>al[ci]?' style="text-align:'+al[ci]+'"':'';
+      html+='<table><thead><tr>'+heads.map((h,ci)=>'<th'+sty(ci)+'>'+mdInline(escapeHtml(h))+'</th>').join('')+'</tr></thead>'+(rows.length?'<tbody>'+rows.map(r=>'<tr>'+heads.map((h,ci)=>'<td'+sty(ci)+'>'+mdInline(escapeHtml(r[ci]||''))+'</td>').join('')+'</tr>').join('')+'</tbody>':'')+'</table>';
+      continue;
+    }
+    if(/^(-{3,}|\*{3,}|_{3,})\s*$/.test(line)){html+='<hr>';i++;continue;}
+    let hm=line.match(/^(#{1,6})\s+(.*)$/);
+    if(hm){const n=Math.min(hm[1].length,3),t=n===1?'h1':n===2?'h2':'h3';html+='<'+t+'>'+mdInline(escapeHtml(hm[2]))+'</'+t+'>';i++;continue;}
+    if(/^>\s?/.test(line)){let q=[];while(i<lines.length&&/^>\s?/.test(lines[i])){q.push(lines[i].replace(/^>\s?/,''));i++;}html+='<blockquote>'+mdInline(escapeHtml(q.join('\n'))).replace(/\n/g,'<br>')+'</blockquote>';continue;}
+    if(/^[-*+]\s+/.test(line)){let it=[];while(i<lines.length&&/^[-*+]\s+/.test(lines[i])){it.push(lines[i].replace(/^[-*+]\s+/,''));i++;}html+='<ul>'+it.map(x=>'<li>'+mdInline(escapeHtml(x))+'</li>').join('')+'</ul>';continue;}
+    if(/^\d+\.\s+/.test(line)){let it=[];while(i<lines.length&&/^\d+\.\s+/.test(lines[i])){it.push(lines[i].replace(/^\d+\.\s+/,''));i++;}html+='<ol>'+it.map(x=>'<li>'+mdInline(escapeHtml(x))+'</li>').join('')+'</ol>';continue;}
+    if(/^\s*$/.test(line)){i++;continue;}
+    let para=[];while(i<lines.length&&!/^\s*$/.test(lines[i])&&!special.test(lines[i])&&!isTable(i)){para.push(lines[i]);i++;}
+    if(!para.length){para.push(lines[i]);i++;}
+    html+='<p>'+mdInline(escapeHtml(para.join('\n'))).replace(/\n/g,'<br>')+'</p>';
+  }
+  return html;
+}
+function htmlToMd(html){
+  const d=document.createElement('div');d.innerHTML=html||'';
+  function walk(node){let out='';node.childNodes.forEach(n=>{
+    if(n.nodeType===3){out+=n.nodeValue;return;}
+    if(n.nodeType!==1)return;
+    const tag=n.tagName.toLowerCase(),inner=walk(n);
+    if(tag==='h1')out+='\n# '+inner+'\n\n';
+    else if(tag==='h2')out+='\n## '+inner+'\n\n';
+    else if(tag==='h3'||tag==='h4'||tag==='h5'||tag==='h6')out+='\n### '+inner+'\n\n';
+    else if(tag==='strong'||tag==='b')out+='**'+inner+'**';
+    else if(tag==='em'||tag==='i')out+='_'+inner+'_';
+    else if(tag==='code')out+='`'+inner+'`';
+    else if(tag==='pre')out+='\n```\n'+inner+'\n```\n\n';
+    else if(tag==='blockquote')out+='\n> '+inner.trim().replace(/\n/g,'\n> ')+'\n\n';
+    else if(tag==='ul'||tag==='ol')out+='\n'+inner+'\n';
+    else if(tag==='li')out+='- '+inner.trim()+'\n';
+    else if(tag==='a')out+='['+inner+']('+(n.getAttribute('href')||'')+')';
+    else if(tag==='br')out+='\n';
+    else if(tag==='p'||tag==='div')out+='\n'+inner+'\n\n';
+    else out+=inner;
+  });return out;}
+  return walk(d).replace(/\n{3,}/g,'\n\n').trim();
+}
+function looksHtml(b){return /^\s*<(p|h[1-6]|ul|ol|li|blockquote|pre|div|strong|em|br)\b/i.test(b)||/<\/(p|h[1-6]|ul|ol|li|blockquote|pre|div)>/i.test(b);}
+function splitBlocks(md){const p=(md||'').split(/\n{2,}/);return p.length?p:[''];}
+
+function getBodyMd(){
+  if(edMode==='source'){const ta=document.getElementById('edSource');if(ta)mdBody=ta.value;}
+  else if(edMode==='live'&&activeBlock!=null){const ta=document.querySelector('.ed-raw');if(ta){liveBlocks[activeBlock]=ta.value;mdBody=liveBlocks.join('\n\n');}}
+  return mdBody;
+}
+function setBodyMd(md){mdBody=md||'';liveBlocks=splitBlocks(mdBody);activeBlock=null;renderEditor();}
+function loadWorkBody(w){let b=w.body||'';if(looksHtml(b))b=htmlToMd(b);setBodyMd(b);}
+function onEdit(){const t=getBodyMd().trim();const w=t?t.split(/\s+/).length:0;document.getElementById('wc').textContent=w+' W';}
+
+function setEdMode(m){getBodyMd();edMode=m;if(m==='live'){liveBlocks=splitBlocks(mdBody);activeBlock=null;}renderEditor();}
+function renderEditor(){
+  const ed=document.getElementById('editor');if(!ed)return;
+  document.getElementById('edmLive').classList.toggle('active',edMode==='live');
+  document.getElementById('edmSource').classList.toggle('active',edMode==='source');
+  document.getElementById('edmRead').classList.toggle('active',edMode==='read');
+  document.getElementById('mdToolbar').style.visibility=(edMode==='read')?'hidden':'visible';
+  if(edMode==='source'){
+    ed.innerHTML='<textarea class="ed-source" id="edSource" placeholder="Write in Markdown…"></textarea>';
+    const ta=document.getElementById('edSource');ta.value=mdBody;ta.oninput=onSourceInput;
+  }else if(edMode==='read'){
+    ed.innerHTML='<div class="ed-read md-render">'+(mdToHtml(mdBody)||'<p class="ed-empty">Nothing to read yet.</p>')+'</div>';
+  }else{
+    if(!liveBlocks.length)liveBlocks=[''];
+    ed.innerHTML=liveBlocks.map((b,i)=>{
+      if(i===activeBlock)return '<textarea class="ed-raw" data-i="'+i+'"></textarea>';
+      const html=mdToHtml(b)||'<p class="ed-ph">Empty line — click to write.</p>';
+      return '<div class="ed-block md-render" data-i="'+i+'" onclick="editBlock('+i+')">'+html+'</div>';
+    }).join('')+'<div class="ed-add" onclick="addBlock()">+ paragraph</div>';
+    if(activeBlock!=null){const ta=ed.querySelector('.ed-raw');if(ta){ta.value=liveBlocks[activeBlock];autoGrow(ta);ta.oninput=onRawInput;ta.focus();}}
+  }
+}
+function onSourceInput(){const ta=document.getElementById('edSource');if(!ta)return;mdBody=ta.value;onEdit();}
+function onRawInput(){const ta=document.querySelector('.ed-raw');if(!ta||activeBlock==null)return;liveBlocks[activeBlock]=ta.value;mdBody=liveBlocks.join('\n\n');autoGrow(ta);onEdit();}
+function editBlock(i){if(activeBlock===i)return;getBodyMd();activeBlock=i;renderEditor();}
+function addBlock(){getBodyMd();liveBlocks.push('');activeBlock=liveBlocks.length-1;renderEditor();}
+function autoGrow(ta){ta.style.height='auto';ta.style.height=(ta.scrollHeight+2)+'px';}
+
+function edTarget(){
+  if(edMode==='source')return document.getElementById('edSource');
+  if(edMode==='live'){if(activeBlock==null){activeBlock=Math.max(0,liveBlocks.length-1);renderEditor();}return document.querySelector('.ed-raw');}
+  return null;
+}
+function syncFromTarget(ta){if(edMode==='source'){mdBody=ta.value;}else if(edMode==='live'&&activeBlock!=null){liveBlocks[activeBlock]=ta.value;mdBody=liveBlocks.join('\n\n');}autoGrow(ta);onEdit();}
+function mdWrap(pre,post){const ta=edTarget();if(!ta)return;const s=ta.selectionStart,e=ta.selectionEnd,v=ta.value;const sel=v.slice(s,e)||'text';ta.value=v.slice(0,s)+pre+sel+post+v.slice(e);ta.focus();ta.setSelectionRange(s+pre.length,s+pre.length+sel.length);syncFromTarget(ta);}
+function mdPrefix(p){const ta=edTarget();if(!ta)return;const v=ta.value,s=ta.selectionStart;const ls=v.lastIndexOf('\n',s-1)+1;ta.value=v.slice(0,ls)+p+v.slice(ls);ta.focus();ta.setSelectionRange(s+p.length,s+p.length);syncFromTarget(ta);}
+function mdLink(){const ta=edTarget();if(!ta)return;const s=ta.selectionStart,e=ta.selectionEnd,v=ta.value;const sel=v.slice(s,e)||'text';const ins='['+sel+'](url)';ta.value=v.slice(0,s)+ins+v.slice(e);ta.focus();ta.setSelectionRange(s+ins.length-4,s+ins.length-1);syncFromTarget(ta);}
+function setPlat(el,p){platform=p;document.querySelectorAll('.plat-btn').forEach(b=>b.classList.remove('active'));el.classList.add('active');document.getElementById('sheetKicker').textContent=cap(activeStage)+' — '+cap(p);}
+function toggleDesk(){deskOpen=!deskOpen;document.getElementById('desk').classList.toggle('open',deskOpen);document.getElementById('aiToggle').classList.toggle('on',deskOpen);uiState.deskOpen=deskOpen;saveUIState();}
+
+/* ===== Collapsible + resizable panels ===== */
+let uiState={mastCollapsed:true,indexCollapsed:false,mastW:230,indexW:280,deskW:344,deskOpen:true,guideSeen:false};
+function applyUI(ui){
+  if(ui)uiState=Object.assign(uiState,ui);
+  const r=document.documentElement.style;
+  document.getElementById('masthead').classList.toggle('collapsed',!!uiState.mastCollapsed);
+  document.getElementById('index').classList.toggle('collapsed',!!uiState.indexCollapsed);
+  r.setProperty('--col-masthead',uiState.mastCollapsed?'54px':((uiState.mastW||230)+'px'));
+  r.setProperty('--col-index',uiState.indexCollapsed?'36px':((uiState.indexW||280)+'px'));
+  r.setProperty('--desk-w',(uiState.deskW||344)+'px');
+  deskOpen=uiState.deskOpen!==false;
+  document.getElementById('desk').classList.toggle('open',deskOpen);
+  document.getElementById('aiToggle').classList.toggle('on',deskOpen);
+  updateRzVisibility();
+}
+function updateRzVisibility(){
+  const mh=document.getElementById('mhRz');if(mh)mh.style.display=uiState.mastCollapsed?'none':'block';
+  const ix=document.getElementById('ixRz');if(ix)ix.style.display=uiState.indexCollapsed?'none':'block';
+}
+function saveUIState(){if(window.COS)window.COS.saveUI(uiState);}
+function toggleMasthead(){uiState.mastCollapsed=!uiState.mastCollapsed;applyUI();renderMastRail();saveUIState();}
+function toggleIndex(){uiState.indexCollapsed=!uiState.indexCollapsed;applyUI();saveUIState();}
+function renderMastRail(){
+  const el=document.getElementById('mastRail');if(!el)return;
+  const chips=Object.values(brands).map(b=>`<button class="mr-chip ${b.id===cur?'active':''}" style="--brandc:${b.accent}" title="${b.name}" onclick="switchBrand('${b.id}')"></button>`).join('');
+  el.innerHTML='<button class="mr-x" onclick="toggleMasthead()" title="Expand workspaces">›</button>'+
+    '<div class="mr-chips">'+chips+'</div>'+
+    '<div class="mr-icons">'+
+      '<button class="mr-ic" title="Guide" onclick="openGuide()">?</button>'+
+      '<button class="mr-ic" title="Workflow editor" onclick="openWorkflow()">🛠</button>'+
+      '<button class="mr-ic" title="Settings" onclick="openSettings()">⚙</button>'+
+      '<button class="mr-ic" title="Vault" onclick="openVault()">🗂</button>'+
+      '<button class="mr-ic" title="Published" onclick="openPublished()">✓</button>'+
+      '<button class="mr-ic" title="Master Context" onclick="openMaster()">◈</button>'+
+    '</div>';
+}
+let _rz=null;
+function startRz(e,which){_rz={which};document.body.style.cursor='col-resize';document.body.style.userSelect='none';if(which==='desk')document.getElementById('desk').classList.add('noanim');e.preventDefault();}
+function setMastW(w){w=Math.min(Math.max(w,150),460);uiState.mastW=w;document.documentElement.style.setProperty('--col-masthead',w+'px');}
+function setIndexW(w){w=Math.min(Math.max(w,190),600);uiState.indexW=w;document.documentElement.style.setProperty('--col-index',w+'px');}
+function setDeskW(w){w=Math.min(Math.max(w,260),Math.round(window.innerWidth*0.8));uiState.deskW=w;document.documentElement.style.setProperty('--desk-w',w+'px');}
+document.addEventListener('mousemove',e=>{
+  if(!_rz)return;
+  if(_rz.which==='masthead')setMastW(e.clientX);
+  else if(_rz.which==='index')setIndexW(e.clientX-document.getElementById('index').getBoundingClientRect().left);
+  else if(_rz.which==='desk')setDeskW(window.innerWidth-e.clientX);
+});
+document.addEventListener('mouseup',()=>{if(!_rz)return;_rz=null;document.body.style.cursor='';document.body.style.userSelect='';document.getElementById('desk').classList.remove('noanim');saveUIState();});
+
+function switchMode(el,m){
+  mode=m;
+  document.querySelectorAll('.mode-tab').forEach(t=>t.classList.remove('active'));el.classList.add('active');
+  document.getElementById('writeView').style.display=(m==='write')?'':'none';
+  document.getElementById('voiceView').style.display=(m==='voice')?'':'none';
+  document.getElementById('contextView').style.display=(m==='context')?'':'none';
+  document.getElementById('platWrap').style.visibility=(m==='write')?'visible':'hidden';
+  if(m==='voice')renderVoiceView();
+  if(m==='context')renderContextView();
+}
+function renderVoiceView(){
+  document.getElementById('voiceViewTitle').textContent=brands[cur].name;
+  document.getElementById('voiceTA').value=brands[cur].voice;
+}
+async function saveVoice(){
+  const v=document.getElementById('voiceTA').value.trim();
+  if(!v){toast('Voice cannot be empty');return;}
+  brands[cur].voice=v;
+  updateVP();
+  if(window.COS)await window.COS.saveVoice(cur,{voice:v,brand:brands[cur].name,updated:new Date().toISOString()});
+  toast('Voice profile saved');
+}
+function renderContextView(){
+  document.getElementById('contextViewTitle').textContent=brands[cur].name;
+  const list=contextFiles[cur]||[];
+  const el=document.getElementById('ctxList');
+  if(!list.length){el.innerHTML='<div class="ctx-empty">No context files yet.<br>Add your story, key facts, or style notes — the AI will draw on them when injection is on.</div>';return;}
+  el.innerHTML=list.map((f,i)=>`<div class="ctx-card"><div class="ctx-card-head"><input class="ctx-name" value="${f.name.replace(/"/g,'&quot;')}" data-i="${i}" onchange="renameContext(${i},this.value)"><button class="ctx-del" onclick="deleteContext(${i})" title="Delete">✕</button></div><textarea class="ctx-body" data-i="${i}" oninput="contextFiles['${cur}'][${i}].body=this.value">${(f.body||'').replace(/</g,'&lt;')}</textarea><button class="ctx-save" onclick="saveContextCard(${i})">Save file</button></div>`).join('');
+}
+function addContext(){
+  openInput('Context file name','e.g. my-story, key-facts',async(name)=>{
+    if(!name)return;
+    const safe=name.replace(/[^\w\- ]/g,'').trim()||'note';
+    contextFiles[cur].unshift({name:safe,body:''});
+    renderContextView();updateCtxPip();
+    if(window.COS)await window.COS.saveContextFile(cur,safe,'');
+  });
+}
+function renameContext(i,val){contextFiles[cur][i].name=val.replace(/[^\w\- ]/g,'').trim()||'note';}
+async function saveContextCard(i){
+  const f=contextFiles[cur][i];
+  if(window.COS)await window.COS.saveContextFile(cur,f.name,f.body);
+  toast('Saved — '+f.name);
+}
+async function deleteContext(i){
+  const f=contextFiles[cur][i];
+  if(!confirm('Delete context file "'+f.name+'"?'))return;
+  if(window.COS)await window.COS.deleteContextFile(cur,f.name);
+  contextFiles[cur].splice(i,1);renderContextView();updateCtxPip();
+  toast('Deleted');
+}
+function toggleContext(){useContext=!useContext;updateCtxPip();}
+function updateCtxPip(){
+  const n=(contextFiles[cur]||[]).length;
+  const t=document.getElementById('ctxToggle');const pip=document.getElementById('ctxPip');
+  if(useContext&&n>0){t.classList.add('on');pip.textContent='ON · '+n;}
+  else{t.classList.remove('on');pip.textContent=(n>0?'OFF · '+n:'NONE');if(useContext&&n===0)useContext=false;}
+}
+function contextBlock(){
+  let out='';
+  if(useContext){
+    const list=contextFiles[cur]||[];
+    if(list.length){
+      let body=list.map(f=>'### '+f.name+'\n'+stripTags(f.body)).join('\n\n');
+      if(body.length>6000)body=body.slice(0,6000)+'…';
+      out+='REFERENCE CONTEXT for '+brands[cur].name+' (ground your voice, facts, and continuity in this; do not quote it verbatim):\n'+body+'\n\n';
+    }
+  }
+  if(useMaster&&masterFiles.length){
+    let mbody=masterFiles.map(f=>'### '+f.name+'\n'+stripTags(f.body)).join('\n\n');
+    if(mbody.length>6000)mbody=mbody.slice(0,6000)+'…';
+    out+='MASTER CONTEXT (shared across all brands — overarching story, facts, and rules; do not quote verbatim):\n'+mbody+'\n\n';
+  }
+  return out;
+}
+function stripTags(s){const d=document.createElement('div');d.innerHTML=s||'';return d.innerText;}
+function modelFor(stageId){return (SETTINGS.models&&(SETTINGS.models[stageId]||SETTINGS.models.default))||'anthropic/claude-sonnet-4';}
+function maxTokens(){return parseInt(SETTINGS.maxTokens,10)||4000;}
+function nativeSearch(){return SETTINGS.provider==='openrouter'||SETTINGS.provider==='anthropic';}
+function chatHeaders(){
+  const s=SETTINGS;
+  if(s.provider==='anthropic')return {'Content-Type':'application/json','x-api-key':s.apiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'};
+  return {'Content-Type':'application/json','Authorization':'Bearer '+s.apiKey,'HTTP-Referer':'https://zedialabs.com','X-Title':'ContentOS'};
+}
+function chatBody(model,prompt,stream){
+  const s=SETTINGS;
+  const body={model:model,max_tokens:maxTokens(),stream:!!stream,messages:[{role:'user',content:prompt}]};
+  if(useSearch&&s.provider==='anthropic')body.tools=[{type:'web_search_20250305',name:'web_search',max_uses:5}];
+  if(useSearch&&s.provider==='openrouter')body.plugins=[{id:'web',max_results:5}];
+  return body;
+}
+async function callModel(prompt,model){
+  const s=SETTINGS;
+  const res=await fetch(s.baseUrl,{method:'POST',headers:chatHeaders(),body:JSON.stringify(chatBody(model,prompt,false))});
+  const d=await res.json();if(d.error)throw new Error((d.error&&(d.error.message||d.error))||'API error');
+  if(s.provider==='anthropic')return (d.content&&d.content.filter(c=>c.type==='text').map(c=>c.text).join(''))||'No response.';
+  return (d.choices&&d.choices[0]&&d.choices[0].message&&d.choices[0].message.content)||'No response.';
+}
+async function streamModel(prompt,model,onToken){
+  const s=SETTINGS;
+  const res=await fetch(s.baseUrl,{method:'POST',headers:chatHeaders(),body:JSON.stringify(chatBody(model,prompt,true))});
+  if(!res.ok){let d={};try{d=await res.json();}catch(e){}throw new Error((d.error&&(d.error.message||d.error))||('HTTP '+res.status));}
+  if(!res.body){const t=await res.text();onToken(t);return t;}
+  const reader=res.body.getReader(),dec=new TextDecoder();let buf='',full='';
+  while(true){
+    const r=await reader.read();if(r.done)break;
+    buf+=dec.decode(r.value,{stream:true});let idx;
+    while((idx=buf.indexOf('\n'))>=0){
+      let line=buf.slice(0,idx).trim();buf=buf.slice(idx+1);
+      if(!line||line.startsWith(':')||!line.startsWith('data:'))continue;
+      const data=line.slice(5).trim();
+      if(data==='[DONE]')continue;
+      let j;try{j=JSON.parse(data);}catch(e){continue;}
+      let tok='';
+      if(s.provider==='anthropic'){if(j.type==='content_block_delta'&&j.delta&&j.delta.type==='text_delta')tok=j.delta.text||'';}
+      else{tok=(j.choices&&j.choices[0]&&j.choices[0].delta&&j.choices[0].delta.content)||'';}
+      if(tok){full+=tok;onToken(full,tok);}
+    }
+  }
+  return full;
+}
+async function webSearchBlock(query){
+  if(!SETTINGS.searchKey||!query)return '';
+  try{
+    const res=await fetch('https://api.tavily.com/search',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({api_key:SETTINGS.searchKey,query:query,max_results:5,include_answer:false})});
+    const d=await res.json();
+    if(!d.results||!d.results.length)return '';
+    const block=d.results.map((r,i)=>(i+1)+'. '+r.title+' — '+r.url+'\n'+(r.content||'').slice(0,400)).join('\n\n');
+    return 'LIVE WEB RESULTS (use these for current facts; cite the URLs where relevant):\n'+block+'\n\n';
+  }catch(e){return '';}
+}
+async function runOp(opId){
+  if(busy)return;
+  const stg=PIPELINE[stageIndex(activeStage)];
+  const op=stg.ops.find(o=>o.id===opId);if(!op)return;
+  if(!SETTINGS.apiKey){toast('Add your API key in Settings');openSettings();return;}
+  saveCurrent();
+  const title=document.getElementById('titleField').innerText.trim();
+  const body=getBodyMd().trim();
+  const text=(title?title+'\n\n':'')+body;
+  const b=brands[cur];
+  const ctx={text:text,brand:b.name,voiceLine:'Voice profile for '+b.name+': '+b.voice,platform:platform,guide:platformGuide[platform]};
+  const out=document.getElementById('out');
+  busy=true;out.className='out';out.textContent='';aiContent='';
+  const btns=document.querySelectorAll('.act');btns.forEach(x=>x.disabled=true);
+  const fired=[...btns].find(x=>x.textContent.includes(op.label));
+  const orig=fired?fired.innerHTML:'';if(fired)fired.innerHTML='<span class="spin"></span> Working…';
+  try{
+    let prefix='';
+    if(useSearch&&!nativeSearch()){out.textContent='Searching the web…';prefix=await webSearchBlock(title||text.slice(0,160));}
+    const w=document.querySelector('.out-wrap');
+    out.textContent='';
+    await streamModel(prefix+contextBlock()+fillTemplate(op.prompt,ctx),modelFor(activeStage),(full)=>{aiContent=full;out.textContent=full;if(w)w.scrollTop=w.scrollHeight;});
+    if(!aiContent){out.className='out empty';out.textContent='No response.';}
+  }catch(e){out.className='out empty';out.textContent='AI error — '+(e.message||'check Settings')+'.';}
+  finally{busy=false;btns.forEach(x=>x.disabled=false);if(fired)fired.innerHTML=orig;}
+}
+function useOutput(){
+  if(!aiContent){toast('Nothing to use yet');return;}
+  let md=aiContent.trim();
+  const nl=md.indexOf('\n');const first=(nl<0?md:md.slice(0,nl)).trim();
+  // Lift a leading "# Heading" into the title field, leave the rest as body.
+  if(first.startsWith('# ')&&!first.startsWith('## ')){
+    document.getElementById('titleField').innerText=first.slice(2).trim();
+    md=(nl<0?'':md.slice(nl+1)).replace(/^\n+/,'');
+  }
+  setBodyMd(md);
+  onEdit();saveCurrent();toast('Pulled into the page');
+}
+function copyOutput(){if(!aiContent){toast('Nothing to copy');return;}navigator.clipboard.writeText(aiContent).then(()=>toast('Copied'));}
+
+function newWork(){const id='w'+Date.now();const w={id:id,title:'',body:'',stage:'spark',platform:platform,updated:new Date().toISOString()};works[cur].unshift(w);if(window.COS)window.COS.saveWork(cur,w);renderWorks();openWork(id);document.getElementById('titleField').focus();toast('New work — Spark');}
+function openCapture(){document.getElementById('overlay').classList.add('open');setTimeout(()=>document.getElementById('capTA').focus(),120);}
+function closeCapture(){document.getElementById('overlay').classList.remove('open');document.getElementById('capTA').value='';if(recording)toggleRec();document.getElementById('recStatus').textContent='';}
+function overlayClick(e){if(e.target===e.currentTarget)closeCapture();}
+function saveCapture(){const t=document.getElementById('capTA').value.trim();if(!t){toast('Nothing to save');return;}const id='s'+Date.now();const w={id:id,title:'',body:t,stage:'spark',platform:platform,updated:new Date().toISOString()};works[cur].unshift(w);if(window.COS)window.COS.appendCapture(cur,w);closeCapture();filterStage='all';renderStageFilter();renderWorks();openWork(id);toast('Captured → Spark');}
+/* ---- local speech-to-text: record → 16k WAV → on-device transcribe ---- */
+let _sttWarmed=false;
+function pcmToWav(samples,rate){
+  const n=samples.length,buf=new ArrayBuffer(44+n*2),v=new DataView(buf);
+  const ws=(o,s)=>{for(let i=0;i<s.length;i++)v.setUint8(o+i,s.charCodeAt(i));};
+  ws(0,'RIFF');v.setUint32(4,36+n*2,true);ws(8,'WAVE');ws(12,'fmt ');
+  v.setUint32(16,16,true);v.setUint16(20,1,true);v.setUint16(22,1,true);
+  v.setUint32(24,rate,true);v.setUint32(28,rate*2,true);v.setUint16(32,2,true);v.setUint16(34,16,true);
+  ws(36,'data');v.setUint32(40,n*2,true);
+  let o=44;for(let i=0;i<n;i++){let x=Math.max(-1,Math.min(1,samples[i]));v.setInt16(o,x<0?x*0x8000:x*0x7FFF,true);o+=2;}
+  return new Uint8Array(buf);
+}
+async function blobTo16kWav(blob){
+  const arr=await blob.arrayBuffer();
+  const AC=window.AudioContext||window.webkitAudioContext;const ac=new AC();
+  const dec=await ac.decodeAudioData(arr);const len=dec.length,ch=dec.numberOfChannels;
+  const mono=new Float32Array(len);
+  for(let c=0;c<ch;c++){const d=dec.getChannelData(c);for(let i=0;i<len;i++)mono[i]+=d[i]/ch;}
+  ac.close();
+  const outLen=Math.max(1,Math.ceil((len/dec.sampleRate)*16000));
+  const off=new OfflineAudioContext(1,outLen,16000);
+  const b=off.createBuffer(1,len,dec.sampleRate);b.copyToChannel(mono,0);
+  const src=off.createBufferSource();src.buffer=b;src.connect(off.destination);src.start();
+  const rendered=await off.startRendering();
+  return pcmToWav(rendered.getChannelData(0),16000);
+}
+function activeSttEngine(){return (SETTINGS.stt&&SETTINGS.stt.engine)||'parakeet';}
+function activeSttModel(){return (SETTINGS.stt&&SETTINGS.stt.modelId)||'parakeet-tdt-v3-int8';}
+async function transcribeBlob(blob){
+  const wav=await blobTo16kWav(blob);
+  const T=window.__TAURI__;const dir=await T.path.appDataDir();const tmp=await T.path.join(dir,'tmp');
+  await T.fs.mkdir(tmp,{recursive:true}).catch(()=>{});
+  const wavPath=await T.path.join(tmp,'rec-'+Date.now()+'.wav');
+  await T.fs.writeFile(wavPath,wav);
+  const text=await T.core.invoke('transcribe',{wavPath:wavPath,engine:activeSttEngine(),modelId:activeSttModel()});
+  T.fs.remove(wavPath).catch(()=>{});
+  return text;
+}
+async function toggleRec(){
+  const btn=document.getElementById('recBtn'),status=document.getElementById('recStatus');
+  if(!recording){
+    if(!(window.COS&&window.COS.isTauri)){toast('Recording needs the desktop app');return;}
+    try{
+      const stream=await navigator.mediaDevices.getUserMedia({audio:true});
+      mr=new MediaRecorder(stream);const chunks=[];
+      mr.ondataavailable=e=>{if(e.data&&e.data.size)chunks.push(e.data);};
+      mr.onstop=async()=>{
+        stream.getTracks().forEach(t=>t.stop());
+        btn.className='rec-btn';btn.textContent='⏺ Record';status.textContent=_sttWarmed?'Transcribing…':'Warming up model…';
+        try{
+          const blob=new Blob(chunks,{type:(mr&&mr.mimeType)||'audio/webm'});
+          const text=await transcribeBlob(blob);_sttWarmed=true;
+          const ta=document.getElementById('capTA');ta.value+=(ta.value?'\n\n':'')+(text||'').trim();
+          status.textContent='';toast('Transcribed ✓');
+        }catch(e){status.textContent='';const m=(e&&e.message)||(''+e);
+          if(/not installed|model/i.test(m)){toast('Download a transcription model in Settings');openSettings();}
+          else toast('Transcription failed');console.error('transcribe',e);}
+      };
+      mr.start();recording=true;btn.className='rec-btn rec';btn.textContent='⏹ Stop';
+      let s=0;btn._t=setInterval(()=>{s++;const mm=Math.floor(s/60),ss=String(s%60).padStart(2,'0');status.textContent=(s>=105?'⚠ ':'')+mm+':'+ss+(s>=105?' · max 2:00':'');if(s>=120)toggleRec();},1000);
+    }catch(e){
+      console.error('getUserMedia',e);const n=(e&&e.name)||'';
+      if(n==='NotAllowedError')toast('Mic blocked — allow ContentOS in System Settings › Privacy › Microphone, then relaunch');
+      else if(n==='NotFoundError')toast('No microphone found');
+      else if(!navigator.mediaDevices)toast('Mic unavailable in this build');
+      else toast('Mic error — '+(n||(e&&e.message)||e));
+    }
+  }else{clearInterval(btn._t);recording=false;if(mr)mr.stop();}
+}
+/* ---- STT model manager (Settings) ---- */
+let _sttModels=[];
+function fmtMB(b){return Math.round((b||0)/1048576)+' MB';}
+async function renderSttModels(){
+  const el=document.getElementById('sttModels');if(!el)return;
+  if(!(window.COS&&window.COS.isTauri)){el.innerHTML='<div class="set-hint">Available in the desktop app.</div>';return;}
+  try{_sttModels=await window.__TAURI__.core.invoke('list_models');}catch(e){_sttModels=[];}
+  if(!_sttModels.length){el.innerHTML='<div class="set-hint">No models in catalog.</div>';return;}
+  const active=activeSttModel();
+  el.innerHTML=_sttModels.map(m=>{
+    const isA=m.id===active;
+    const actions=m.installed
+      ? '<button class="stt-btn '+(isA?'active':'')+'" onclick="selectSttModel(\''+m.id+'\',\''+m.engine+'\')">'+(isA?'Active':'Use')+'</button><button class="stt-btn" onclick="deleteSttModel(\''+m.id+'\')">Delete</button>'
+      : '<button class="stt-btn" onclick="downloadSttModel(\''+m.id+'\')">Download</button>';
+    return '<div class="stt-row"><div class="stt-top"><span class="stt-name">'+m.label.replace(/</g,'&lt;')+'</span><span class="stt-size">'+m.size_mb+' MB</span>'+actions+'</div><div class="stt-bar" id="bar-'+m.id+'"><i></i></div><div class="stt-status" id="st-'+m.id+'"></div></div>';
+  }).join('');
+}
+function selectSttModel(id,engine){SETTINGS.stt={engine:engine,modelId:id};if(window.COS)window.COS.saveSettings(SETTINGS);renderSttModels();toast('Active transcription model set');}
+async function downloadSttModel(id){
+  const st=document.getElementById('st-'+id),bar=document.getElementById('bar-'+id);
+  if(st)st.textContent='Starting…';if(bar)bar.classList.add('show');
+  try{
+    await window.__TAURI__.core.invoke('download_model',{id:id});
+    const m=_sttModels.find(x=>x.id===id);
+    if(!SETTINGS.stt||!SETTINGS.stt.modelId)selectSttModel(id,m?m.engine:'parakeet');
+    toast('Model ready ✓');renderSttModels();
+  }catch(e){toast('Download failed');if(st)st.textContent='Failed — '+((e&&e.message)||e);}
+}
+async function deleteSttModel(id){
+  if(!confirm('Delete this transcription model from disk?'))return;
+  try{await window.__TAURI__.core.invoke('delete_model',{id:id});
+    if(SETTINGS.stt&&SETTINGS.stt.modelId===id){SETTINGS.stt=null;if(window.COS)window.COS.saveSettings(SETTINGS);}
+    renderSttModels();toast('Deleted');
+  }catch(e){toast('Delete failed');}
+}
+function setupSttProgress(){
+  if(!(window.__TAURI__&&window.__TAURI__.event))return;
+  window.__TAURI__.event.listen('stt-progress',e=>{
+    const p=e.payload||{};const bar=document.getElementById('bar-'+p.id),st=document.getElementById('st-'+p.id);
+    if(p.done){if(st)st.textContent='Installed ✓';if(bar){const i=bar.querySelector('i');if(i)i.style.width='100%';}return;}
+    if(bar){bar.classList.add('show');const i=bar.querySelector('i');if(i&&p.total)i.style.width=Math.round(p.received/p.total*100)+'%';}
+    if(st)st.textContent=(p.file||'')+' · '+fmtMB(p.received)+(p.total?(' / '+fmtMB(p.total)):'');
+  });
+}
+function toast(m){const el=document.getElementById('toast');el.textContent=m;el.classList.add('show');setTimeout(()=>el.classList.remove('show'),2600);}
+function showBanner(msg){const el=document.getElementById('memBanner');if(!el)return;el.textContent=msg+' — click to dismiss';el.style.display='block';}
+
+/* ---- styled text-input modal (replaces native prompt) ---- */
+let _inputCb=null;
+function openInput(title,ph,cb){
+  _inputCb=cb;
+  document.getElementById('inputTitle').textContent=title;
+  const f=document.getElementById('inputField');f.value='';f.placeholder=ph||'';
+  document.getElementById('inputHint').textContent='';
+  document.getElementById('inputOverlay').classList.add('open');
+  setTimeout(()=>f.focus(),120);
+}
+function closeInput(){document.getElementById('inputOverlay').classList.remove('open');_inputCb=null;}
+function inputOverlayClick(e){if(e.target===e.currentTarget)closeInput();}
+function inputKey(e){if(e.key==='Enter'){e.preventDefault();submitInput();}else if(e.key==='Escape')closeInput();}
+function submitInput(){const v=document.getElementById('inputField').value.trim();const cb=_inputCb;closeInput();if(cb)cb(v);}
+
+/* ---- workflow guide ---- */
+function renderGuide(){
+  const stages=PIPELINE.map((s,i)=>`<div class="g-stage"><span class="g-glyph">${s.glyph}</span><div><b>${i+1}. ${s.label}</b><div class="g-cap">${s.caption} <span class="g-ops">· ${s.ops.length} ops</span></div></div></div>`).join('');
+  document.getElementById('guideBody').innerHTML=
+    '<div class="g-sec"><div class="g-h">The idea</div><p>Every piece of content is a <b>Work</b>. You walk it left-to-right down the pipeline; each stage has its own AI tools in <b>The Desk</b> on the right. Brands are fully siloed — voice, works, and context never bleed across them. Everything saves as plain Markdown + JSON in your vault, so the files outlive the app.</p></div>'+
+    '<div class="g-sec"><div class="g-h">The pipeline</div>'+stages+'<p class="g-note">This workflow is a starting point, not a cage — it is data-driven and will become fully customizable (add, remove, reorder stages) in a later update.</p></div>'+
+    '<div class="g-sec"><div class="g-h">The Desk</div><p>Open a stage and The Desk shows that stage&#39;s operations. Each call is grounded in the brand&#39;s <b>Voice</b>, plus any <b>Context</b> files you toggle on. <b>Master Context</b> is the one place context crosses brands — use it sparingly.</p></div>'+
+    '<div class="g-sec"><div class="g-h">Writing modes</div><p><b>Live</b> renders your Markdown but shows the block you&#39;re editing as raw source. <b>Source</b> is pure Markdown. <b>Reading</b> is the clean rendered view. Switch anytime with the toggle above the editor.</p></div>'+
+    '<div class="g-sec"><div class="g-h">Shipping</div><p>Walk a Work to <b>Ship</b> and hit <b>Publish</b> — it copies the final and writes a clean Markdown file to <code>vault/published</code>. The ✓ button lists everything you&#39;ve shipped.</p></div>';
+}
+function openGuide(){renderGuide();document.getElementById('guideOverlay').classList.add('open');if(!uiState.guideSeen){uiState.guideSeen=true;saveUIState();}}
+function closeGuide(){document.getElementById('guideOverlay').classList.remove('open');}
+function guideOverlayClick(e){if(e.target===e.currentTarget)closeGuide();}
+function maybeAutoGuide(){if(!uiState.guideSeen)openGuide();}
+
+/* ===== Workflow editor (configurable pipeline + AI instructions) ===== */
+let pipeDraft=null,pipeNotesDraft='',pdStage=0,pdOp=0,pipeDirty=false,wfNotesOpen=false;
+const WF_TOKENS=['{{text}}','{{voiceLine}}','{{platform}}','{{guide}}','{{brand}}'];
+function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function attr(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/"/g,'&quot;');}
+function slug(s){return String(s||'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'');}
+function clonePD(){return JSON.parse(JSON.stringify(pipeDraft));}
+function openWorkflow(){pipeDraft=clonePipeline(PIPELINE);pipeNotesDraft=pipelineNotes;pdStage=0;pdOp=0;pipeDirty=false;wfNotesOpen=false;document.getElementById('wfResults').classList.remove('show');renderWorkflow();updateWfDirty();document.getElementById('wfOverlay').classList.add('open');const m=document.querySelector('.wf-modal');if(m){if(uiState.wfW)m.style.width=uiState.wfW+'px';if(uiState.wfH)m.style.height=uiState.wfH+'px';}}
+function wfSaveSize(){const m=document.querySelector('.wf-modal');if(m&&m.offsetWidth){uiState.wfW=m.offsetWidth;uiState.wfH=m.offsetHeight;saveUIState();}}
+function wfClose(){wfSaveSize();if(pipeDirty&&!confirm('Discard unsaved workflow changes?'))return;document.getElementById('wfOverlay').classList.remove('open');}
+function wfOverlayClick(e){if(e.target===e.currentTarget)wfClose();}
+function updateWfDirty(){const el=document.getElementById('wfDirty');if(el){el.textContent=pipeDirty?'UNSAVED':'SAVED';el.style.background=pipeDirty?'var(--accent)':'var(--ink)';}}
+function wfMark(){pipeDirty=true;updateWfDirty();}
+function worksInStage(id){let n=0;for(const b in works)n+=(works[b]||[]).filter(w=>w.stage===id).length;return n;}
+function wfUniqueStageId(base){const ids=pipeDraft.map(s=>s.id);let id=slug(base)||'stage',n=1;while(ids.includes(id))id=(slug(base)||'stage')+(++n);return id;}
+function wfUniqueOpId(stage,base){const ids=stage.ops.map(o=>o.id);let id=slug(base)||'task',n=1;while(ids.includes(id))id=(slug(base)||'task')+(++n);return id;}
+function renderWorkflow(){
+  if(!pipeDraft)return;
+  if(pdStage>=pipeDraft.length)pdStage=Math.max(0,pipeDraft.length-1);
+  document.getElementById('wfStages').innerHTML='<div class="wf-section-h">Stages · '+pipeDraft.length+'</div>'+pipeDraft.map((s,i)=>
+    '<div class="wf-srow '+(i===pdStage?'sel':'')+'" onclick="wfSelStage('+i+')"><span class="g">'+esc(s.glyph||'•')+'</span><span class="t" id="wf-st-'+i+'">'+esc(s.label)+'</span>'+
+    '<button class="wf-mini" title="Up" onclick="event.stopPropagation();wfMoveStage('+i+',-1)">↑</button><button class="wf-mini" title="Down" onclick="event.stopPropagation();wfMoveStage('+i+',1)">↓</button><button class="wf-mini" title="Delete" onclick="event.stopPropagation();wfDelStage('+i+')">✕</button></div>'
+  ).join('')+'<button class="wf-add" onclick="wfAddStage()">+ Stage</button>';
+  const s=pipeDraft[pdStage],det=document.getElementById('wfDetail');
+  if(!s){det.innerHTML='<div class="wf-detail">No stages — add one.</div>';return;}
+  if(pdOp>=s.ops.length)pdOp=Math.max(0,s.ops.length-1);
+  const o=s.ops[pdOp];
+  det.innerHTML='<div class="wf-detail">'+
+    '<div class="wf-notes-toggle" onclick="wfEditNotes()">✎ House style / workflow notes — steers the AI</div>'+
+    (wfNotesOpen?'<div class="wf-fld"><textarea class="wf-ta" style="min-height:80px" oninput="pipeNotesDraft=this.value;wfMark()" placeholder="Global guidance the AI keeps every task aligned to — tone, audience, rules, what to avoid.">'+esc(pipeNotesDraft)+'</textarea></div>':'')+
+    '<div class="wf-row2"><div class="wf-fld" style="flex:2"><label>Stage name</label><input class="wf-in" value="'+attr(s.label)+'" oninput="wfStageField(\'label\',this.value)"></div>'+
+    '<div class="wf-fld" style="flex:0 0 80px"><label>Glyph</label><input class="wf-in" value="'+attr(s.glyph)+'" oninput="wfStageField(\'glyph\',this.value)"></div></div>'+
+    '<div class="wf-fld"><label>Caption</label><input class="wf-in" value="'+attr(s.caption)+'" oninput="wfStageField(\'caption\',this.value)"></div>'+
+    '<div class="wf-section-h" style="padding-left:0">Tasks · '+s.ops.length+'</div>'+
+    s.ops.map((op,i)=>'<div class="wf-srow '+(i===pdOp?'sel':'')+'" onclick="wfSelOp('+i+')"><span class="g">'+esc(op.glyph||'•')+'</span><span class="t" id="wf-op-'+i+'">'+esc(op.label)+'</span><span class="wf-mini" style="opacity:1">'+(op.kind==='pri'?'PRI':'sec')+'</span><button class="wf-mini" onclick="event.stopPropagation();wfMoveOp('+i+',-1)">↑</button><button class="wf-mini" onclick="event.stopPropagation();wfMoveOp('+i+',1)">↓</button><button class="wf-mini" onclick="event.stopPropagation();wfDelOp('+i+')">✕</button></div>').join('')+
+    '<button class="wf-add" onclick="wfAddOp()">+ Task</button>'+
+    (o?('<div class="wf-detail-head"><span class="k">Task instruction</span><button class="wf-gen" onclick="wfGenOp(event)">✨ Generate / improve</button></div>'+
+    '<div class="wf-row2"><div class="wf-fld" style="flex:2"><label>Task name</label><input class="wf-in" value="'+attr(o.label)+'" oninput="wfOpField(\'label\',this.value)"></div>'+
+    '<div class="wf-fld" style="flex:0 0 80px"><label>Glyph</label><input class="wf-in" value="'+attr(o.glyph)+'" oninput="wfOpField(\'glyph\',this.value)"></div>'+
+    '<div class="wf-fld" style="flex:0 0 150px"><label>Priority</label><div class="wf-kind"><button class="'+(o.kind==='pri'?'on':'')+'" onclick="wfSetKind(\'pri\')">Primary</button><button class="'+(o.kind!=='pri'?'on':'')+'" onclick="wfSetKind(\'sec\')">Secondary</button></div></div></div>'+
+    '<div class="wf-fld"><label>AI instruction (template)</label><textarea class="wf-ta" id="wfPrompt" oninput="wfOpField(\'prompt\',this.value)">'+esc(o.prompt)+'</textarea>'+
+    '<div class="wf-tokens">'+WF_TOKENS.map(t=>'<span class="wf-tok" onclick="wfInsertToken(\''+t+'\')">'+t+'</span>').join('')+'</div></div>'):'')+
+    '</div>';
+}
+function wfStageField(f,v){pipeDraft[pdStage][f]=v;wfMark();if(f==='label'){const el=document.getElementById('wf-st-'+pdStage);if(el)el.textContent=v;}}
+function wfOpField(f,v){pipeDraft[pdStage].ops[pdOp][f]=v;wfMark();if(f==='label'){const el=document.getElementById('wf-op-'+pdOp);if(el)el.textContent=v;}}
+function wfSetKind(k){pipeDraft[pdStage].ops[pdOp].kind=k;wfMark();renderWorkflow();}
+function wfInsertToken(t){const ta=document.getElementById('wfPrompt');if(!ta)return;const a=ta.selectionStart,b=ta.selectionEnd,v=ta.value;ta.value=v.slice(0,a)+t+v.slice(b);ta.focus();ta.setSelectionRange(a+t.length,a+t.length);wfOpField('prompt',ta.value);}
+function wfSelStage(i){if(pdStage!==i){pdStage=i;pdOp=0;renderWorkflow();}}
+function wfSelOp(i){if(pdOp!==i){pdOp=i;renderWorkflow();}}
+function wfMoveStage(i,d){const j=i+d;if(j<0||j>=pipeDraft.length)return;const t=pipeDraft[i];pipeDraft[i]=pipeDraft[j];pipeDraft[j]=t;pdStage=j;wfMark();renderWorkflow();}
+function wfMoveOp(i,d){const ops=pipeDraft[pdStage].ops,j=i+d;if(j<0||j>=ops.length)return;const t=ops[i];ops[i]=ops[j];ops[j]=t;pdOp=j;wfMark();renderWorkflow();}
+function wfAddStage(){pipeDraft.push({id:wfUniqueStageId('stage'),label:'New Stage',glyph:'◦',caption:'',ops:[{id:'task',label:'New Task',glyph:'•',kind:'pri',prompt:'{{voiceLine}}\n\nWrite your instruction here. Use {{text}} for the current draft.'}]});pdStage=pipeDraft.length-1;pdOp=0;wfMark();renderWorkflow();}
+function wfDelStage(i){const s=pipeDraft[i];if(pipeDraft.length<=1){toast('Keep at least one stage');return;}const n=worksInStage(s.id);if(n>0&&!confirm(n+' work(s) sit in "'+s.label+'". They stay safe (shown with ⌫) but lose this stage. Delete anyway?'))return;else if(n===0&&!confirm('Delete stage "'+s.label+'"?'))return;pipeDraft.splice(i,1);if(pdStage>=pipeDraft.length)pdStage=Math.max(0,pipeDraft.length-1);pdOp=0;wfMark();renderWorkflow();}
+function wfAddOp(){const ops=pipeDraft[pdStage].ops;ops.push({id:wfUniqueOpId(pipeDraft[pdStage],'task'),label:'New Task',glyph:'•',kind:'sec',prompt:'{{voiceLine}}\n\nWrite your instruction here. Use {{text}} for the current draft.'});pdOp=ops.length-1;wfMark();renderWorkflow();}
+function wfDelOp(i){const ops=pipeDraft[pdStage].ops;if(ops.length<=1){toast('A stage needs at least one task');return;}if(!confirm('Delete task "'+ops[i].label+'"?'))return;ops.splice(i,1);if(pdOp>=ops.length)pdOp=Math.max(0,ops.length-1);wfMark();renderWorkflow();}
+function wfEditNotes(){wfNotesOpen=!wfNotesOpen;renderWorkflow();}
+function wfReset(){if(!confirm('Reset the entire workflow to the shipped default? Discards your customizations.'))return;pipeDraft=clonePipeline(DEFAULT_PIPELINE);pipeNotesDraft='';pdStage=0;pdOp=0;wfMark();renderWorkflow();}
+function wfSave(){
+  for(const s of pipeDraft){if(!s.label||!s.label.trim()){toast('Every stage needs a name');return;}if(!s.ops.length){toast('Stage "'+s.label+'" has no tasks');return;}}
+  PIPELINE=clonePD();pipelineNotes=pipeNotesDraft;
+  if(window.COS)window.COS.savePipeline({notes:pipelineNotes,stages:PIPELINE});
+  pipeDirty=false;updateWfDirty();
+  filterStage='all';
+  if(activeStage&&PIPELINE.findIndex(s=>s.id===activeStage)<0)activeStage=PIPELINE[0].id;
+  renderStageFilter();renderWorks();renderRail();renderDesk();
+  toast('Workflow saved');
+}
+/* ---- AI instructions generator / auditor ---- */
+function pipeForAI(){return JSON.stringify(pipeDraft.map(s=>({id:s.id,stage:s.label,caption:s.caption,tasks:s.ops.map(o=>({id:o.id,task:o.label,kind:o.kind,instruction:o.prompt}))})));}
+function genModel(){return (SETTINGS.models&&SETTINGS.models.default)||modelFor('draft');}
+function parseJSONLoose(s){if(!s)return null;let t=s.trim().replace(/^```[a-z]*\n?/i,'').replace(/```$/,'').trim();const a=t.indexOf('{'),b=t.lastIndexOf('}');if(a>=0&&b>a)t=t.slice(a,b+1);try{return JSON.parse(t);}catch(e){return null;}}
+async function wfGenOp(ev){
+  const s=pipeDraft[pdStage],o=s.ops[pdOp];if(!o)return;
+  if(!SETTINGS.apiKey){toast('Add your API key in Settings');return;}
+  const btn=ev&&ev.target,orig=btn?btn.textContent:'';if(btn){btn.textContent='Working…';btn.disabled=true;}
+  const prompt='You design AI instructions for a content-creation pipeline. Template tokens you may use literally: {{text}} (current draft/notes), {{voiceLine}} (brand voice), {{platform}}, {{guide}}, {{brand}}.\n\nHouse style:\n'+(pipeNotesDraft||'(none)')+'\n\nFull pipeline (JSON):\n'+pipeForAI()+'\n\nRewrite and improve ONLY the instruction for stage "'+s.label+'" → task "'+o.label+'" (kind: '+(o.kind==='pri'?'primary':'secondary')+'). Make it crisp and specific, coherent with the other tasks (no overlap or contradiction), aligned to the house style, using tokens where useful. Return ONLY the new instruction text — no preamble, no quotes, no code fences.';
+  try{
+    let out=await callModel(prompt,genModel());
+    out=(out||'').trim().replace(/^```[a-z]*\n?/i,'').replace(/```$/,'').trim();
+    if(out){o.prompt=out;const ta=document.getElementById('wfPrompt');if(ta)ta.value=out;wfMark();toast('Instruction updated — review & Save');}
+  }catch(e){toast('Generate failed — '+((e&&e.message)||e));}
+  finally{if(btn){btn.textContent=orig;btn.disabled=false;}}
+}
+let _wfFix={};
+async function wfAudit(){
+  if(!SETTINGS.apiKey){toast('Add your API key in Settings');return;}
+  const res=document.getElementById('wfResults');res.classList.add('show');res.innerHTML='<div class="wf-results-h">⚖ Auditing the workflow…</div>';
+  const prompt='Audit the AI instructions of this content pipeline for quality and coherence.\n\nHouse style:\n'+(pipeNotesDraft||'(none)')+'\n\nPipeline (JSON):\n'+pipeForAI()+'\n\nFind real problems: contradictions between tasks, overlapping/duplicate tasks, gaps in the workflow, instructions that drift from the house style, vague/weak instructions, missing use of tokens. Respond with ONLY JSON: {"findings":[{"severity":"high|med|low","stageId":"","opId":"","where":"Stage → Task","issue":"...","suggestedInstruction":"full replacement instruction OR empty string"}]}. Use empty opId for stage/whole-pipeline issues. No prose outside the JSON.';
+  try{const data=parseJSONLoose(await callModel(prompt,genModel()));renderWfFindings((data&&data.findings)||[]);}
+  catch(e){res.innerHTML='<div class="wf-results-h">Audit failed</div><div class="set-hint">'+esc((e&&e.message)||e)+'</div>';}
+}
+function renderWfFindings(f){
+  const res=document.getElementById('wfResults');_wfFix={};
+  if(!f.length){res.innerHTML='<div class="wf-results-h">⚖ Audit — no issues found ✓</div>';return;}
+  res.innerHTML='<div class="wf-results-h">⚖ Audit — '+f.length+' finding(s)</div>'+f.map((x,i)=>{_wfFix[i]=x;return '<div class="wf-finding"><div><span class="sev">'+esc((x.severity||'med'))+'</span><span class="where">'+esc(x.where||'')+'</span></div><div class="issue">'+esc(x.issue||'')+'</div>'+(x.suggestedInstruction?'<button class="wf-apply" onclick="wfApplyFix('+i+')">Apply suggested fix</button>':'')+'</div>';}).join('');
+}
+function wfApplyFix(i){
+  const f=_wfFix[i];if(!f||!f.suggestedInstruction)return;
+  const si=pipeDraft.findIndex(s=>s.id===f.stageId);if(si<0){toast('Stage not found for this fix');return;}
+  const oi=f.opId?pipeDraft[si].ops.findIndex(o=>o.id===f.opId):-1;
+  if(oi<0){toast('Stage-level note — open the relevant task to apply');return;}
+  pipeDraft[si].ops[oi].prompt=f.suggestedInstruction;pdStage=si;pdOp=oi;wfMark();renderWorkflow();toast('Fix applied — review & Save');
+}
+let _wfSug={};
+async function wfSuggest(){
+  if(!SETTINGS.apiKey){toast('Add your API key in Settings');return;}
+  const res=document.getElementById('wfResults');res.classList.add('show');res.innerHTML='<div class="wf-results-h">✨ Looking for gaps…</div>';
+  const prompt='Suggest stages or tasks that would round out this content pipeline without redundancy.\n\nHouse style:\n'+(pipeNotesDraft||'(none)')+'\n\nPipeline (JSON):\n'+pipeForAI()+'\n\nRespond with ONLY JSON: {"suggestions":[{"kind":"stage|task","stageId":"(for a task: the stage id to add it under)","label":"","glyph":"one symbol","instruction":"full AI instruction using tokens like {{text}}","rationale":"why it helps"}]}. No prose outside the JSON.';
+  try{const data=parseJSONLoose(await callModel(prompt,genModel()));renderWfSuggestions((data&&data.suggestions)||[]);}
+  catch(e){res.innerHTML='<div class="wf-results-h">Suggest failed</div>';}
+}
+function renderWfSuggestions(sugs){
+  const res=document.getElementById('wfResults');_wfSug={};
+  if(!sugs.length){res.innerHTML='<div class="wf-results-h">✨ No suggestions</div>';return;}
+  res.innerHTML='<div class="wf-results-h">✨ '+sugs.length+' suggestion(s)</div>'+sugs.map((s,i)=>{_wfSug[i]=s;return '<div class="wf-finding"><div><span class="sev">'+esc(s.kind||'task')+'</span><span class="where">'+esc((s.glyph||'•')+' '+(s.label||'')+(s.kind==='task'&&s.stageId?(' → '+s.stageId):''))+'</span></div><div class="issue">'+esc(s.rationale||'')+'</div><button class="wf-apply" onclick="wfAddSuggestion('+i+')">Add to workflow</button></div>';}).join('');
+}
+function wfAddSuggestion(i){
+  const s=_wfSug[i];if(!s)return;
+  if(s.kind==='stage'){pipeDraft.push({id:wfUniqueStageId(s.label||'stage'),label:s.label||'New Stage',glyph:s.glyph||'◦',caption:s.rationale||'',ops:[{id:'task',label:s.label||'Task',glyph:s.glyph||'•',kind:'pri',prompt:s.instruction||'{{voiceLine}}\n\n{{text}}'}]});pdStage=pipeDraft.length-1;pdOp=0;}
+  else{let si=pipeDraft.findIndex(x=>x.id===s.stageId);if(si<0)si=pdStage;const st=pipeDraft[si];st.ops.push({id:wfUniqueOpId(st,s.label||'task'),label:s.label||'New Task',glyph:s.glyph||'•',kind:'sec',prompt:s.instruction||'{{voiceLine}}\n\n{{text}}'});pdStage=si;pdOp=st.ops.length-1;}
+  wfMark();renderWorkflow();toast('Added — review & Save');
+}
+
+/* ---- vault: reveal + change ---- */
+async function revealVault(){
+  if(window.COS&&window.COS.isTauri&&window.COS.vault){
+    const ok=await window.COS.revealVault();
+    toast(ok?('Vault — '+window.COS.vault):'Could not open vault folder');
+  }else{toast('In-memory mode — no vault on disk yet');}
+}
+function openVault(){
+  document.getElementById('vaultPath').textContent=(window.COS&&window.COS.vault)||'In-memory mode — no vault folder selected';
+  document.getElementById('vaultOverlay').classList.add('open');
+}
+function closeVault(){document.getElementById('vaultOverlay').classList.remove('open');}
+function vaultOverlayClick(e){if(e.target===e.currentTarget)closeVault();}
+async function revealVaultFromModal(){await revealVault();}
+async function doChangeVault(){
+  if(!(window.COS&&window.COS.isTauri)){toast('In-memory mode — nothing to change');return;}
+  if(!confirm('Switch to a different vault folder?\n\nThe app will reload all works, context, voice, and settings from the new folder. Unsaved edits in the current work may be lost.'))return;
+  const v=await window.COS.changeVault();
+  if(!v){toast('Vault unchanged');return;}
+  await loadAllFromVault();
+  closeVault();init();
+  toast('Vault switched');
+}
+
+/* ---- Published: shipped-works view + export ---- */
+function openPublished(){renderPublished();document.getElementById('pubOverlay').classList.add('open');}
+function closePublished(){document.getElementById('pubOverlay').classList.remove('open');}
+function pubOverlayClick(e){if(e.target===e.currentTarget)closePublished();}
+function renderPublished(){
+  document.getElementById('pubBrand').textContent=brands[cur].name.toUpperCase();
+  const list=(works[cur]||[]).filter(w=>w.stage==='ship');
+  const el=document.getElementById('pubBody');
+  if(!list.length){el.innerHTML='<div class="ctx-empty" style="padding:24px 16px">Nothing shipped yet for '+brands[cur].name+'.<br>Walk a work to the Ship stage, then hit Publish in The Desk.</div>';return;}
+  el.innerHTML=list.map(w=>{
+    const name=(w.title||stripTags(w.body).slice(0,46)||'Untitled').replace(/</g,'&lt;');
+    return`<div class="work-row" onclick="openPublishedWork('${w.id}')"><div class="wr-top"><span class="wr-stage">✓ Ship</span><span class="wr-name">${name}</span></div><div class="wr-meta">Updated ${fmtWhen(w.updated)}</div></div>`;
+  }).join('');
+}
+function openPublishedWork(id){closePublished();openWork(id);}
+async function publishWork(){
+  saveCurrent();
+  const w=getWork();
+  if(!w){toast('No work to publish');return;}
+  const title=document.getElementById('titleField').innerText.trim();
+  const bodyText=getBodyMd().trim();
+  const out=(title?title+'\n\n':'')+bodyText;
+  if(!out.trim()){toast('Nothing to publish yet');return;}
+  try{await navigator.clipboard.writeText(out);}catch(e){}
+  if(window.COS&&window.COS.isTauri){
+    await window.COS.savePublished(cur,w);
+    toast('Published ✓ — copied + saved to vault/published');
+  }else{
+    toast('Copied ✓ — in-memory (no file written)');
+  }
+}
+
+/* ---- Master Context (cross-brand) ---- */
+function openMaster(){renderMaster();document.getElementById('masterOverlay').classList.add('open');}
+function closeMaster(){document.getElementById('masterOverlay').classList.remove('open');}
+function masterOverlayClick(e){if(e.target===e.currentTarget)closeMaster();}
+function renderMaster(){
+  const el=document.getElementById('masterList');
+  if(!masterFiles.length){el.innerHTML='<div class="ctx-empty">No master files yet.<br>Add cross-brand facts, your overarching story, or global style rules.</div>';updateMasterCount();updateMasterPip();return;}
+  el.innerHTML=masterFiles.map((f,i)=>`<div class="ctx-card"><div class="ctx-card-head"><input class="ctx-name" value="${f.name.replace(/"/g,'&quot;')}" data-i="${i}" onchange="renameMaster(${i},this.value)"><button class="ctx-del" onclick="deleteMaster(${i})" title="Delete">✕</button></div><textarea class="ctx-body" data-i="${i}" oninput="masterFiles[${i}].body=this.value">${(f.body||'').replace(/</g,'&lt;')}</textarea><button class="ctx-save" onclick="saveMasterCard(${i})">Save file</button></div>`).join('');
+  updateMasterCount();updateMasterPip();
+}
+function addMaster(){
+  openInput('Master file name','e.g. global-story, brand-facts',async(name)=>{
+    if(!name)return;
+    const safe=name.replace(/[^\w\- ]/g,'').trim()||'note';
+    masterFiles.unshift({name:safe,body:''});
+    renderMaster();
+    if(window.COS)await window.COS.saveMasterFile(safe,'');
+  });
+}
+function renameMaster(i,val){masterFiles[i].name=val.replace(/[^\w\- ]/g,'').trim()||'note';}
+async function saveMasterCard(i){const f=masterFiles[i];if(window.COS)await window.COS.saveMasterFile(f.name,f.body);toast('Saved — '+f.name);}
+async function deleteMaster(i){const f=masterFiles[i];if(!confirm('Delete master file "'+f.name+'"?'))return;if(window.COS)await window.COS.deleteMasterFile(f.name);masterFiles.splice(i,1);renderMaster();toast('Deleted');}
+function toggleMaster(){useMaster=!useMaster;updateMasterPip();}
+function toggleSearch(){useSearch=!useSearch;updateSearchPip();if(useSearch&&!nativeSearch()&&!SETTINGS.searchKey)toast('Add a Tavily search key in Settings for this provider');}
+function updateSearchPip(){const t=document.getElementById('searchToggle'),p=document.getElementById('searchPip');if(!t||!p)return;t.classList.toggle('on',useSearch);p.textContent=useSearch?(nativeSearch()?'ON · native':'ON · tavily'):'OFF';}
+function updateMasterPip(){
+  const n=masterFiles.length;
+  const t=document.getElementById('masterToggle');const pip=document.getElementById('masterPip');
+  if(!t||!pip)return;
+  if(useMaster&&n>0){t.classList.add('on');pip.textContent='ON · '+n;}
+  else{t.classList.remove('on');pip.textContent=(n>0?'OFF · '+n:'NONE');if(useMaster&&n===0)useMaster=false;}
+}
+function updateMasterCount(){const el=document.getElementById('masterCount');if(el)el.textContent=masterFiles.length?(''+masterFiles.length):'—';}
+
+async function loadAllFromVault(){
+  const data=await window.COS.loadWorks();
+  if(data){ for(const b in data){ if(data[b]) works[b]=data[b]; } }
+  const s=await window.COS.loadSettings();
+  if(s) SETTINGS=Object.assign(SETTINGS,s);
+  const pl=await window.COS.loadPipeline(); if(pl&&Array.isArray(pl.stages)&&pl.stages.length){PIPELINE=pl.stages;pipelineNotes=pl.notes||'';}
+  const mx=await window.COS.loadMaster(); if(mx) masterFiles=mx;
+  for(const b in brands){
+    try{
+      const vp=await window.COS.loadVoice(b); if(vp&&vp.voice) brands[b].voice=vp.voice;
+      const cx=await window.COS.loadContext(b); if(cx) contextFiles[b]=cx;
+    }catch(e){}
+  }
+}
+(async function boot(){
+  let persisted=false,failed=false;
+  if(window.COS&&window.COS.isTauri){
+    try{
+      const v=await window.COS.ensureVault();
+      if(v){ persisted=true; const ui=await window.COS.loadUI(); applyUI(ui); await loadAllFromVault(); }
+    }catch(e){failed=true;console.error('vault load failed',e);}
+  }
+  init();
+  maybeAutoGuide();
+  if(failed)showBanner('Vault load failed — working in memory, edits may not persist');
+  else if(!persisted)showBanner((window.COS&&window.COS.isTauri)?'No vault selected — edits stay in memory':'In-memory mode — edits will not be saved to disk');
+})();
+</script>
+</body>
+</html>

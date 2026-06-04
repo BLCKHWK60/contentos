@@ -1,0 +1,21 @@
+# Dependencies
+node_modules/
+
+# Rust / Tauri build artifacts (large + generated)
+src-tauri/target/
+src-tauri/gen/
+src-tauri/icons/
+
+# OS cruft
+.DS_Store
+**/.DS_Store
+
+# Original zip package — not part of the project (leading ! escaped)
+\!_base-package/
+
+# Claude local settings (permissions, machine-specific)
+.claude/
+
+# Secrets — never commit a vault or any settings.json (contains the API key)
+settings.json
+vault/

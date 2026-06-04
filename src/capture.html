@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Quick Capture</title>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Newsreader:opsz,wght@6..72,400&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--paper:#EAE6D9;--paper-hi:#F4F1E7;--ink:#15110A;--ink-3:#8C8472;--accent:#E5330C;
+  --d:'Bricolage Grotesque',sans-serif;--serif:'Newsreader',Georgia,serif;--mono:'Space Mono',monospace;}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:var(--paper);font-family:var(--d);color:var(--ink);overflow:hidden}
+.bar{display:flex;align-items:stretch;height:38px;border-bottom:2px solid var(--ink)}
+.bar-title{padding:0 14px;display:flex;align-items:center;font-family:var(--d);font-weight:800;font-size:15px;letter-spacing:-0.4px;text-transform:uppercase}
+.bar-x{margin-left:auto;padding:0 14px;background:transparent;border:none;border-left:2px solid var(--ink);font-size:14px;cursor:pointer;color:var(--ink)}
+.bar-x:hover{background:var(--ink);color:var(--paper-hi)}
+.wrap{padding:12px}
+.brand-sel{width:100%;margin-bottom:10px;padding:8px 10px;background:var(--paper-hi);border:2px solid var(--ink);font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--ink);cursor:pointer}
+.ta{width:100%;height:150px;background:var(--paper-hi);border:2px solid var(--ink);padding:11px 13px;font-family:var(--serif);font-size:15px;line-height:1.55;resize:none;outline:none;color:var(--ink)}
+.ta::placeholder{color:var(--ink-3);font-style:italic}
+.foot{margin-top:10px;display:flex;align-items:center;gap:10px}
+.hint{font-family:var(--mono);font-size:9px;letter-spacing:0.5px;text-transform:uppercase;color:var(--ink-3)}
+.save{margin-left:auto;padding:9px 18px;background:var(--ink);color:var(--paper-hi);border:2px solid var(--ink);font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;box-shadow:3px 3px 0 var(--accent);transition:transform 120ms,box-shadow 120ms}
+.save:hover{transform:translate(-2px,-2px);box-shadow:5px 5px 0 var(--accent)}
+.rec{padding:9px 12px;background:transparent;border:2px solid var(--ink);font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;cursor:pointer;color:var(--ink);transition:all 120ms}
+.rec:hover{background:var(--ink);color:var(--paper-hi)}
+.rec.on{background:var(--accent);color:var(--paper-hi);border-color:var(--accent)}
+</style>
+</head>
+<body>
+  <div class="bar">
+    <div class="bar-title">⚡ Capture</div>
+    <button class="bar-x" onclick="hide()">✕</button>
+  </div>
+  <div class="wrap">
+    <select class="brand-sel" id="brand">
+      <option value="victor">Victor Chaidez</option>
+      <option value="bricks">Bricks &amp; Borders</option>
+      <option value="zedia">ZediaLabs</option>
+      <option value="zediatech">ZediaTech</option>
+    </select>
+    <textarea class="ta" id="ta" placeholder="Dump the thought before it's gone. ⌘↵ to save."></textarea>
+    <div class="foot">
+      <button class="rec" id="recBtn" onclick="toggleRec()" title="Record a voice memo — transcribed locally">⏺ Record</button>
+      <span class="hint" id="hint">Lands as a new Spark</span>
+      <button class="save" onclick="save()">Save → Spark</button>
+    </div>
+  </div>
+<script src="bridge.js"></script>
+<script>
+const T=window.__TAURI__;
+async function hide(){ try{ await T.window.getCurrentWindow().hide(); }catch(e){} document.getElementById('ta').value=''; }
+async function save(){
+  const txt=document.getElementById('ta').value.trim();
+  if(!txt){ document.getElementById('ta').focus(); return; }
+  const brand=document.getElementById('brand').value;
+  const work={id:'s'+Date.now(),title:'',body:txt,stage:'spark',platform:'medium',updated:new Date().toISOString()};
+  try{ if(window.COS){ await window.COS.ensureVault(); await window.COS.appendCapture(brand,work);} }catch(e){}
+  const h=document.getElementById('hint'); h.textContent='Saved ✓'; setTimeout(()=>h.textContent='Lands as a new Spark',1500);
+  document.getElementById('ta').value='';
+  hide();
+}
+document.addEventListener('keydown',e=>{ if(e.key==='Escape')hide(); if((e.metaKey||e.ctrlKey)&&e.key==='Enter')save(); });
+window.addEventListener('focus',()=>document.getElementById('ta').focus());
+
+/* ---- local voice transcription (mirrors the main window) ---- */
+let STT={engine:'parakeet',modelId:'parakeet-tdt-v3-int8'},recording=false,mr=null;
+function pcmToWav(samples,rate){
+  const n=samples.length,buf=new ArrayBuffer(44+n*2),v=new DataView(buf);
+  const ws=(o,s)=>{for(let i=0;i<s.length;i++)v.setUint8(o+i,s.charCodeAt(i));};
+  ws(0,'RIFF');v.setUint32(4,36+n*2,true);ws(8,'WAVE');ws(12,'fmt ');
+  v.setUint32(16,16,true);v.setUint16(20,1,true);v.setUint16(22,1,true);
+  v.setUint32(24,rate,true);v.setUint32(28,rate*2,true);v.setUint16(32,2,true);v.setUint16(34,16,true);
+  ws(36,'data');v.setUint32(40,n*2,true);
+  let o=44;for(let i=0;i<n;i++){let x=Math.max(-1,Math.min(1,samples[i]));v.setInt16(o,x<0?x*0x8000:x*0x7FFF,true);o+=2;}
+  return new Uint8Array(buf);
+}
+async function blobTo16kWav(blob){
+  const arr=await blob.arrayBuffer();const AC=window.AudioContext||window.webkitAudioContext;const ac=new AC();
+  const dec=await ac.decodeAudioData(arr);const len=dec.length,ch=dec.numberOfChannels;
+  const mono=new Float32Array(len);for(let c=0;c<ch;c++){const d=dec.getChannelData(c);for(let i=0;i<len;i++)mono[i]+=d[i]/ch;}
+  ac.close();const outLen=Math.max(1,Math.ceil((len/dec.sampleRate)*16000));
+  const off=new OfflineAudioContext(1,outLen,16000);const b=off.createBuffer(1,len,dec.sampleRate);b.copyToChannel(mono,0);
+  const sn=off.createBufferSource();sn.buffer=b;sn.connect(off.destination);sn.start();
+  const rendered=await off.startRendering();return pcmToWav(rendered.getChannelData(0),16000);
+}
+async function transcribeBlob(blob){
+  const wav=await blobTo16kWav(blob);const tt=window.__TAURI__;
+  const dir=await tt.path.appDataDir();const tmp=await tt.path.join(dir,'tmp');
+  await tt.fs.mkdir(tmp,{recursive:true}).catch(()=>{});
+  const p=await tt.path.join(tmp,'rec-'+Date.now()+'.wav');
+  await tt.fs.writeFile(p,wav);
+  const text=await tt.core.invoke('transcribe',{wavPath:p,engine:STT.engine||'parakeet',modelId:STT.modelId||'parakeet-tdt-v3-int8'});
+  tt.fs.remove(p).catch(()=>{});return text;
+}
+async function toggleRec(){
+  const btn=document.getElementById('recBtn'),hint=document.getElementById('hint');
+  if(!recording){
+    try{
+      const stream=await navigator.mediaDevices.getUserMedia({audio:true});
+      mr=new MediaRecorder(stream);const chunks=[];
+      mr.ondataavailable=e=>{if(e.data&&e.data.size)chunks.push(e.data);};
+      mr.onstop=async()=>{stream.getTracks().forEach(t=>t.stop());btn.classList.remove('on');btn.textContent='⏺ Record';hint.textContent='Transcribing…';
+        try{const blob=new Blob(chunks,{type:(mr&&mr.mimeType)||'audio/webm'});const text=await transcribeBlob(blob);const ta=document.getElementById('ta');ta.value+=(ta.value?'\n\n':'')+(text||'').trim();hint.textContent='Transcribed ✓';}
+        catch(e){console.error('transcribe',e);hint.textContent=/not installed|model/i.test((e&&e.message)||''+e)?'Download a model in Settings':'Transcription failed';}};
+      mr.start();recording=true;btn.classList.add('on');btn.textContent='⏹ Stop';
+    }catch(e){console.error('getUserMedia',e);hint.textContent=((e&&e.name)==='NotAllowedError')?'Mic blocked — see Privacy settings':'Mic error';}
+  }else{recording=false;if(mr)mr.stop();}
+}
+if(window.COS){ window.COS.ensureVault().then(()=>window.COS.loadSettings()).then(s=>{if(s&&s.stt)STT=s.stt;}).catch(()=>{}); }
+</script>
+</body>
+</html>
