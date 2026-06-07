@@ -82,10 +82,10 @@ html,body{height:100%;background:var(--paper);color:var(--ink);font-family:var(-
 
 /* MASTHEAD */
 .masthead{border-right:var(--rule) solid var(--line);display:flex;flex-direction:column;overflow:hidden;background:var(--paper);animation:rise 400ms cubic-bezier(0.2,0,0,1) both}
-.wordmark{padding:18px 16px 14px;border-bottom:var(--rule) solid var(--line);flex-shrink:0}
+.wordmark{padding:18px 42px 14px 16px;border-bottom:var(--rule) solid var(--line);flex-shrink:0;overflow:hidden}
 .wm-top{font-family:var(--d);font-weight:800;font-size:24px;line-height:0.92;letter-spacing:-1px}
 .wm-bot{font-family:var(--d);font-weight:800;font-size:24px;line-height:0.92;letter-spacing:-1px;display:inline-block;background:var(--ink);color:var(--paper-hi);padding:0 6px;margin-top:2px}
-.kicker{font-family:var(--mono);font-size:9.5px;letter-spacing:2px;text-transform:uppercase;color:var(--ink-3);padding:13px 16px 7px;flex-shrink:0}
+.kicker{font-family:var(--mono);font-size:9.5px;letter-spacing:2px;text-transform:uppercase;color:var(--ink-3);padding:13px 16px 7px;flex-shrink:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .brand-stack{flex:1;overflow-y:auto;scrollbar-width:none}.brand-stack::-webkit-scrollbar{display:none}
 .brand-row{position:relative;padding:12px 30px 12px 16px;border-bottom:var(--rule2) solid var(--line);cursor:pointer;transition:background var(--ease),color var(--ease)}
 .brand-row:hover{background:var(--card)}
@@ -112,7 +112,7 @@ html,body{height:100%;background:var(--paper);color:var(--ink);font-family:var(-
 
 /* INDEX */
 .index{border-right:var(--rule) solid var(--line);display:flex;flex-direction:column;overflow:hidden;background:var(--paper);animation:rise 400ms cubic-bezier(0.2,0,0,1) 60ms both}
-.index-head{padding:16px 18px 13px;border-bottom:var(--rule) solid var(--line);flex-shrink:0}
+.index-head{padding:16px 42px 13px 18px;border-bottom:var(--rule) solid var(--line);flex-shrink:0}
 .index-kicker{font-family:var(--mono);font-size:9.5px;letter-spacing:2px;text-transform:uppercase;color:var(--ink-3);margin-bottom:6px}
 .index-title{font-family:var(--d);font-weight:800;font-size:27px;line-height:0.95;letter-spacing:-1px;text-transform:uppercase;margin-bottom:13px}
 .idx-btns{display:flex;gap:8px}
@@ -145,7 +145,7 @@ html,body{height:100%;background:var(--paper);color:var(--ink);font-family:var(-
 .dw-btn:disabled{opacity:0.4;cursor:not-allowed;pointer-events:none}
 .work-row.active{background:var(--accent);color:var(--paper-hi)}
 .work-row.active .wr-meta{color:rgba(244,241,231,0.75)}
-.wr-top{display:flex;align-items:baseline;gap:9px;margin-bottom:5px}
+.wr-top{display:flex;flex-direction:column;align-items:flex-start;gap:6px;margin-bottom:5px}
 .wr-stage{font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;flex-shrink:0;border:1.5px solid currentColor;padding:1px 5px}
 .wr-name{font-family:var(--d);font-weight:600;font-size:14px;line-height:1.25;letter-spacing:-0.2px;flex:1;min-width:0}
 .wr-meta{font-family:var(--mono);font-size:9px;letter-spacing:0.5px;text-transform:uppercase;color:var(--ink-3);transition:color var(--ease)}
@@ -255,6 +255,10 @@ html,body{height:100%;background:var(--paper);color:var(--ink);font-family:var(-
 button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,[contenteditable]:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
 .panel-x{background:transparent;border:1.5px solid var(--line);width:19px;height:19px;line-height:1;font-size:12px;cursor:pointer;color:var(--ink-2);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all var(--ease)}
 .panel-x:hover{background:var(--ink);color:var(--paper-hi)}
+/* collapse chevron — same top-right plane in both panels */
+.panel-collapse{position:absolute;top:13px;right:11px;z-index:5}
+.masthead.collapsed .panel-collapse,.index.collapsed .panel-collapse{display:none}
+.mr-expand{align-self:center;margin:13px 0 10px}
 /* masthead collapsed rail */
 .mast-rail{display:none}
 .masthead.collapsed .wordmark,.masthead.collapsed .kicker,.masthead.collapsed .brand-stack,.masthead.collapsed .masthead-foot{display:none}
@@ -271,7 +275,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 /* index collapsed rail */
 .idx-rail{display:none}
 .index.collapsed .index-head,.index.collapsed .stage-filter,.index.collapsed .work-stack{display:none}
-.index.collapsed .idx-rail{display:flex;flex-direction:column;align-items:center;padding:10px 0;gap:10px}
+.index.collapsed .idx-rail{display:flex;flex-direction:column;align-items:center;padding:13px 0 10px;gap:10px}
 .idx-rail .vlabel{writing-mode:vertical-rl;font-family:var(--mono);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--ink-3)}
 
 /* GUIDE */
@@ -657,8 +661,9 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
   </div>
   <div class="app">
     <aside class="masthead collapsed" id="masthead">
+      <button class="panel-x panel-collapse" onclick="toggleMasthead()" title="Collapse workspaces">‹</button>
       <div class="wordmark"><div class="wm-top">CONTENT</div><div class="wm-bot">OS</div></div>
-      <div class="kicker" style="display:flex;align-items:center;justify-content:space-between;gap:8px">Workspaces — Siloed <button class="panel-x" onclick="toggleMasthead()" title="Collapse">‹</button></div>
+      <div class="kicker">Workspaces — Siloed</div>
       <div class="brand-stack" id="brandStack"></div>
       <div class="masthead-foot">
         <button class="master-row" onclick="openWsCreate()">＋ New workspace</button>
@@ -677,8 +682,9 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
       <div class="rz" id="mhRz" onmousedown="startRz(event,'masthead')"></div>
     </aside>
     <aside class="index" id="index">
+      <button class="panel-x panel-collapse" onclick="toggleIndex()" title="Collapse index">‹</button>
       <div class="index-head">
-        <div class="index-kicker" style="display:flex;align-items:center;justify-content:space-between;gap:8px">The Index <button class="panel-x" onclick="toggleIndex()" title="Collapse">‹</button></div>
+        <div class="index-kicker">The Index</div>
         <div class="index-title" id="indexTitle">Content<br>OS</div>
         <div class="idx-btns">
           <button class="capture-btn" onclick="openCapture()">⚡ Capture</button>
@@ -1620,7 +1626,7 @@ function toggleIndex(){uiState.indexCollapsed=!uiState.indexCollapsed;applyUI();
 function renderMastRail(){
   const el=document.getElementById('mastRail');if(!el)return;
   const chips=Object.values(brands).map(b=>`<button class="mr-chip ${b.id===cur?'active':''}" style="--brandc:${b.accent}" title="${b.name}" onclick="switchBrand('${b.id}')"></button>`).join('');
-  el.innerHTML='<button class="mr-x" onclick="toggleMasthead()" title="Expand workspaces">›</button>'+
+  el.innerHTML='<button class="panel-x mr-expand" onclick="toggleMasthead()" title="Expand workspaces">›</button>'+
     '<div class="mr-chips">'+chips+'</div>'+
     '<div class="mr-icons">'+
       '<button class="mr-ic" title="Guide" onclick="openGuide()">?</button>'+
