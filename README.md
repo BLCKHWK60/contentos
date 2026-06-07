@@ -34,7 +34,8 @@ The app scaffolds:
 ```
 ContentOS/
   brands/
-    victor/ bricks/ zedia/ zediatech/
+    sample/ my-blog/ …    ← one folder per workspace
+      workspace.json  ← workspace name, tag, accent
       works/        ← one .md per Work (frontmatter + body)
       context/      ← voice profiles, story, reference
   inbox/            ← raw captures also land here

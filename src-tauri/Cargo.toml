@@ -2,7 +2,7 @@
 name = "contentos"
 version = "0.3.0"
 description = "ContentOS — content orchestration platform"
-authors = ["Victor Chaidez"]
+authors = []
 edition = "2021"
 
 [lib]

@@ -32,17 +32,12 @@ html,body{height:100%;background:var(--paper);font-family:var(--d);color:var(--i
     <button class="bar-x" onclick="hide()">✕</button>
   </div>
   <div class="wrap">
-    <select class="brand-sel" id="brand">
-      <option value="victor">Victor Chaidez</option>
-      <option value="bricks">Bricks &amp; Borders</option>
-      <option value="zedia">ZediaLabs</option>
-      <option value="zediatech">ZediaTech</option>
-    </select>
+    <select class="brand-sel" id="brand"></select>
     <textarea class="ta" id="ta" placeholder="Dump the thought before it's gone. ⌘↵ to save."></textarea>
     <div class="foot">
       <button class="rec" id="recBtn" onclick="toggleRec()" title="Record a voice memo — transcribed locally">⏺ Record</button>
-      <span class="hint" id="hint">Lands as a new Spark</span>
-      <button class="save" onclick="save()">Save → Spark</button>
+      <span class="hint" id="hint">Lands as a new Idea</span>
+      <button class="save" onclick="save()">Save → Idea</button>
     </div>
   </div>
 <script src="bridge.js"></script>
@@ -53,9 +48,10 @@ async function save(){
   const txt=document.getElementById('ta').value.trim();
   if(!txt){ document.getElementById('ta').focus(); return; }
   const brand=document.getElementById('brand').value;
-  const work={id:'s'+Date.now(),title:'',body:txt,stage:'spark',platform:'medium',updated:new Date().toISOString()};
+  if(!brand){ document.getElementById('hint').textContent='No workspace yet — open the app first'; return; }
+  const work={id:'s'+Date.now(),title:'',body:txt,stage:'idea',platform:'medium',updated:new Date().toISOString()};
   try{ if(window.COS){ await window.COS.ensureVault(); await window.COS.appendCapture(brand,work);} }catch(e){}
-  const h=document.getElementById('hint'); h.textContent='Saved ✓'; setTimeout(()=>h.textContent='Lands as a new Spark',1500);
+  const h=document.getElementById('hint'); h.textContent='Saved ✓'; setTimeout(()=>h.textContent='Lands as a new Idea',1500);
   document.getElementById('ta').value='';
   hide();
 }
@@ -106,7 +102,19 @@ async function toggleRec(){
     }catch(e){console.error('getUserMedia',e);hint.textContent=((e&&e.name)==='NotAllowedError')?'Mic blocked — see Privacy settings':'Mic error';}
   }else{recording=false;if(mr)mr.stop();}
 }
-if(window.COS){ window.COS.ensureVault().then(()=>window.COS.loadSettings()).then(s=>{if(s&&s.stt)STT=s.stt;}).catch(()=>{}); }
+async function loadBrandOptions(){
+  const sel=document.getElementById('brand');if(!sel)return;
+  let ids=[],del=[];
+  try{ if(window.COS&&window.COS.listBrands) ids=await window.COS.listBrands(); }catch(e){}
+  try{ const s=window.COS&&await window.COS.loadSettings(); if(s&&s.deletedBrands)del=s.deletedBrands; }catch(e){}
+  ids=ids.filter(id=>del.indexOf(id)<0);
+  const opts=[];
+  for(const id of ids){ let name=id; try{ const m=await window.COS.loadBrandMeta(id); if(m&&m.name)name=m.name; }catch(e){} opts.push({id:id,name:name}); }
+  if(!opts.length)opts.push({id:'sample',name:'Sample Studio'});
+  sel.innerHTML=opts.map(o=>'<option value="'+o.id+'">'+String(o.name).replace(/</g,'&lt;')+'</option>').join('');
+}
+if(window.COS){ window.COS.ensureVault().then(()=>window.COS.loadSettings()).then(s=>{if(s&&s.stt)STT=s.stt;}).then(loadBrandOptions).catch(loadBrandOptions); }
+else { loadBrandOptions(); }
 </script>
 </body>
 </html>

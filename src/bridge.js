@@ -14,7 +14,7 @@
 (function () {
   const T = window.__TAURI__;
   const isTauri = !!(T && T.fs);
-  const BRANDS = ["victor", "bricks", "zedia", "zediatech"];
+  const safeId = (s) => (s || "").replace(/[^\w.\-]/g, "_");
 
   const COS = {
     isTauri,
@@ -46,15 +46,51 @@
     },
 
     async scaffold() {
+      // Brand folders are created on demand (createBrand / saveWork), not blanket-seeded,
+      // so deleting a workspace doesn't get resurrected on the next launch.
       const { fs, path } = T;
       await fs.mkdir(await path.join(this.vault, "inbox"), { recursive: true }).catch(() => {});
       await fs.mkdir(await path.join(this.vault, "master"), { recursive: true }).catch(() => {});
       await fs.mkdir(await path.join(this.vault, "published"), { recursive: true }).catch(() => {});
-      for (const b of BRANDS) {
-        await fs.mkdir(await path.join(this.vault, "brands", b, "works"), { recursive: true }).catch(() => {});
-        await fs.mkdir(await path.join(this.vault, "brands", b, "context"), { recursive: true }).catch(() => {});
-        await fs.mkdir(await path.join(this.vault, "brands", b, "media"), { recursive: true }).catch(() => {});
+      await fs.mkdir(await path.join(this.vault, "brands"), { recursive: true }).catch(() => {});
+    },
+
+    // ---- workspaces (dynamic, discovered from the vault) ----
+    async listBrands() {
+      if (!isTauri || !this.vault) return [];
+      const { fs, path } = T;
+      let entries = [];
+      try { entries = await fs.readDir(await path.join(this.vault, "brands")); } catch (e) { return []; }
+      return entries.filter((e) => e.isDirectory && e.name).map((e) => e.name);
+    },
+
+    async loadBrandMeta(id) {
+      if (!isTauri || !this.vault) return null;
+      const { fs, path } = T;
+      const p = await path.join(this.vault, "brands", safeId(id), "workspace.json");
+      if (await fs.exists(p).catch(() => false)) {
+        try { return JSON.parse(await fs.readTextFile(p)); } catch (e) { return null; }
       }
+      return null;
+    },
+
+    async saveBrandMeta(id, meta) {
+      if (!isTauri || !this.vault) return;
+      const { fs, path } = T;
+      const dir = await path.join(this.vault, "brands", safeId(id));
+      await fs.mkdir(dir, { recursive: true }).catch(() => {});
+      await fs.writeTextFile(await path.join(dir, "workspace.json"), JSON.stringify(meta || {}, null, 2));
+    },
+
+    async createBrand(id, meta) {
+      if (!isTauri || !this.vault) return id;
+      const { fs, path } = T;
+      const sid = safeId(id);
+      for (const sub of ["works", "context", "media"]) {
+        await fs.mkdir(await path.join(this.vault, "brands", sid, sub), { recursive: true }).catch(() => {});
+      }
+      await this.saveBrandMeta(sid, meta);
+      return sid;
     },
 
     // ---- works ----
@@ -62,7 +98,7 @@
       if (!isTauri || !this.vault) return null;
       const { fs, path } = T;
       const out = {};
-      for (const b of BRANDS) {
+      for (const b of await this.listBrands()) {
         out[b] = [];
         const dir = await path.join(this.vault, "brands", b, "works");
         let entries = [];
@@ -85,6 +121,20 @@
       const dir = await path.join(this.vault, "brands", brand, "works");
       await fs.mkdir(dir, { recursive: true }).catch(() => {});
       await fs.writeTextFile(await path.join(dir, w.id + ".md"), serializeWork(w));
+    },
+
+    async deleteWork(brand, id) {
+      if (!isTauri || !this.vault) return;
+      const { fs, path } = T;
+      const safe = (id || "").replace(/[^\w.\-]/g, "_");
+      try { await fs.remove(await path.join(this.vault, "brands", brand, "works", safe + ".md")); } catch (e) {}
+    },
+
+    async deleteBrand(brand) {
+      if (!isTauri || !this.vault) return;
+      const { fs, path } = T;
+      const safe = (brand || "").replace(/[^\w.\-]/g, "_");
+      try { await fs.remove(await path.join(this.vault, "brands", safe), { recursive: true }); } catch (e) {}
     },
 
     async appendCapture(brand, w) {

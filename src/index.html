@@ -87,8 +87,14 @@ html,body{height:100%;background:var(--paper);color:var(--ink);font-family:var(-
 .wm-bot{font-family:var(--d);font-weight:800;font-size:24px;line-height:0.92;letter-spacing:-1px;display:inline-block;background:var(--ink);color:var(--paper-hi);padding:0 6px;margin-top:2px}
 .kicker{font-family:var(--mono);font-size:9.5px;letter-spacing:2px;text-transform:uppercase;color:var(--ink-3);padding:13px 16px 7px;flex-shrink:0}
 .brand-stack{flex:1;overflow-y:auto;scrollbar-width:none}.brand-stack::-webkit-scrollbar{display:none}
-.brand-row{padding:12px 16px;border-bottom:var(--rule2) solid var(--line);cursor:pointer;transition:background var(--ease),color var(--ease)}
+.brand-row{position:relative;padding:12px 30px 12px 16px;border-bottom:var(--rule2) solid var(--line);cursor:pointer;transition:background var(--ease),color var(--ease)}
 .brand-row:hover{background:var(--card)}
+.ws-del{position:absolute;top:10px;right:9px;width:20px;height:20px;line-height:1;border:none;background:transparent;color:var(--ink-3);font-size:12px;cursor:pointer;opacity:0;transition:opacity var(--ease),color var(--ease)}
+.ws-edit{position:absolute;top:10px;right:31px;width:20px;height:20px;line-height:1;border:none;background:transparent;color:var(--ink-3);font-size:12px;cursor:pointer;opacity:0;transition:opacity var(--ease),color var(--ease)}
+.brand-row:hover .ws-del,.brand-row:hover .ws-edit{opacity:1}
+.ws-del:hover,.ws-edit:hover{color:var(--accent)}
+.brand-row.active .ws-del,.brand-row.active .ws-edit{color:rgba(244,241,231,0.7);opacity:1}
+.brand-row{padding-right:54px}
 .brand-row.active{background:var(--ink);color:var(--paper-hi)}
 .brand-row.active .br-tag,.brand-row.active .br-num{color:rgba(244,241,231,0.55)}
 .br-head{display:flex;align-items:center;gap:8px;margin-bottom:3px}
@@ -121,9 +127,22 @@ html,body{height:100%;background:var(--paper);color:var(--ink);font-family:var(-
 .sf-btn:hover{background:var(--card);color:var(--ink)}
 .sf-btn.active{background:var(--ink);color:var(--paper-hi)}
 .work-stack{flex:1;overflow-y:auto;scrollbar-width:none}.work-stack::-webkit-scrollbar{display:none}
-.work-row{padding:13px 18px;border-bottom:var(--rule2) solid var(--line);cursor:pointer;transition:background var(--ease),color var(--ease)}
+.work-row{position:relative;padding:13px 30px 13px 18px;border-bottom:var(--rule2) solid var(--line);cursor:pointer;transition:background var(--ease),color var(--ease)}
 .work-row:hover{background:var(--ink);color:var(--paper-hi)}
 .work-row:hover .wr-meta{color:rgba(244,241,231,0.6)}
+.wr-del{position:absolute;top:10px;right:8px;width:20px;height:20px;line-height:1;border:none;background:transparent;color:var(--ink-3);font-size:12px;cursor:pointer;opacity:0;transition:opacity var(--ease),color var(--ease)}
+.work-row:hover .wr-del{opacity:1;color:rgba(244,241,231,0.65)}
+.wr-del:hover{color:var(--accent)!important}
+.work-row.active .wr-del{opacity:1;color:rgba(244,241,231,0.75)}
+.dw-body{padding:16px 18px}
+.dw-warn{font-family:var(--serif);font-size:14px;line-height:1.55;color:var(--ink-2);margin-bottom:14px}
+.dw-warn b{color:var(--ink)}
+.dw-btns{display:flex;gap:8px;margin-top:14px;justify-content:flex-end;flex-wrap:wrap}
+.dw-btn{padding:8px 12px;border:var(--rule) solid var(--line);background:transparent;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:0.5px;text-transform:uppercase;cursor:pointer;transition:all var(--ease)}
+.dw-btn:hover{background:var(--ink);color:var(--paper-hi)}
+.dw-btn.wipe{border-color:var(--accent);color:var(--accent)}
+.dw-btn.wipe:hover{background:var(--accent);color:var(--paper-hi)}
+.dw-btn:disabled{opacity:0.4;cursor:not-allowed;pointer-events:none}
 .work-row.active{background:var(--accent);color:var(--paper-hi)}
 .work-row.active .wr-meta{color:rgba(244,241,231,0.75)}
 .wr-top{display:flex;align-items:baseline;gap:9px;margin-bottom:5px}
@@ -642,6 +661,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
       <div class="kicker" style="display:flex;align-items:center;justify-content:space-between;gap:8px">Workspaces — Siloed <button class="panel-x" onclick="toggleMasthead()" title="Collapse">‹</button></div>
       <div class="brand-stack" id="brandStack"></div>
       <div class="masthead-foot">
+        <button class="master-row" onclick="openWsCreate()">＋ New workspace</button>
         <button class="master-row" onclick="openMaster()">◈ Master Context <span style="margin-left:auto;opacity:0.6" id="masterCount">—</span></button>
         <div class="mast-icons">
           <button class="mast-icon" title="Guide" onclick="openGuide()">?</button>
@@ -659,7 +679,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
     <aside class="index" id="index">
       <div class="index-head">
         <div class="index-kicker" style="display:flex;align-items:center;justify-content:space-between;gap:8px">The Index <button class="panel-x" onclick="toggleIndex()" title="Collapse">‹</button></div>
-        <div class="index-title" id="indexTitle">Victor<br>Chaidez</div>
+        <div class="index-title" id="indexTitle">Content<br>OS</div>
         <div class="idx-btns">
           <button class="capture-btn" onclick="openCapture()">⚡ Capture</button>
           <button class="new-work" onclick="newWork()" title="New Work">+</button>
@@ -692,7 +712,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
             <div class="sheet-kicker" id="sheetKicker">Draft — Medium</div>
             <div class="cover-banner" id="coverBanner"></div>
             <div class="title-field" id="titleField" contenteditable="true" data-ph="Headline goes here." oninput="onEdit()"></div>
-            <div class="byline" id="byline">By Victor Chaidez — Draft</div>
+            <div class="byline" id="byline">By —</div>
             <div class="sched-row"><label>Publish <input type="date" id="schedDate" onchange="onSchedChange()"></label><label>Due <input type="date" id="dueDate" onchange="onSchedChange()"></label></div>
             <div class="ed-bar">
               <div class="toolbar" id="mdToolbar" onmousedown="event.preventDefault()">
@@ -714,14 +734,14 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
           </div>
           <div class="view" id="voiceView" style="display:none">
             <div class="view-kicker">Voice Profile</div>
-            <div class="view-title" id="voiceViewTitle">Victor Chaidez</div>
+            <div class="view-title" id="voiceViewTitle">Workspace</div>
             <div class="view-sub">Injected into every operation for this brand — this is how The Desk sounds like you.</div>
             <textarea class="voice-ta" id="voiceTA" placeholder="Describe this brand's voice: tone, perspective, who it speaks to, what it never does…"></textarea>
             <button class="btn-ink" onclick="saveVoice()">Save Voice Profile</button>
           </div>
           <div class="view" id="contextView" style="display:none">
             <div class="view-kicker">Context Library</div>
-            <div class="view-title" id="contextViewTitle">Victor Chaidez</div>
+            <div class="view-title" id="contextViewTitle">Workspace</div>
             <div class="view-sub">Reference files the AI can draw on — story, facts, past work, style notes. Toggle them on in The Desk.</div>
             <button class="ctx-add" onclick="addContext()">+ Add context file</button>
             <div id="ctxList"></div>
@@ -737,7 +757,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
             <div class="desk-view" id="deskAI">
             <div class="desk-scroll" id="deskScroll">
             <div class="vp-block">
-              <div class="vp-bar" id="vpBar">Active Voice — Victor Chaidez</div>
+              <div class="vp-bar" id="vpBar">Active Voice</div>
               <div class="vp-body" id="vpBody">—</div>
             </div>
             <div class="tog-row">
@@ -935,6 +955,64 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
     <div class="appr-body" id="apprBody"></div>
   </div>
 </div>
+<div class="overlay" id="factoryOverlay" onclick="factoryOverlayClick(event)">
+  <div class="modal" style="width:460px">
+    <div class="modal-head"><div class="modal-title">⚠ Reset to factory defaults</div><button class="modal-x" onclick="closeFactory()">✕</button></div>
+    <div class="dw-body">
+      <p class="dw-warn">This <b>erases every workspace and all content</b> in the current vault (works, context, voice, media, master, publish log) and restores the <b>Sample Studio</b> tutorial. Your AI provider keys and downloaded models are kept. This cannot be undone.</p>
+      <label class="set-label">Type <b>RESET</b> to confirm</label>
+      <input class="set-input" id="factoryInput" type="text" oninput="factoryInputCheck()" placeholder="RESET" autocomplete="off">
+      <div class="dw-btns">
+        <button class="dw-btn" onclick="closeFactory()">Cancel</button>
+        <button class="dw-btn wipe" id="factoryGo" onclick="doFactoryReset()" disabled>Erase &amp; reset</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="overlay" id="coConfirmOverlay" onclick="coConfirmBackdrop(event)">
+  <div class="modal" style="width:420px">
+    <div class="modal-head"><div class="modal-title" id="coConfirmTitle">Confirm</div><button class="modal-x" onclick="coConfirmDo(false)">✕</button></div>
+    <div class="dw-body">
+      <p class="dw-warn" id="coConfirmMsg">Are you sure?</p>
+      <div class="dw-btns">
+        <button class="dw-btn" onclick="coConfirmDo(false)">Cancel</button>
+        <button class="dw-btn" id="coConfirmOk" onclick="coConfirmDo(true)">Confirm</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="overlay" id="wsEditOverlay" onclick="wsEditOverlayClick(event)">
+  <div class="modal" style="width:420px">
+    <div class="modal-head"><div class="modal-title" id="wsEditTitle">New workspace</div><button class="modal-x" onclick="closeWsEdit()">✕</button></div>
+    <div class="dw-body">
+      <label class="set-label">Name</label>
+      <input class="set-input" id="wsEditName" type="text" placeholder="e.g. My Blog" autocomplete="off" onkeydown="if(event.key==='Enter')saveWsEdit()">
+      <label class="set-label" style="margin-top:10px">Tag (optional)</label>
+      <input class="set-input" id="wsEditTag" type="text" placeholder="e.g. Personal, Brand, Client" autocomplete="off">
+      <label class="set-label" style="margin-top:10px">Accent color</label>
+      <div><input type="color" id="wsEditAccent" value="#1452E8" style="width:48px;height:34px;border:var(--rule) solid var(--line);background:none;cursor:pointer;padding:0;vertical-align:middle"></div>
+      <div class="dw-btns">
+        <button class="dw-btn" onclick="closeWsEdit()">Cancel</button>
+        <button class="dw-btn wipe" id="wsEditSave" onclick="saveWsEdit()">Save</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="overlay" id="delWsOverlay" onclick="delWsOverlayClick(event)">
+  <div class="modal" style="width:440px">
+    <div class="modal-head"><div class="modal-title">⚠ Delete workspace</div><button class="modal-x" onclick="closeDelWs()">✕</button></div>
+    <div class="dw-body">
+      <p class="dw-warn">You're about to delete <b id="delWsName">Workspace</b> and <b>all of its entries</b>. This cannot be undone.</p>
+      <label class="set-label">Type <b id="delWsMatch">Workspace</b> to confirm</label>
+      <input class="set-input" id="delWsInput" type="text" oninput="delWsInput()" placeholder="workspace name" autocomplete="off">
+      <div class="dw-btns">
+        <button class="dw-btn" onclick="closeDelWs()">Cancel</button>
+        <button class="dw-btn hide" id="delWsHide" onclick="doDeleteWorkspace('hide')" disabled title="Remove from the app but keep its files in the vault">Hide · keep files</button>
+        <button class="dw-btn wipe" id="delWsWipe" onclick="doDeleteWorkspace('wipe')" disabled title="Permanently delete the workspace folder and all its files">Delete files</button>
+      </div>
+    </div>
+  </div>
+</div>
 <div class="overlay" id="planOverlay" onclick="planOverlayClick(event)">
   <div class="modal set-modal plan-modal">
     <div class="modal-head">
@@ -1009,6 +1087,9 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
         <button class="new-work" style="flex:1" onclick="doChangeVault()">Change vault…</button>
       </div>
       <div class="set-hint" style="margin-top:10px;line-height:1.6">Your files live here as plain Markdown + JSON. Changing the vault reloads everything from the new folder.</div>
+      <div class="set-section" style="color:var(--accent);border-top-color:var(--accent)">Danger zone</div>
+      <button class="new-work" style="border-color:var(--accent);color:var(--accent)" onclick="openFactoryReset()">Reset to factory defaults…</button>
+      <div class="set-hint" style="margin-top:8px;line-height:1.6">Erases all workspaces and content in this vault and restores the Sample Studio tutorial. Your AI provider keys and downloaded models are kept.</div>
     </div>
   </div>
 </div>
@@ -1085,37 +1166,29 @@ function platFor(id){return platforms().find(p=>p.id===id)||null;}
 function platLabel(id){const p=platFor(id);return p?p.label:cap(id);}
 function platGuide(id){const p=platFor(id);return p?p.guide:'';}
 
-const brands={
-  victor:{id:'victor',name:'Victor Chaidez',titleHTML:'Victor<br>Chaidez',tag:'Personal',accent:'#E5330C',accentSoft:'rgba(229,51,12,0.12)',voice:'Direct, analytical, veteran. US Army vet turned remote consultant, slow-traveling Europe with wife and dog. Real numbers, no BS, earned the hard way.'},
-  bricks:{id:'bricks',name:'Bricks & Borders',titleHTML:'Bricks &amp;<br>Borders',tag:'Travel/expat',accent:'#0E7A52',accentSoft:'rgba(14,122,82,0.12)',voice:'Warm, adventurous, practical. US expat crossing borders slowly with Gina and Buddy the dog. Real costs, real logistics, beautiful chaos.'},
-  zedia:{id:'zedia',name:'ZediaLabs',titleHTML:'Zedia<br>Labs',tag:'AI products',accent:'#1452E8',accentSoft:'rgba(20,82,232,0.12)',voice:'Technical, builder-focused, irreverent. Show the code, show the receipts. No vaporware. Tools that matter in the AI era.'},
-  zediatech:{id:'zediatech',name:'ZediaTech',titleHTML:'Zedia<br>Tech',tag:'Genesys',accent:'#7A2BD6',accentSoft:'rgba(122,43,214,0.12)',voice:'Professional, precise, authoritative. 10 years of Genesys Cloud expertise. For ops directors and contact center managers who need real solutions.'}
-};
+// Generic factory-default workspace, seeded on a fresh vault. NO personal data ships in code;
+// real workspaces are discovered from the vault (each with its own brands/<id>/workspace.json).
+const EXAMPLE_BRAND={id:'sample',name:'Sample Studio',tag:'Example',accent:'#1452E8',voice:'Clear, friendly, concrete. Speaks plainly, shows real examples, and never sounds hypey. This is a sample voice profile — edit it in the Voice tab to match how you write.'};
+const TUTORIAL_WORKS=[
+  {id:'tut1',stage:'idea',title:'Start here: how ContentOS works',body:"Welcome to ContentOS.\n\nEvery piece of content is a **Work**. You move it left to right down the pipeline: **Idea → Research → Draft → Ready to Publish → Published**. The five stage filters sit at the top of the Index list on the left.\n\n- Click any Work to open it.\n- Click **+ New** to start one, or use **Capture** for a quick thought.\n- Hover a Work and click the **✕** to delete it — you'll be asked to confirm first.\n\nThis text is a real Markdown file in your vault. Edit it, delete it, make it yours."},
+  {id:'tut2',stage:'idea',title:'The Desk: your AI sidebar',body:"Open a Work and look at the right panel: **The Desk**.\n\nIt lists AI prompts for the current stage. The flow:\n\n1. **Click a prompt** to load it — nothing runs yet.\n2. Hit **Autogen** to run it on everything you've written, or type a question and hit **Ask**.\n3. Keep chatting in the response window to dig deeper, or to explain something to it.\n\nThe toggles — **Voice**, **Context**, **Master**, **Web** — control what the AI can see on each call. Use the buttons under the response (Cursor, Append, Replace, Title, Draft) or the **Into Page** switch to drop a reply into your draft."},
+  {id:'tut3',stage:'research',title:'Voice and Context make it sound like you',body:"Two things teach the AI your style.\n\n## Voice\nOne short paragraph describing how this workspace sounds. It's injected into every operation. Open the **Voice** tab above the editor and try editing it.\n\n## Context\nA library of reference files — facts, past work, style notes — that you toggle on in The Desk. Add them in the **Context** tab.\n\n**Master Context** (the ◈ in the left rail) is shared across every workspace. Use it for the few facts that are true everywhere."},
+  {id:'tut4',stage:'draft',title:'Writing: Live, Source, and Reading',body:"The editor has three modes (top right of the sheet):\n\n- **Live** renders your Markdown but shows the paragraph you're editing as raw source, so you can type continuously.\n- **Source** is pure Markdown.\n- **Reading** is the clean, rendered view.\n\nThe toolbar gives you bold, italic, H2, lists, quotes, code, and links.\n\n## This is a heading\n> And this is a quote — switch to Reading to see it formatted.\n\nEverything autosaves as Markdown in your vault."},
+  {id:'tut5',stage:'ready',title:'Platforms: adapt for every channel',body:"Pick a **Format** in the top bar — Medium, LinkedIn, X, Reddit, Blog, GitHub. Each one carries a short guide the AI follows when adapting your draft.\n\nAt the **Ready to Publish** stage, use The Desk to rewrite the same piece for each platform, generate teasers, or find places to share it. The **→ Draft** button can spin a rewrite into a brand-new Draft entry.\n\nAdd, edit, or remove platforms in **Settings → Platforms**."},
+  {id:'tut6',stage:'published',title:'Publishing, Media, and the pipeline editor',body:"On the **Published** stage, hit **Publish** in The Desk — it writes a clean Markdown file to `published/` in your vault and logs where it went.\n\n## Media\nThe **Media** view (toggle at the top of The Desk) stores and generates images for this workspace, and connects to Canva.\n\n## Make the pipeline yours\nThe **Workflow editor** (in the left rail) lets you add, rename, remove, and reorder pipeline stages and the AI tasks inside them. Nothing here is fixed."},
+  {id:'tut7',stage:'idea',title:'Make it yours: workspaces',body:"Workspaces are fully separate — voice, works, context, and media never cross between them.\n\n- Create one with **+ New workspace** (top left): give it a name and an accent color.\n- Rename or recolor any workspace with the **✎** button.\n- Delete one with its **✕** — you choose whether to keep or wipe its files.\n\nWhen you're ready, delete this **Sample Studio** workspace and build your own. You can always start over from **Settings → Reset to factory defaults**."}
+];
+const APP_REFERER='https://contentos.app';
+let brands={},works={};
+function slugify(s){return String(s||'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'')||('ws'+Date.now());}
+function makeBrand(id,meta){meta=meta||{};const accent=meta.accent||'#1452E8';const name=meta.name||id;return{id:id,name:name,titleHTML:esc(name).replace(/\s+/,'<br>'),tag:meta.tag||'Workspace',accent:accent,accentSoft:hexA(accent,0.12),voice:meta.voice||''};}
+function tutorialWorks(){return TUTORIAL_WORKS.map(t=>({id:t.id,title:t.title,body:t.body,stage:t.stage,platform:'medium',scheduled:'',due:'',cover:'',updated:new Date().toISOString()}));}
+function seedExampleInMemory(){brands={};brands[EXAMPLE_BRAND.id]=makeBrand(EXAMPLE_BRAND.id,EXAMPLE_BRAND);works={};works[EXAMPLE_BRAND.id]=tutorialWorks();contextFiles={};contextFiles[EXAMPLE_BRAND.id]=[];cur=EXAMPLE_BRAND.id;}
 
-let works={
-  victor:[
-    {id:'w1',title:'Living on $100K with $30K in debt abroad',body:'',stage:'draft',updated:'Today'},
-    {id:'w2',title:'The real cost of slow travel in Europe',body:'',stage:'ready',updated:'May 28'},
-    {id:'w3',title:'',body:'Voice memo: thoughts on FEIE vs FTC and what I keep getting wrong',stage:'idea',updated:'Today'}
-  ],
-  bricks:[
-    {id:'b1',title:'Albania month one — the honest review',body:'',stage:'draft',updated:'May 30'},
-    {id:'b2',title:'Traveling the Balkans with a dog',body:'',stage:'draft',updated:'May 25'}
-  ],
-  zedia:[
-    {id:'z1',title:"I shipped LEDGER — here's what happened",body:'',stage:'published',updated:'Jun 1'},
-    {id:'z2',title:'Why I chose Tauri over Electron',body:'',stage:'research',updated:'Today'},
-    {id:'z3',title:'',body:'ContentOS concept — orchestration not organization',stage:'idea',updated:'Today'}
-  ],
-  zediatech:[
-    {id:'t1',title:'Genesys Cloud reporting — the missing manual',body:'',stage:'draft',updated:'May 20'}
-  ]
-};
-
-let cur='victor',platform='medium',filterStage='all',activeWorkId=null,activeStage='draft',deskOpen=true,busy=false,aiContent='',recording=false,mr=null;
+let cur='',platform='medium',filterStage='all',activeWorkId=null,activeStage='draft',deskOpen=true,busy=false,aiContent='',recording=false,mr=null;
 let SETTINGS={provider:'openrouter',apiKey:'',baseUrl:'https://openrouter.ai/api/v1/chat/completions',models:{default:'anthropic/claude-sonnet-4'}};
 let mode='write',useContext=false,useMaster=false,useSearch=false,useVoice=true;
-let contextFiles={victor:[],bricks:[],zedia:[],zediatech:[]};
+let contextFiles={};
 let masterFiles=[];
 let edMode='live',mdBody='',edBlocks=[''],edActive=null,edPendingCaret=null,_lastLiveBlock=null,_imeOn=false,aiDest='desk',_saveT=null,_outRaf=0,_pageStream=null;
 function providerDefaults(p){if(p==='anthropic')return{baseUrl:'https://api.anthropic.com/v1/messages',model:'claude-sonnet-4-20250514'};if(p==='openrouter')return{baseUrl:'https://openrouter.ai/api/v1/chat/completions',model:'anthropic/claude-sonnet-4'};return{baseUrl:'',model:''};}
@@ -1209,7 +1282,7 @@ async function testConnection(){
     if(s.provider==='anthropic'){
       res=await fetch(s.baseUrl,{method:'POST',headers:{'Content-Type':'application/json','x-api-key':s.apiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:s.model,max_tokens:1,messages:[{role:'user',content:'ping'}]})});
     }else{
-      res=await fetch(s.baseUrl,{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+s.apiKey,'HTTP-Referer':'https://zedialabs.com','X-Title':'ContentOS'},body:JSON.stringify({model:s.model,max_tokens:1,messages:[{role:'user',content:'ping'}]})});
+      res=await fetch(s.baseUrl,{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+s.apiKey,'HTTP-Referer':APP_REFERER,'X-Title':'ContentOS'},body:JSON.stringify({model:s.model,max_tokens:1,messages:[{role:'user',content:'ping'}]})});
     }
     d=await res.json().catch(()=>({}));
     if(res.ok&&!d.error)st.textContent='Connected ✓';
@@ -1240,7 +1313,7 @@ async function loadModels(){
 }
 
 function ensurePlatforms(){if(!SETTINGS.platforms||!SETTINGS.platforms.length)SETTINGS.platforms=JSON.parse(JSON.stringify(DEFAULT_PLATFORMS));}
-function init(){ensurePlatforms();applyUI();renderBrands();renderMastRail();applyTheme();renderPlatforms();updateHeaders();renderStageFilter();renderWorks();selectFirstWork();updateVP();updateVoicePip();updateCtxPip();updateMasterCount();updateMasterPip();updateSearchPip();setupSttProgress();tickClock();setInterval(tickClock,30000);}
+function init(){ensurePlatforms();applyDeletedBrands();applyUI();renderBrands();renderMastRail();applyTheme();renderPlatforms();updateHeaders();renderStageFilter();renderWorks();selectFirstWork();updateVP();updateVoicePip();updateCtxPip();updateMasterCount();updateMasterPip();updateSearchPip();setupSttProgress();tickClock();setInterval(tickClock,30000);}
 function tickClock(){document.getElementById('issueClock').textContent=new Date().toLocaleDateString('en-US',{month:'short',day:'2-digit',year:'numeric'}).toUpperCase();}
 function cap(s){return s.charAt(0).toUpperCase()+s.slice(1);}
 function fmtWhen(v){
@@ -1252,7 +1325,7 @@ function fmtWhen(v){
   return d.toLocaleDateString('en-US',d.getFullYear()===now.getFullYear()?{month:'short',day:'numeric'}:{month:'short',day:'numeric',year:'numeric'});
 }
 
-function renderBrands(){document.getElementById('brandStack').innerHTML=Object.values(brands).map((b,i)=>`<div class="brand-row ${b.id===cur?'active':''}" style="--brandc:${b.accent}" onclick="switchBrand('${b.id}')"><div class="br-head"><span class="br-num">Nº0${i+1}</span><span class="br-sq"></span></div><div class="br-name">${b.name}</div><div class="br-tag">${b.tag} · ${works[b.id].length} works</div></div>`).join('');}
+function renderBrands(){document.getElementById('brandStack').innerHTML=Object.values(brands).map((b,i)=>`<div class="brand-row ${b.id===cur?'active':''}" style="--brandc:${b.accent}" onclick="switchBrand('${b.id}')"><button class="ws-edit" title="Rename / recolor workspace" onclick="openWsEdit(event,'${b.id}')">✎</button><button class="ws-del" title="Delete workspace" onclick="delWorkspace(event,'${b.id}')">✕</button><div class="br-head"><span class="br-num">Nº0${i+1}</span><span class="br-sq"></span></div><div class="br-name">${b.name}</div><div class="br-tag">${b.tag} · ${(works[b.id]||[]).length} works</div></div>`).join('');}
 function switchBrand(id){cur=id;filterStage='all';renderBrands();renderMastRail();applyTheme();updateHeaders();renderStageFilter();renderWorks();selectFirstWork();updateVP();updateCtxPip();if(mode==='voice')renderVoiceView();if(mode==='context')renderContextView();}
 function applyTheme(){const cust=(typeof uiState!=='undefined'&&uiState.accent)||'';const b=brands[cur];const acc=cust||b.accent;const soft=cust?hexA(cust,0.12):b.accentSoft;document.documentElement.style.setProperty('--accent',acc);document.documentElement.style.setProperty('--accent-soft',soft);}
 function updateHeaders(){const b=brands[cur];document.getElementById('issueBrand').textContent=b.name.toUpperCase();document.getElementById('indexTitle').innerHTML=b.titleHTML;document.getElementById('modalBrand').textContent=b.name.toUpperCase();document.getElementById('vpBar').textContent='Active Voice — '+b.name;}
@@ -1274,7 +1347,7 @@ function renderWorks(){
     const si=PIPELINE.findIndex(s=>s.id===w.stage);
     const stg=si>=0?PIPELINE[si]:{glyph:'⌫',label:w.stage};
     const name=w.title||w.body.slice(0,46)||'Untitled';
-    return`<div class="work-row ${w.id===activeWorkId?'active':''}" onclick="openWork('${w.id}')"><div class="wr-top"><span class="wr-stage">${stg.glyph} ${stg.label}</span><span class="wr-name">${name}</span></div><div class="wr-meta">Updated ${fmtWhen(w.updated)}</div></div>`;
+    return`<div class="work-row ${w.id===activeWorkId?'active':''}" onclick="openWork('${w.id}')"><button class="wr-del" title="Delete entry" onclick="delWork(event,'${w.id}')">✕</button><div class="wr-top"><span class="wr-stage">${stg.glyph} ${stg.label}</span><span class="wr-name">${name}</span></div><div class="wr-meta">Updated ${fmtWhen(w.updated)}</div></div>`;
   }).join('');
 }
 
@@ -1622,7 +1695,7 @@ async function saveContextCard(i){
 }
 async function deleteContext(i){
   const f=contextFiles[cur][i];
-  if(!confirm('Delete context file "'+f.name+'"?'))return;
+  if(!(await coConfirm('Delete context file "'+f.name+'"?',{title:'Delete context file',confirmLabel:'Delete'})))return;
   if(window.COS)await window.COS.deleteContextFile(cur,f.name);
   contextFiles[cur].splice(i,1);renderContextView();updateCtxPip();
   toast('Deleted');
@@ -1658,7 +1731,7 @@ function nativeSearch(){return SETTINGS.provider==='openrouter'||SETTINGS.provid
 function chatHeaders(){
   const s=SETTINGS;
   if(s.provider==='anthropic')return {'Content-Type':'application/json','x-api-key':s.apiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'};
-  return {'Content-Type':'application/json','Authorization':'Bearer '+s.apiKey,'HTTP-Referer':'https://zedialabs.com','X-Title':'ContentOS'};
+  return {'Content-Type':'application/json','Authorization':'Bearer '+s.apiKey,'HTTP-Referer':APP_REFERER,'X-Title':'ContentOS'};
 }
 function chatBody(model,prompt,stream){
   const s=SETTINGS;
@@ -1848,6 +1921,115 @@ function pageStreamFinish(){
 function copyOutput(){if(!aiContent){toast('Nothing to copy');return;}navigator.clipboard.writeText(aiContent).then(()=>toast('Copied'));}
 
 function newWork(){const id='w'+Date.now();const w={id:id,title:'',body:'',stage:firstStage(),platform:platform,scheduled:'',due:'',cover:'',updated:new Date().toISOString()};works[cur].unshift(w);if(window.COS)window.COS.saveWork(cur,w);renderWorks();openWork(id);document.getElementById('titleField').focus();toast('New work — '+PIPELINE[0].label);}
+/* ---- delete: entries (simple confirm) + workspaces (type-to-confirm) ---- */
+async function delWork(e,id){
+  e.stopPropagation();
+  const w=(works[cur]||[]).find(x=>x.id===id);if(!w)return;
+  const name=w.title||stripTags(w.body||'').slice(0,40)||'this entry';
+  if(!(await coConfirm('Delete "'+name+'"?\n\nThis permanently removes the entry from the vault and cannot be undone.',{title:'Delete entry',confirmLabel:'Delete',danger:true})))return;
+  works[cur]=works[cur].filter(x=>x.id!==id);
+  if(window.COS&&window.COS.deleteWork)window.COS.deleteWork(cur,id);
+  if(activeWorkId===id)selectFirstWork();
+  renderWorks();renderBrands();renderMastRail();
+  toast('Entry deleted');
+}
+let _delWsId=null;
+function applyDeletedBrands(){(SETTINGS.deletedBrands||[]).forEach(id=>{delete brands[id];delete works[id];if(typeof contextFiles!=='undefined')delete contextFiles[id];});if(!brands[cur])cur=Object.keys(brands)[0];}
+function delWorkspace(e,id){
+  e.stopPropagation();
+  if(Object.keys(brands).length<=1){toast('You need at least one workspace');return;}
+  const b=brands[id];if(!b)return;
+  _delWsId=id;
+  document.getElementById('delWsName').textContent=b.name;
+  document.getElementById('delWsMatch').textContent=b.name;
+  const inp=document.getElementById('delWsInput');inp.value='';delWsInput();
+  document.getElementById('delWsOverlay').classList.add('open');
+  setTimeout(()=>inp.focus(),80);
+}
+function delWsInput(){const b=brands[_delWsId];if(!b)return;const ok=document.getElementById('delWsInput').value.trim()===b.name;document.getElementById('delWsHide').disabled=!ok;document.getElementById('delWsWipe').disabled=!ok;}
+/* ---- reusable in-app confirm (native confirm() is unreliable in the Tauri webview) ---- */
+let _coConfirmRes=null;
+function coConfirm(message,opts){
+  opts=opts||{};
+  return new Promise(res=>{
+    _coConfirmRes=res;
+    document.getElementById('coConfirmTitle').textContent=opts.title||'Confirm';
+    document.getElementById('coConfirmMsg').innerHTML=esc(message).replace(/\n/g,'<br>');
+    const ok=document.getElementById('coConfirmOk');
+    ok.textContent=opts.confirmLabel||'Confirm';
+    ok.classList.toggle('wipe',opts.danger!==false);
+    document.getElementById('coConfirmOverlay').classList.add('open');
+    setTimeout(()=>ok.focus(),60);
+  });
+}
+function coConfirmDo(ok){document.getElementById('coConfirmOverlay').classList.remove('open');const r=_coConfirmRes;_coConfirmRes=null;if(r)r(!!ok);}
+function coConfirmBackdrop(e){if(e.target===e.currentTarget)coConfirmDo(false);}
+/* ---- factory reset (type-to-confirm) ---- */
+function openFactoryReset(){document.getElementById('factoryInput').value='';document.getElementById('factoryGo').disabled=true;document.getElementById('factoryOverlay').classList.add('open');setTimeout(()=>document.getElementById('factoryInput').focus(),80);}
+function factoryInputCheck(){document.getElementById('factoryGo').disabled=document.getElementById('factoryInput').value.trim()!=='RESET';}
+function closeFactory(){document.getElementById('factoryOverlay').classList.remove('open');}
+function factoryOverlayClick(e){if(e.target===e.currentTarget)closeFactory();}
+async function doFactoryReset(){
+  closeFactory();
+  if(window.COS&&window.COS.isTauri){
+    const all=Object.keys(brands).concat(SETTINGS.deletedBrands||[]);
+    for(const id of all){if(window.COS.deleteBrand)await window.COS.deleteBrand(id);}
+    for(const f of masterFiles.slice()){if(window.COS.deleteMasterFile)await window.COS.deleteMasterFile(f.name);}
+    if(window.COS.savePublishLog)await window.COS.savePublishLog([]);
+  }
+  // keep device/account credentials; drop all content + content-related flags
+  const keep={provider:SETTINGS.provider,apiKey:SETTINGS.apiKey,baseUrl:SETTINGS.baseUrl,models:SETTINGS.models,maxTokens:SETTINGS.maxTokens,searchKey:SETTINGS.searchKey,stt:SETTINGS.stt,publish:SETTINGS.publish,images:SETTINGS.images,canva:SETTINGS.canva};
+  SETTINGS=Object.assign({},keep);
+  brands={};works={};contextFiles={};masterFiles=[];pubLog=[];cur='';
+  if(window.COS&&window.COS.isTauri){
+    if(window.COS.saveSettings)await window.COS.saveSettings(SETTINGS);
+    await seedFreshVault();
+    await loadAllFromVault();
+  }else{ seedExampleInMemory(); }
+  closeSettings();
+  ensurePlatforms();applyDeletedBrands();renderBrands();renderMastRail();applyTheme();renderPlatforms();updateHeaders();renderStageFilter();renderWorks();selectFirstWork();updateVP();updateVoicePip();updateCtxPip();updateMasterCount();updateMasterPip();updateSearchPip();
+  toast('Reset to factory defaults');
+}
+/* ---- create / rename workspace ---- */
+let _wsEditId=null;
+function openWsCreate(){_wsEditId=null;document.getElementById('wsEditTitle').textContent='New workspace';document.getElementById('wsEditName').value='';document.getElementById('wsEditTag').value='';document.getElementById('wsEditAccent').value='#1452E8';document.getElementById('wsEditOverlay').classList.add('open');setTimeout(()=>document.getElementById('wsEditName').focus(),80);}
+function openWsEdit(e,id){e.stopPropagation();const b=brands[id];if(!b)return;_wsEditId=id;document.getElementById('wsEditTitle').textContent='Edit workspace';document.getElementById('wsEditName').value=b.name;document.getElementById('wsEditTag').value=(b.tag&&b.tag!=='Workspace')?b.tag:'';document.getElementById('wsEditAccent').value=/^#[0-9a-fA-F]{6}$/.test(b.accent)?b.accent:'#1452E8';document.getElementById('wsEditOverlay').classList.add('open');setTimeout(()=>document.getElementById('wsEditName').focus(),80);}
+function closeWsEdit(){document.getElementById('wsEditOverlay').classList.remove('open');_wsEditId=null;}
+function wsEditOverlayClick(e){if(e.target===e.currentTarget)closeWsEdit();}
+async function saveWsEdit(){
+  const name=document.getElementById('wsEditName').value.trim();
+  if(!name){toast('Name required');return;}
+  const accent=document.getElementById('wsEditAccent').value||'#1452E8';
+  const tag=document.getElementById('wsEditTag').value.trim()||'Workspace';
+  if(_wsEditId){ // rename / recolor
+    const meta={name:name,tag:tag,accent:accent,voice:brands[_wsEditId].voice};
+    brands[_wsEditId]=makeBrand(_wsEditId,meta);
+    if(window.COS&&window.COS.saveBrandMeta)await window.COS.saveBrandMeta(_wsEditId,meta);
+    closeWsEdit();renderBrands();renderMastRail();applyTheme();updateHeaders();updateVP();
+    toast('Workspace updated');
+  }else{ // create
+    let id=slugify(name),base=id,n=2;const taken={};Object.keys(brands).forEach(k=>taken[k]=1);(SETTINGS.deletedBrands||[]).forEach(k=>taken[k]=1);
+    while(taken[id])id=base+'-'+(n++);
+    const meta={name:name,tag:tag,accent:accent,voice:''};
+    brands[id]=makeBrand(id,meta);works[id]=[];contextFiles[id]=[];
+    SETTINGS.deletedBrands=(SETTINGS.deletedBrands||[]).filter(x=>x!==id);
+    if(window.COS){if(window.COS.createBrand)await window.COS.createBrand(id,meta);if(window.COS.saveSettings)await window.COS.saveSettings(SETTINGS);}
+    closeWsEdit();switchBrand(id);
+    toast('Workspace created');
+  }
+}
+function closeDelWs(){document.getElementById('delWsOverlay').classList.remove('open');_delWsId=null;}
+function delWsOverlayClick(e){if(e.target===e.currentTarget)closeDelWs();}
+async function doDeleteWorkspace(mode){
+  const id=_delWsId;if(!id||!brands[id])return;
+  if(mode==='wipe'&&window.COS&&window.COS.deleteBrand)await window.COS.deleteBrand(id);
+  SETTINGS.deletedBrands=(SETTINGS.deletedBrands||[]).concat(id);
+  if(window.COS&&window.COS.saveSettings)window.COS.saveSettings(SETTINGS);
+  delete brands[id];delete works[id];if(typeof contextFiles!=='undefined')delete contextFiles[id];
+  if(cur===id)cur=Object.keys(brands)[0];
+  closeDelWs();switchBrand(cur);
+  toast(mode==='wipe'?'Workspace and its files deleted':'Workspace hidden (files kept)');
+}
 function openCapture(){document.getElementById('overlay').classList.add('open');setTimeout(()=>document.getElementById('capTA').focus(),120);}
 function closeCapture(){document.getElementById('overlay').classList.remove('open');document.getElementById('capTA').value='';if(recording)toggleRec();document.getElementById('recStatus').textContent='';}
 function overlayClick(e){if(e.target===e.currentTarget)closeCapture();}
@@ -1950,7 +2132,7 @@ async function downloadSttModel(id){
   }catch(e){toast('Download failed');if(st)st.textContent='Failed — '+((e&&e.message)||e);}
 }
 async function deleteSttModel(id){
-  if(!confirm('Delete this transcription model from disk?'))return;
+  if(!(await coConfirm('Delete this transcription model from disk?',{title:'Delete model',confirmLabel:'Delete'})))return;
   try{await window.__TAURI__.core.invoke('delete_model',{id:id});
     if(SETTINGS.stt&&SETTINGS.stt.modelId===id){SETTINGS.stt=null;if(window.COS)window.COS.saveSettings(SETTINGS);}
     renderSttModels();toast('Deleted');
@@ -2039,7 +2221,7 @@ function slug(s){return String(s||'').toLowerCase().replace(/[^a-z0-9]+/g,'-').r
 function clonePD(){return JSON.parse(JSON.stringify(pipeDraft));}
 function openWorkflow(){pipeDraft=clonePipeline(PIPELINE);pipeNotesDraft=pipelineNotes;pdStage=0;pdOp=0;pipeDirty=false;wfNotesOpen=false;document.getElementById('wfResults').classList.remove('show');renderWorkflow();updateWfDirty();document.getElementById('wfOverlay').classList.add('open');const m=document.querySelector('.wf-modal');if(m){if(uiState.wfW)m.style.width=uiState.wfW+'px';if(uiState.wfH)m.style.height=uiState.wfH+'px';}}
 function wfSaveSize(){const m=document.querySelector('.wf-modal');if(m&&m.offsetWidth){uiState.wfW=m.offsetWidth;uiState.wfH=m.offsetHeight;saveUIState();}}
-function wfClose(){wfSaveSize();if(pipeDirty&&!confirm('Discard unsaved workflow changes?'))return;document.getElementById('wfOverlay').classList.remove('open');}
+async function wfClose(){wfSaveSize();if(pipeDirty&&!(await coConfirm('Discard unsaved workflow changes?',{title:'Discard changes',confirmLabel:'Discard'})))return;document.getElementById('wfOverlay').classList.remove('open');}
 function wfOverlayClick(e){if(e.target===e.currentTarget)wfClose();}
 function updateWfDirty(){const el=document.getElementById('wfDirty');if(el){el.textContent=pipeDirty?'UNSAVED':'SAVED';el.style.background=pipeDirty?'var(--accent)':'var(--ink)';}}
 function wfMark(){pipeDirty=true;updateWfDirty();}
@@ -2086,11 +2268,11 @@ function wfSelOp(i){if(pdOp!==i){pdOp=i;renderWorkflow();}}
 function wfMoveStage(i,d){const j=i+d;if(j<0||j>=pipeDraft.length)return;const t=pipeDraft[i];pipeDraft[i]=pipeDraft[j];pipeDraft[j]=t;pdStage=j;wfMark();renderWorkflow();}
 function wfMoveOp(i,d){const ops=pipeDraft[pdStage].ops,j=i+d;if(j<0||j>=ops.length)return;const t=ops[i];ops[i]=ops[j];ops[j]=t;pdOp=j;wfMark();renderWorkflow();}
 function wfAddStage(){pipeDraft.push({id:wfUniqueStageId('stage'),label:'New Stage',glyph:'◦',caption:'',ops:[{id:'task',label:'New Task',glyph:'•',kind:'pri',prompt:'{{voiceLine}}\n\nWrite your instruction here. Use {{text}} for the current draft.'}]});pdStage=pipeDraft.length-1;pdOp=0;wfMark();renderWorkflow();}
-function wfDelStage(i){const s=pipeDraft[i];if(pipeDraft.length<=1){toast('Keep at least one stage');return;}const n=worksInStage(s.id);if(n>0&&!confirm(n+' work(s) sit in "'+s.label+'". They stay safe (shown with ⌫) but lose this stage. Delete anyway?'))return;else if(n===0&&!confirm('Delete stage "'+s.label+'"?'))return;pipeDraft.splice(i,1);if(pdStage>=pipeDraft.length)pdStage=Math.max(0,pipeDraft.length-1);pdOp=0;wfMark();renderWorkflow();}
+async function wfDelStage(i){const s=pipeDraft[i];if(pipeDraft.length<=1){toast('Keep at least one stage');return;}const n=worksInStage(s.id);const msg=n>0?(n+' work(s) sit in "'+s.label+'". They stay safe (shown with ⌫) but lose this stage. Delete anyway?'):('Delete stage "'+s.label+'"?');if(!(await coConfirm(msg,{title:'Delete stage',confirmLabel:'Delete'})))return;pipeDraft.splice(i,1);if(pdStage>=pipeDraft.length)pdStage=Math.max(0,pipeDraft.length-1);pdOp=0;wfMark();renderWorkflow();}
 function wfAddOp(){const ops=pipeDraft[pdStage].ops;ops.push({id:wfUniqueOpId(pipeDraft[pdStage],'task'),label:'New Task',glyph:'•',kind:'sec',prompt:'{{voiceLine}}\n\nWrite your instruction here. Use {{text}} for the current draft.'});pdOp=ops.length-1;wfMark();renderWorkflow();}
-function wfDelOp(i){const ops=pipeDraft[pdStage].ops;if(ops.length<=1){toast('A stage needs at least one task');return;}if(!confirm('Delete task "'+ops[i].label+'"?'))return;ops.splice(i,1);if(pdOp>=ops.length)pdOp=Math.max(0,ops.length-1);wfMark();renderWorkflow();}
+async function wfDelOp(i){const ops=pipeDraft[pdStage].ops;if(ops.length<=1){toast('A stage needs at least one task');return;}if(!(await coConfirm('Delete task "'+ops[i].label+'"?',{title:'Delete task',confirmLabel:'Delete'})))return;ops.splice(i,1);if(pdOp>=ops.length)pdOp=Math.max(0,ops.length-1);wfMark();renderWorkflow();}
 function wfEditNotes(){wfNotesOpen=!wfNotesOpen;renderWorkflow();}
-function wfReset(){if(!confirm('Reset the entire workflow to the shipped default? Discards your customizations.'))return;pipeDraft=clonePipeline(DEFAULT_PIPELINE);pipeNotesDraft='';pdStage=0;pdOp=0;wfMark();renderWorkflow();}
+async function wfReset(){if(!(await coConfirm('Reset the entire workflow to the shipped default? Discards your customizations.',{title:'Reset workflow',confirmLabel:'Reset'})))return;pipeDraft=clonePipeline(DEFAULT_PIPELINE);pipeNotesDraft='';pdStage=0;pdOp=0;wfMark();renderWorkflow();}
 function wfSave(){
   for(const s of pipeDraft){if(!s.label||!s.label.trim()){toast('Every stage needs a name');return;}if(!s.ops.length){toast('Stage "'+s.label+'" has no tasks');return;}}
   PIPELINE=clonePD();pipelineNotes=pipeNotesDraft;
@@ -2173,7 +2355,7 @@ function vaultOverlayClick(e){if(e.target===e.currentTarget)closeVault();}
 async function revealVaultFromModal(){await revealVault();}
 async function doChangeVault(){
   if(!(window.COS&&window.COS.isTauri)){toast('In-memory mode — nothing to change');return;}
-  if(!confirm('Switch to a different vault folder?\n\nThe app will reload all works, context, voice, and settings from the new folder. Unsaved edits in the current work may be lost.'))return;
+  if(!(await coConfirm('Switch to a different vault folder?\n\nThe app will reload all works, context, voice, and settings from the new folder. Unsaved edits in the current work may be lost.',{title:'Switch vault',confirmLabel:'Switch',danger:false})))return;
   const v=await window.COS.changeVault();
   if(!v){toast('Vault unchanged');return;}
   await loadAllFromVault();
@@ -2470,7 +2652,7 @@ async function msDropFiles(ev){ev.preventDefault();const el=document.getElementB
 async function msAddFiles(files){if(!files.length)return;for(const f of files)await addMediaFile(f);await loadMsMedia();renderMediaStudio();toast(files.length+' image(s) added');}
 function msInsert(n){if(!getWork()){toast('Open a work first');return;}insertImageMd(n);toast('Inserted into body');}
 function msCover(n){if(!getWork()){toast('Open a work first');return;}setCover(n);toast('Cover set');}
-async function msDelete(n){if(!confirm('Delete this image from the vault?'))return;if(window.COS)await window.COS.deleteMedia(cur,n);await loadMsMedia();renderMediaStudio();}
+async function msDelete(n){if(!(await coConfirm('Delete this image from the vault?',{title:'Delete image',confirmLabel:'Delete'})))return;if(window.COS)await window.COS.deleteMedia(cur,n);await loadMsMedia();renderMediaStudio();}
 /* AI generation */
 function renderMsGen(){
   const cfg=SETTINGS.images||{};const seed=getWork()?workTitle(getWork()):'';
@@ -2491,7 +2673,7 @@ async function generateImage(prompt){
   const cfg=SETTINGS.images||{},prov=cfg.provider||'openai';
   const base=(cfg.endpoint||(prov==='openrouter'?'https://openrouter.ai/api/v1':'https://api.openai.com/v1')).replace(/\/$/,'');
   if(prov==='openrouter'){
-    const r=await httpReq('POST',base+'/chat/completions',{'Authorization':'Bearer '+cfg.key,'Content-Type':'application/json','HTTP-Referer':'https://zedialabs.com','X-Title':'ContentOS'},{model:cfg.model||'google/gemini-2.5-flash-image-preview',messages:[{role:'user',content:prompt}],modalities:['image','text']});
+    const r=await httpReq('POST',base+'/chat/completions',{'Authorization':'Bearer '+cfg.key,'Content-Type':'application/json','HTTP-Referer':APP_REFERER,'X-Title':'ContentOS'},{model:cfg.model||'google/gemini-2.5-flash-image-preview',messages:[{role:'user',content:prompt}],modalities:['image','text']});
     let d={};try{d=JSON.parse(r.body||'{}');}catch(e){}
     const imgs=d.choices&&d.choices[0]&&d.choices[0].message&&d.choices[0].message.images;
     if(imgs&&imgs[0]){const u=imgs[0].image_url?imgs[0].image_url.url:imgs[0];return await saveImageRef(u);}
@@ -2621,7 +2803,7 @@ function addMaster(){
 }
 function renameMaster(i,val){masterFiles[i].name=val.replace(/[^\w\- ]/g,'').trim()||'note';}
 async function saveMasterCard(i){const f=masterFiles[i];if(window.COS)await window.COS.saveMasterFile(f.name,f.body);toast('Saved — '+f.name);}
-async function deleteMaster(i){const f=masterFiles[i];if(!confirm('Delete master file "'+f.name+'"?'))return;if(window.COS)await window.COS.deleteMasterFile(f.name);masterFiles.splice(i,1);renderMaster();toast('Deleted');}
+async function deleteMaster(i){const f=masterFiles[i];if(!(await coConfirm('Delete master file "'+f.name+'"?',{title:'Delete master file',confirmLabel:'Delete'})))return;if(window.COS)await window.COS.deleteMasterFile(f.name);masterFiles.splice(i,1);renderMaster();toast('Deleted');}
 function toggleMaster(){useMaster=!useMaster;updateMasterPip();}
 function toggleSearch(){useSearch=!useSearch;updateSearchPip();if(useSearch&&!nativeSearch()&&!SETTINGS.searchKey)toast('Add a Tavily search key in Settings for this provider');}
 function updateSearchPip(){const t=document.getElementById('searchToggle'),p=document.getElementById('searchPip');if(!t||!p)return;t.classList.toggle('on',useSearch);p.textContent=useSearch?'ON':'OFF';}
@@ -2634,9 +2816,18 @@ function updateMasterPip(){
 }
 function updateMasterCount(){const el=document.getElementById('masterCount');if(el)el.textContent=masterFiles.length?(''+masterFiles.length):'—';}
 
+// First run on an empty vault: create the example workspace + write the tutorial works to disk
+// (real, editable, deletable .md files). Guarded so deleting tutorials never re-seeds.
+async function seedFreshVault(){
+  if(!window.COS||!window.COS.createBrand)return;
+  await window.COS.createBrand(EXAMPLE_BRAND.id,{name:EXAMPLE_BRAND.name,tag:EXAMPLE_BRAND.tag,accent:EXAMPLE_BRAND.accent,voice:EXAMPLE_BRAND.voice});
+  if(window.COS.saveVoice)await window.COS.saveVoice(EXAMPLE_BRAND.id,{voice:EXAMPLE_BRAND.voice,brand:EXAMPLE_BRAND.name,updated:new Date().toISOString()});
+  for(const w of tutorialWorks()){if(window.COS.saveWork)await window.COS.saveWork(EXAMPLE_BRAND.id,w);}
+  SETTINGS.seeded=true;
+  if(window.COS.saveSettings)await window.COS.saveSettings(SETTINGS);
+}
 async function loadAllFromVault(){
-  const data=await window.COS.loadWorks();
-  if(data){ for(const b in data){ if(data[b]) works[b]=data[b]; } }
+  // settings + pipeline first (need SETTINGS.seeded before deciding whether to seed)
   const s=await window.COS.loadSettings();
   if(s) SETTINGS=Object.assign(SETTINGS,s);
   const pl=await window.COS.loadPipeline();
@@ -2645,6 +2836,16 @@ async function loadAllFromVault(){
     PIPELINE=clonePipeline(DEFAULT_PIPELINE);pipelineNotes=(pl&&pl.notes)||'';
     if(window.COS.savePipeline)window.COS.savePipeline({version:PIPELINE_VERSION,notes:pipelineNotes,stages:PIPELINE});
   }
+  // discover workspaces from the vault; seed the example on a truly fresh vault (one-time)
+  let ids=await window.COS.listBrands();
+  if(!ids.length&&!SETTINGS.seeded){await seedFreshVault();ids=await window.COS.listBrands();}
+  brands={};
+  for(const id of ids){const meta=await window.COS.loadBrandMeta(id)||{};brands[id]=makeBrand(id,meta);}
+  applyDeletedBrands(); // re-hide "hidden" workspaces whose folders still exist
+  if(!brands[cur])cur=Object.keys(brands)[0]||'';
+  for(const id in brands)if(!works[id])works[id]=[]; // guarantee works[id] exists
+  const data=await window.COS.loadWorks();
+  if(data){ for(const b in data){ if(data[b]&&brands[b]) works[b]=data[b]; } }
   // One-time remap of existing works onto the new stage ids.
   for(const b in works){if(!works[b])continue;for(const w of works[b]){const ns=mapStage(w.stage);if(ns!==w.stage){w.stage=ns;if(window.COS.saveWork)window.COS.saveWork(b,w);}}}
   const plog=await window.COS.loadPublishLog(); if(plog&&plog.length)pubLog=plog;
@@ -2664,6 +2865,8 @@ async function loadAllFromVault(){
       if(v){ persisted=true; const ui=await window.COS.loadUI(); applyUI(ui); await loadAllFromVault(); }
     }catch(e){failed=true;console.error('vault load failed',e);}
   }
+  if(!Object.keys(brands).length)seedExampleInMemory(); // browser / no-vault: in-memory example + tutorial
+  if(!brands[cur])cur=Object.keys(brands)[0]||'';
   init();
   maybeAutoGuide();
   if(failed)showBanner('Vault load failed — working in memory, edits may not persist');
