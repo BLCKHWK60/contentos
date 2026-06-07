@@ -412,24 +412,27 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 .ptable input[type=date]{font-family:var(--mono);font-size:10px;border:var(--rule2) solid var(--line);background:var(--paper);padding:2px 4px;outline:none}
 .ptable .lk{color:var(--accent);text-transform:uppercase;font-family:var(--mono);font-size:9px;text-decoration:none}
 
-/* MEDIA STUDIO + COVER */
-.ms-modal{width:min(94vw,1000px)!important;height:88vh;min-width:520px;min-height:420px}
-.ms-tabs{display:flex;margin-left:14px}
-.ms-tab{padding:0 14px;height:42px;background:transparent;border:none;border-right:var(--rule) solid var(--line);font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--ink-3);cursor:pointer}
-.ms-tab:first-child{border-left:var(--rule) solid var(--line)}
+/* MEDIA STUDIO (lives inside the Desk panel) + COVER */
+.desk-view{flex:1;min-height:0;display:flex;flex-direction:column;overflow:hidden}
+.dv-tabs{margin-left:auto;display:flex;gap:4px;flex-shrink:0}
+.dv{padding:3px 9px;background:transparent;border:var(--rule2) solid var(--line);font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:0.5px;text-transform:uppercase;color:var(--ink-2);cursor:pointer;transition:all var(--ease)}
+.dv.on{background:var(--ink);color:var(--paper-hi);border-color:var(--ink)}
+.ms-tabs{display:flex;border-bottom:var(--rule) solid var(--line);flex-shrink:0}
+.ms-tab{flex:1;padding:0 6px;height:32px;background:transparent;border:none;border-right:var(--rule2) solid var(--line);font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:0.5px;text-transform:uppercase;color:var(--ink-3);cursor:pointer}
+.ms-tab:last-child{border-right:none}
 .ms-tab:hover{background:var(--card);color:var(--ink)}
 .ms-tab.active{background:var(--ink);color:var(--paper-hi)}
-.ms-body{flex:1;min-height:0;overflow:auto;padding:14px 16px}
-.ms-up{border:var(--rule) dashed var(--line);padding:18px;text-align:center;font-family:var(--mono);font-size:10.5px;letter-spacing:0.5px;text-transform:uppercase;color:var(--ink-3);cursor:pointer;margin-bottom:14px}
+.ms-body{flex:1;min-height:0;overflow:auto;padding:12px 14px}
+.ms-up{border:var(--rule) dashed var(--line);padding:14px;text-align:center;font-family:var(--mono);font-size:9.5px;letter-spacing:0.5px;text-transform:uppercase;color:var(--ink-3);cursor:pointer;margin-bottom:12px}
 .ms-up:hover,.ms-up.over{background:var(--card);border-color:var(--accent);color:var(--ink)}
-.ms-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px}
+.ms-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(92px,1fr));gap:8px}
 .ms-cell{border:var(--rule) solid var(--line);background:var(--paper)}
-.ms-cell img{width:100%;height:120px;object-fit:cover;display:block;border-bottom:var(--rule) solid var(--line)}
+.ms-cell img{width:100%;height:84px;object-fit:cover;display:block;border-bottom:var(--rule) solid var(--line)}
 .ms-acts{display:flex}
-.ms-acts button{flex:1;padding:5px 0;background:transparent;border:none;border-right:var(--rule2) solid var(--line);font-family:var(--mono);font-size:8.5px;font-weight:700;letter-spacing:0.5px;text-transform:uppercase;cursor:pointer;color:var(--ink-2)}
+.ms-acts button{flex:1;padding:5px 0;background:transparent;border:none;border-right:var(--rule2) solid var(--line);font-family:var(--mono);font-size:8px;font-weight:700;letter-spacing:0.3px;text-transform:uppercase;cursor:pointer;color:var(--ink-2)}
 .ms-acts button:last-child{border-right:none}
 .ms-acts button:hover{background:var(--ink);color:var(--paper-hi)}
-.ms-form{max-width:560px}
+.ms-form{max-width:none}
 .cover-banner{position:relative;margin-bottom:16px;display:none}
 .cover-banner img{width:100%;max-height:280px;object-fit:cover;border:var(--rule) solid var(--line);display:block}
 .cover-x{position:absolute;top:8px;right:8px;width:26px;height:26px;background:var(--ink);color:var(--paper-hi);border:none;cursor:pointer;font-size:13px}
@@ -467,12 +470,11 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 .desk.open{width:var(--desk-w,344px);border-left-width:2px}
 .desk.noanim{transition:none}
 .desk-in{width:100%;min-width:260px;display:flex;flex-direction:column;height:100%;overflow:hidden}
-.desk-head{padding:15px 16px 13px;border-bottom:var(--rule) solid var(--line);flex-shrink:0}
-.desk-kicker{font-family:var(--mono);font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--ink-3);margin-bottom:5px;display:flex;align-items:center;gap:7px}
-.live-dot{width:7px;height:7px;background:var(--accent);border-radius:50%;animation:blink 2.4s ease-in-out infinite}
+.desk-head{display:flex;align-items:center;gap:7px;padding:7px 16px;border-bottom:var(--rule) solid var(--line);flex-shrink:0}
+.desk-kicker{font-family:var(--mono);font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--ink-3);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+.live-dot{width:7px;height:7px;background:var(--accent);border-radius:50%;flex-shrink:0;animation:blink 2.4s ease-in-out infinite}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:0.2}}
-.desk-title{font-family:var(--d);font-weight:800;font-size:22px;letter-spacing:-0.8px;text-transform:uppercase;line-height:0.95;display:flex;align-items:baseline;gap:8px}
-.desk-stage-tag{font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:1px;color:var(--accent);text-transform:uppercase}
+.desk-stage-tag{margin-left:auto;font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:1px;color:var(--accent);text-transform:uppercase}
 .vp-block{margin:13px 16px;border:var(--rule) solid var(--line);flex-shrink:0}
 .vp-bar{background:var(--accent);color:var(--paper-hi);font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;padding:5px 10px;transition:background var(--ease)}
 .vp-body{padding:9px 11px;font-family:var(--serif);font-size:12.5px;line-height:1.5;color:var(--ink-2);display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
@@ -516,12 +518,12 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 .dest-btn{padding:5px 9px;background:transparent;border:var(--rule2) solid var(--line);font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:0.5px;text-transform:uppercase;color:var(--ink-2);cursor:pointer;transition:all var(--ease)}
 .dest-btn.active{background:var(--accent);color:var(--paper-hi);border-color:var(--accent)}
 /* vertical drag handle — grow/shrink the AI output reading area */
-.rz-v{height:9px;cursor:row-resize;flex-shrink:0;position:relative;background:transparent;transition:background 120ms}
-.rz-v::after{content:'';position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:34px;height:2px;background:var(--ink-3);opacity:0.4;transition:opacity 120ms}
+.rz-v{height:9px;cursor:row-resize;flex-shrink:0;position:relative;background:var(--card);border-top:var(--rule) solid var(--line);transition:background 120ms}
+.rz-v::after{content:'';position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:40px;height:3px;background:var(--accent);opacity:0.6;transition:opacity 120ms}
 .rz-v:hover{background:var(--accent)}
 .rz-v:hover::after{opacity:0}
 .desk-foot{display:flex;flex-wrap:wrap;border-top:var(--rule) solid var(--line);flex-shrink:0}
-.foot-btn{flex:1 1 30%;min-width:0;padding:10px 6px;background:transparent;border:none;border-right:var(--rule2) solid var(--line);border-bottom:var(--rule2) solid var(--line);font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:0.5px;text-transform:uppercase;color:var(--ink-2);cursor:pointer;transition:all var(--ease)}
+.foot-btn{flex:1 1 30%;min-width:0;padding:6px 5px;background:transparent;border:none;border-right:var(--rule2) solid var(--line);border-bottom:var(--rule2) solid var(--line);font-family:var(--mono);font-size:8.5px;font-weight:700;letter-spacing:0.3px;text-transform:uppercase;color:var(--ink-2);cursor:pointer;transition:all var(--ease)}
 .foot-btn:hover{background:var(--ink);color:var(--paper-hi)}
 
 /* MODAL + TOAST */
@@ -610,12 +612,12 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 .msg.ai p{margin-bottom:9px}.msg.ai ul,.msg.ai ol{margin-bottom:9px;padding-left:18px}.msg.ai li{margin-bottom:3px}
 .msg.ai pre{font-size:11px;padding:9px;margin:8px 0}.msg.ai code{font-size:12px}.msg.ai blockquote{margin:8px 0;padding-left:11px}
 /* composer */
-.composer{border-top:var(--rule) solid var(--line);padding:9px 12px;flex-shrink:0;display:flex;flex-direction:column;gap:7px}
-.composer-op{font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:0.5px;text-transform:uppercase;color:var(--accent);line-height:1.4}
-.composer-in{width:100%;min-height:46px;max-height:120px;resize:vertical;background:var(--paper);border:var(--rule2) solid var(--line);padding:7px 9px;font-family:var(--serif);font-size:13px;line-height:1.5;color:var(--ink);outline:none}
+.composer{border-top:var(--rule) solid var(--line);padding:7px 12px;flex-shrink:0;display:flex;flex-direction:column;gap:6px}
+.composer-op{font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:0.5px;text-transform:uppercase;color:var(--accent);line-height:1.35}
+.composer-in{width:100%;min-height:40px;max-height:120px;resize:vertical;background:var(--paper);border:var(--rule2) solid var(--line);padding:7px 9px;font-family:var(--serif);font-size:13px;line-height:1.5;color:var(--ink);outline:none}
 .composer-in:focus{border-color:var(--accent)}
 .composer-btns{display:flex;gap:6px}
-.cbtn{flex:1;padding:8px;border:var(--rule2) solid var(--line);font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:0.5px;text-transform:uppercase;cursor:pointer;transition:all var(--ease)}
+.cbtn{flex:1;padding:6px;border:var(--rule2) solid var(--line);font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:0.5px;text-transform:uppercase;cursor:pointer;transition:all var(--ease)}
 .cbtn.gen{background:var(--accent);color:var(--paper-hi);border-color:var(--accent)}
 .cbtn.gen:hover{box-shadow:var(--shadow)}
 .cbtn.ask{background:transparent;color:var(--ink)}
@@ -729,9 +731,10 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
           <div class="rz rz-left" onmousedown="startRz(event,'desk')"></div>
           <div class="desk-in">
             <div class="desk-head">
-              <div class="desk-kicker"><span class="live-dot"></span> claude-sonnet-4 · live</div>
-              <div class="desk-title">The Desk <span class="desk-stage-tag" id="deskStageTag">/ DRAFT</span></div>
+              <span class="live-dot"></span><span class="desk-kicker">claude-sonnet-4 · live</span><span class="desk-stage-tag" id="deskStageTag">/ DRAFT</span>
+              <div class="dv-tabs"><button class="dv on" id="dvAI" onclick="setDeskView('ai')">AI</button><button class="dv" id="dvMedia" onclick="setDeskView('media')">Media</button></div>
             </div>
+            <div class="desk-view" id="deskAI">
             <div class="desk-scroll" id="deskScroll">
             <div class="vp-block">
               <div class="vp-bar" id="vpBar">Active Voice — Victor Chaidez</div>
@@ -765,6 +768,16 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
               <button class="foot-btn" onclick="insertOut('title')" title="Use as the headline">→ Title</button>
               <button class="foot-btn" onclick="insertOut('newdraft')" title="Start a new Draft from this reply (current platform)">→ Draft</button>
               <button class="foot-btn" onclick="copyOutput()" title="Copy raw Markdown">⎘ Copy</button>
+            </div>
+            </div>
+            <div class="desk-view" id="deskMedia" style="display:none">
+              <div class="ms-tabs">
+                <button class="ms-tab" id="mstab-lib" onclick="setMsTab('lib')">Library</button>
+                <button class="ms-tab" id="mstab-gen" onclick="setMsTab('gen')">Generate</button>
+                <button class="ms-tab" id="mstab-card" onclick="setMsTab('card')">Card</button>
+                <button class="ms-tab" id="mstab-canva" onclick="setMsTab('canva')">Canva</button>
+              </div>
+              <div class="ms-body" id="msBody"></div>
             </div>
           </div>
         </div>
@@ -920,21 +933,6 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
       <button class="modal-x" onclick="closeAppearance()">✕</button>
     </div>
     <div class="appr-body" id="apprBody"></div>
-  </div>
-</div>
-<div class="overlay" id="msOverlay" onclick="msOverlayClick(event)">
-  <div class="modal set-modal ms-modal">
-    <div class="modal-head">
-      <div class="modal-title">🖼 Media Studio</div>
-      <div class="ms-tabs">
-        <button class="ms-tab" id="mstab-lib" onclick="setMsTab('lib')">Library</button>
-        <button class="ms-tab" id="mstab-gen" onclick="setMsTab('gen')">Generate</button>
-        <button class="ms-tab" id="mstab-card" onclick="setMsTab('card')">Card</button>
-        <button class="ms-tab" id="mstab-canva" onclick="setMsTab('canva')">Canva</button>
-      </div>
-      <button class="modal-x" onclick="closeMediaStudio()">✕</button>
-    </div>
-    <div class="ms-body" id="msBody"></div>
   </div>
 </div>
 <div class="overlay" id="planOverlay" onclick="planOverlayClick(event)">
@@ -2439,11 +2437,20 @@ function insertIntoBody(text){insertAtCaret(text);saveCurrent();}
 function insertImageMd(n){insertIntoBody('\n\n![](media/'+n+')\n\n');}
 function setCover(n){const w=getWork();if(!w)return;w.cover=n||'';if(window.COS)window.COS.saveWork(cur,w);updateCoverBanner();renderWorks();}
 function updateCoverBanner(){const w=getWork();const el=document.getElementById('coverBanner');if(!el)return;if(w&&w.cover){el.innerHTML='<img src="'+mediaResolve('media/'+w.cover)+'"><button class="cover-x" onclick="setCover(\'\')" title="Remove cover">✕</button>';el.style.display='block';}else{el.innerHTML='';el.style.display='none';}}
-/* studio */
-function openMediaStudio(){if(getWork())saveCurrent();msTab='lib';loadMsMedia().then(()=>{renderMediaStudio();document.getElementById('msOverlay').classList.add('open');const m=document.querySelector('.ms-modal');if(m){if(uiState.msW)m.style.width=uiState.msW+'px';if(uiState.msH)m.style.height=uiState.msH+'px';}});}
+/* studio — lives inside the Desk panel (AI ⇄ Media views) */
+let deskView='ai';
+function setDeskView(v){
+  deskView=v;
+  const ai=document.getElementById('deskAI'),md=document.getElementById('deskMedia');
+  if(ai)ai.style.display=(v==='ai')?'flex':'none';
+  if(md)md.style.display=(v==='media')?'flex':'none';
+  const ta=document.getElementById('dvAI'),tm=document.getElementById('dvMedia');
+  if(ta)ta.classList.toggle('on',v==='ai');if(tm)tm.classList.toggle('on',v==='media');
+  if(v==='media'){if(getWork())saveCurrent();msTab='lib';loadMsMedia().then(renderMediaStudio);}
+}
+function showMedia(){if(!deskOpen)toggleDesk();setDeskView('media');}
+function openMediaStudio(){showMedia();}
 async function loadMsMedia(){msMedia=(window.COS&&await window.COS.listMedia(cur))||[];}
-function closeMediaStudio(){const m=document.querySelector('.ms-modal');if(m&&m.offsetWidth){uiState.msW=m.offsetWidth;uiState.msH=m.offsetHeight;saveUIState();}document.getElementById('msOverlay').classList.remove('open');}
-function msOverlayClick(e){if(e.target===e.currentTarget)closeMediaStudio();}
 function setMsTab(t){msTab=t;renderMediaStudio();}
 function renderMediaStudio(){
   ['lib','gen','card','canva'].forEach(t=>{const el=document.getElementById('mstab-'+t);if(el)el.classList.toggle('active',msTab===t);});
@@ -2552,7 +2559,7 @@ async function canvaConnect(){
 }
 function renderMsCanva(){
   const c=SETTINGS.canva||{};
-  if(!c.token)return '<div class="ms-form"><div class="set-hint" style="margin-bottom:10px">Connect Canva in Settings → Canva to create designs from your brand templates. (Experimental — needs your own Canva app + scopes.)</div><button class="ph-btn pri" onclick="closeMediaStudio();openSettings()">Open Settings</button></div>';
+  if(!c.token)return '<div class="ms-form"><div class="set-hint" style="margin-bottom:10px">Connect Canva in Settings → Canva to create designs from your brand templates. (Experimental — needs your own Canva app + scopes.)</div><button class="ph-btn pri" onclick="openSettings()">Open Settings</button></div>';
   return '<div class="ms-form"><div class="ph-row"><button class="ph-btn" onclick="canvaLoadTemplates()">Load brand templates</button><span class="rec-status" id="msCanvaStatus">Connected ✓</span></div><div id="canvaList" style="margin-top:12px"></div></div>';
 }
 async function canvaLoadTemplates(){
