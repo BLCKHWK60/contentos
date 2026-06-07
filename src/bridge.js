@@ -367,7 +367,7 @@
     return {
       id: meta.id || fallbackId,
       title: meta.title || "",
-      stage: meta.stage || "spark",
+      stage: meta.stage || "idea",
       platform: meta.platform || "medium",
       scheduled: meta.scheduled || "",
       due: meta.due || "",

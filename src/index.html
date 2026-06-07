@@ -488,6 +488,8 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 .act.sec{background:transparent;color:var(--ink)}
 .act.sec:hover{background:var(--ink);color:var(--paper-hi)}
 .act:disabled{opacity:0.4;cursor:not-allowed;pointer-events:none}
+.act.sel{outline:2px solid var(--accent);outline-offset:-2px}
+.act.sec.sel{background:var(--card)}
 .act-glyph{font-size:12px;flex-shrink:0}
 .advance{margin:0 16px 13px;padding:10px;border:var(--rule) dashed var(--line);background:transparent;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--ink-2);cursor:pointer;transition:all var(--ease);flex-shrink:0}
 .advance:hover{background:var(--ink);color:var(--paper-hi);border-style:solid}
@@ -553,6 +555,13 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 .set-stage-row{display:flex;align-items:center;gap:10px;margin-bottom:6px}
 .set-stage-name{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;width:84px;flex-shrink:0;color:var(--ink-2)}
 .set-stage-row .set-input{flex:1}
+.set-plat-row{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.set-plat-name{flex:0 0 120px}
+.set-plat-guide{flex:1}
+.set-plat-del{flex-shrink:0;width:28px;height:28px;background:transparent;border:var(--rule2) solid var(--line);font-size:11px;color:var(--ink-2);cursor:pointer;transition:all var(--ease)}
+.set-plat-del:hover{background:var(--ink);color:var(--paper-hi)}
+.btn-line{padding:7px 12px;background:transparent;border:var(--rule) solid var(--line);font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--ink-2);cursor:pointer;transition:all var(--ease)}
+.btn-line:hover{background:var(--ink);color:var(--paper-hi);border-color:var(--ink)}
 .set-section{font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--accent);margin:18px 0 13px;padding-top:14px;border-top:var(--rule) solid var(--line)}
 .set-section:first-child{padding-top:0;border-top:none;margin-top:0}
 .toast.show{transform:translateY(0);opacity:1}
@@ -583,10 +592,35 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 .ctx-save{width:100%;padding:8px;background:transparent;border:none;border-top:var(--rule) solid var(--line);font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--ink-2);cursor:pointer;transition:all var(--ease)}
 .ctx-save:hover{background:var(--ink);color:var(--paper-hi)}
 .ctx-empty{font-family:var(--mono);font-size:10.5px;letter-spacing:0.5px;text-transform:uppercase;color:var(--ink-3);line-height:1.9;padding:20px 0}
-.ctx-toggle{margin:0 16px 13px;padding:8px 11px;border:var(--rule) solid var(--line);background:transparent;font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--ink-2);cursor:pointer;transition:all var(--ease);display:flex;align-items:center;justify-content:space-between;gap:8px;flex-shrink:0}
-.ctx-toggle:hover{border-color:var(--accent)}
-.ctx-toggle.on{background:var(--ink);color:var(--paper-hi);border-color:var(--ink)}
-.ctx-toggle .pip{font-family:var(--mono);font-size:9px;padding:1px 6px;border:1.5px solid currentColor}
+/* compact toggle chips (voice / context / master / web) */
+.tog-row{display:flex;flex-wrap:wrap;gap:5px;margin:0 16px 12px;flex-shrink:0}
+.tog{flex:1 1 auto;display:flex;align-items:center;justify-content:center;gap:5px;padding:5px 7px;border:var(--rule2) solid var(--line);background:transparent;font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:0.5px;text-transform:uppercase;color:var(--ink-2);cursor:pointer;transition:all var(--ease)}
+.tog:hover{border-color:var(--accent)}
+.tog.on{background:var(--ink);color:var(--paper-hi);border-color:var(--ink)}
+.tog .pip{font-family:var(--mono);font-size:8px;padding:0 4px;border:1px solid currentColor;border-radius:var(--radius)}
+/* chat transcript */
+.chat-log{display:flex;flex-direction:column;gap:10px}
+.chat-empty{font-family:var(--mono);font-size:10px;letter-spacing:0.3px;line-height:1.8;color:var(--ink-3);text-transform:uppercase}
+.chat-empty b{color:var(--ink-2)}
+.msg{font-size:13.5px;line-height:1.55}
+.msg.user{align-self:flex-end;max-width:88%;background:var(--accent);color:var(--paper-hi);font-family:var(--mono);font-size:11px;line-height:1.5;padding:7px 10px;border:var(--rule2) solid var(--accent)}
+.msg.ai{align-self:stretch;font-family:var(--serif);font-size:14px;line-height:1.6;color:var(--ink-2)}
+.msg.ai>:first-child{margin-top:0}
+.msg.ai h1{font-size:18px;margin:10px 0 6px}.msg.ai h2{font-size:15px;margin:10px 0 6px}.msg.ai h3{font-size:13.5px;margin:8px 0 5px}
+.msg.ai p{margin-bottom:9px}.msg.ai ul,.msg.ai ol{margin-bottom:9px;padding-left:18px}.msg.ai li{margin-bottom:3px}
+.msg.ai pre{font-size:11px;padding:9px;margin:8px 0}.msg.ai code{font-size:12px}.msg.ai blockquote{margin:8px 0;padding-left:11px}
+/* composer */
+.composer{border-top:var(--rule) solid var(--line);padding:9px 12px;flex-shrink:0;display:flex;flex-direction:column;gap:7px}
+.composer-op{font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:0.5px;text-transform:uppercase;color:var(--accent);line-height:1.4}
+.composer-in{width:100%;min-height:46px;max-height:120px;resize:vertical;background:var(--paper);border:var(--rule2) solid var(--line);padding:7px 9px;font-family:var(--serif);font-size:13px;line-height:1.5;color:var(--ink);outline:none}
+.composer-in:focus{border-color:var(--accent)}
+.composer-btns{display:flex;gap:6px}
+.cbtn{flex:1;padding:8px;border:var(--rule2) solid var(--line);font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:0.5px;text-transform:uppercase;cursor:pointer;transition:all var(--ease)}
+.cbtn.gen{background:var(--accent);color:var(--paper-hi);border-color:var(--accent)}
+.cbtn.gen:hover{box-shadow:var(--shadow)}
+.cbtn.ask{background:transparent;color:var(--ink)}
+.cbtn.ask:hover{background:var(--ink);color:var(--paper-hi)}
+.cbtn:disabled{opacity:0.45;cursor:not-allowed}
 ::-webkit-scrollbar{width:8px;height:8px}::-webkit-scrollbar-track{background:var(--paper)}::-webkit-scrollbar-thumb{background:var(--ink-3)}
 </style>
 </head>
@@ -643,14 +677,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
           <button class="mode-tab" id="modeVoice" onclick="switchMode(this,'voice')">Voice</button>
           <button class="mode-tab" id="modeContext" onclick="switchMode(this,'context')">Context</button>
         </div>
-        <div class="plat-wrap" id="platWrap">
-          <span class="plat-label">Format</span>
-          <button class="plat-btn active" onclick="setPlat(this,'medium')">Medium</button>
-          <button class="plat-btn" onclick="setPlat(this,'reddit')">Reddit</button>
-          <button class="plat-btn" onclick="setPlat(this,'linkedin')">LinkedIn</button>
-          <button class="plat-btn" onclick="setPlat(this,'blog')">Blog</button>
-          <button class="plat-btn" onclick="setPlat(this,'github')">GitHub</button>
-        </div>
+        <div class="plat-wrap" id="platWrap"><span class="plat-label">Format</span></div>
         <div class="page-meta">
           <div class="meta-cell" id="wc">0 W</div>
           <button class="ai-toggle" id="mediaBtn" onclick="openMediaStudio()" title="Media studio">🖼</button>
@@ -710,21 +737,33 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
               <div class="vp-bar" id="vpBar">Active Voice — Victor Chaidez</div>
               <div class="vp-body" id="vpBody">—</div>
             </div>
-            <button class="ctx-toggle" id="ctxToggle" onclick="toggleContext()">Context Injection <span class="pip" id="ctxPip">OFF · 0</span></button>
-            <button class="ctx-toggle" id="masterToggle" onclick="toggleMaster()" style="margin-top:-7px">◈ Master Context <span class="pip" id="masterPip">OFF · 0</span></button>
-            <button class="ctx-toggle" id="searchToggle" onclick="toggleSearch()" style="margin-top:-7px">⌖ Web Search <span class="pip" id="searchPip">OFF</span></button>
+            <div class="tog-row">
+              <button class="tog on" id="voiceToggle" onclick="toggleVoice()" title="Use this brand's voice"><span class="tog-l">Voice</span><span class="pip" id="voicePip">ON</span></button>
+              <button class="tog" id="ctxToggle" onclick="toggleContext()" title="Inject this workspace's context library"><span class="tog-l">Context</span><span class="pip" id="ctxPip">0</span></button>
+              <button class="tog" id="masterToggle" onclick="toggleMaster()" title="Inject master (cross-brand) context"><span class="tog-l">Master</span><span class="pip" id="masterPip">0</span></button>
+              <button class="tog" id="searchToggle" onclick="toggleSearch()" title="Let the AI use web search"><span class="tog-l">Web</span><span class="pip" id="searchPip">OFF</span></button>
+            </div>
             <div class="desk-actions" id="deskActions"></div>
             <button class="advance" id="advanceBtn" onclick="advanceStage()">Advance to next stage →</button>
             <button class="advance" id="publishBtn" onclick="openPublishHub()" style="display:none;border-style:solid;background:var(--accent);color:var(--paper-hi);border-color:var(--accent)">✓ Publish / Distribute →</button>
             <div class="dest-row"><span class="dest-lbl">AI output</span><button class="dest-btn active" id="destDesk" onclick="setDest('desk')" title="Stream to The Desk, then insert">To Desk</button><button class="dest-btn" id="destPage" onclick="setDest('page')" title="Stream straight into the page at your cursor">Into Page</button></div>
             </div>
             <div class="rz-v" id="outRz" onmousedown="startRzV(event)" title="Drag to resize the output area — drag to the top for a full-height reader"></div>
-            <div class="out-wrap"><div class="out empty" id="out">Pick an operation above. The Desk's tools change with each stage of the pipeline.</div></div>
+            <div class="out-wrap"><div class="chat-log" id="chatLog"></div></div>
+            <div class="composer">
+              <div class="composer-op" id="composerOp">Pick a prompt above to begin.</div>
+              <textarea class="composer-in" id="composerIn" placeholder="Ask a directed question… or hit Autogen" onkeydown="composerKey(event)"></textarea>
+              <div class="composer-btns">
+                <button class="cbtn gen" id="autogenBtn" onclick="autogen()" title="Run this prompt on everything you've written">⚡ Autogen</button>
+                <button class="cbtn ask" id="askBtn" onclick="askChat()" title="Send your question (⌘/Ctrl+Enter)">Ask ↩</button>
+              </div>
+            </div>
             <div class="desk-foot">
-              <button class="foot-btn" onclick="insertOut('cursor')" title="Insert at the cursor">↳ Cursor</button>
-              <button class="foot-btn" onclick="insertOut('append')" title="Append to the end">+ Append</button>
+              <button class="foot-btn" onclick="insertOut('cursor')" title="Insert the latest reply at the cursor">↳ Cursor</button>
+              <button class="foot-btn" onclick="insertOut('append')" title="Append the latest reply">+ Append</button>
               <button class="foot-btn" onclick="insertOut('replace')" title="Replace the whole body">⤿ Replace</button>
               <button class="foot-btn" onclick="insertOut('title')" title="Use as the headline">→ Title</button>
+              <button class="foot-btn" onclick="insertOut('newdraft')" title="Start a new Draft from this reply (current platform)">→ Draft</button>
               <button class="foot-btn" onclick="copyOutput()" title="Copy raw Markdown">⎘ Copy</button>
             </div>
           </div>
@@ -745,7 +784,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
       <div class="cap-foot">
         <button class="rec-btn" id="recBtn" onclick="toggleRec()" title="Record a voice memo — transcribed locally on-device">⏺ Record</button>
         <span class="rec-status" id="recStatus"></span>
-        <button class="save-cap" onclick="saveCapture()">Save → Spark</button>
+        <button class="save-cap" id="saveCapBtn" onclick="saveCapture()">Save → Idea</button>
       </div>
     </div>
   </div>
@@ -789,6 +828,12 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
       <div class="set-row">
         <label class="set-label">Per-stage model overrides (optional)</label>
         <div id="setStages"></div>
+      </div>
+      <div class="set-section">Platforms · formats you write &amp; publish for</div>
+      <div class="set-row">
+        <label class="set-label">Each platform's format guide is injected when you pick it as the Format</label>
+        <div id="setPlatforms"></div>
+        <button class="btn-line" onclick="setPlatAdd()" style="margin-top:8px">+ Add platform</button>
       </div>
       <div class="set-section">Web Search</div>
       <div class="set-row">
@@ -984,57 +1029,63 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
    {{tokens}} ({{text}} {{brand}} {{voiceLine}} {{platform}} {{guide}}) so they can be
    edited, persisted to the vault, and AI-generated. The live PIPELINE is seeded from
    this and overridden by vault/pipeline.json. PIPELINE stays "data, not code". */
+const PIPELINE_VERSION=2;
 const DEFAULT_PIPELINE=[
-  {id:'spark',label:'Spark',glyph:'✶',caption:'Capture the raw idea — no judgment yet.',ops:[
-    {id:'angles',label:'Find the angles',glyph:'✶',kind:'pri',prompt:"{{voiceLine}}\nHere is a raw spark:\n\n{{text}}\n\nBrainstorm 5 distinct angles or directions this could become, each one sentence. Punchy. No preamble."},
-    {id:'thread',label:'Find the strongest thread',glyph:'→',kind:'sec',prompt:"{{voiceLine}}\nRaw spark:\n\n{{text}}\n\nIdentify the single strongest narrative thread worth pursuing and explain in 2-3 sentences why it lands for this audience."},
-    {id:'questions',label:'Questions to answer',glyph:'?',kind:'sec',prompt:"{{voiceLine}}\nSpark:\n\n{{text}}\n\nList the 5 questions a reader will want answered if I write this. No preamble."}
+  {id:'idea',label:'Idea',glyph:'✶',caption:'Capture the raw idea and pressure-test it.',ops:[
+    {id:'fit',label:'Does it fit here?',glyph:'◎',kind:'pri',intent:"Check whether this idea belongs in this workspace, given its context and your past posts.",prompt:"Idea / spark:\n\n{{text}}\n\nUsing the reference context and prior work for {{brand}}, judge whether this idea fits this workspace: is it on-brand and additive, or a repeat/off-topic? Give a clear verdict, then 2-3 sentences on why and how to make it fit better."},
+    {id:'angles',label:'Angles to explore',glyph:'✶',kind:'sec',web:true,intent:"Web-researched angles that still fit the workspace.",prompt:"Idea:\n\n{{text}}\n\nUsing current web research, propose 4-5 distinct angles for this idea that still fit {{brand}}. One line each; note what's fresh or under-covered. No preamble."},
+    {id:'series',label:'Spin into a series',glyph:'❏',kind:'sec',intent:"Related ideas that could form a series of posts.",prompt:"Idea:\n\n{{text}}\n\nPropose 3-5 related ideas that could form a series of posts for {{brand}}. Each: a working title + one line on what it covers."},
+    {id:'traction',label:'Will it land here?',glyph:'↗',kind:'sec',web:true,intent:"Short web-based read on whether this gets traction on the chosen platform.",prompt:"Idea:\n\n{{text}}\n\nBased on web research, would this get traction on {{platform}}? Short verdict only — yes / no / maybe — plus one line of why. No long analysis."},
+    {id:'outline',label:'Outline for the platform',glyph:'≣',kind:'sec',intent:"An outline sized to the platform — no padding.",prompt:"Idea / notes:\n\n{{text}}\n\nBuild an outline sized for {{platform}}. {{guide}}\nSize it to the format: a LinkedIn or X post may be a single section; a Reddit post a few short parts; a Medium/blog piece can have more sections and tell a longer story only when it earns it; an eBook can have several chapters. Do not add length without a reason. Section headers + one line each."}
   ]},
-  {id:'research',label:'Research',glyph:'◎',caption:'Gather the angles, points, and counterpoints.',ops:[
-    {id:'outline',label:'Build an outline',glyph:'◎',kind:'pri',prompt:"{{voiceLine}}\nTopic / notes:\n\n{{text}}\n\nBuild a tight outline for a {{platform}} piece. Use H2-style section headers and one line under each. No preamble."},
-    {id:'points',label:'Core points to make',glyph:'•',kind:'sec',prompt:"{{voiceLine}}\nNotes:\n\n{{text}}\n\nExtract the 4-6 core arguments this piece must make, ranked by impact."},
-    {id:'counter',label:'Counterpoints & gaps',glyph:'⚔',kind:'sec',prompt:"{{voiceLine}}\nNotes:\n\n{{text}}\n\nWhat would a sharp skeptic say against this? List 3-4 counterpoints I should address to make it credible."}
+  {id:'research',label:'Research',glyph:'◎',caption:'Validate, optimize, and find the landscape.',ops:[
+    {id:'validate',label:'Validate & broaden',glyph:'◎',kind:'pri',web:true,intent:"Web research: is the idea valid, and how to widen its appeal.",prompt:"Idea / draft:\n\n{{text}}\n\nRun broad web research on this for {{brand}}. Is it valid and would it reach a broad audience? Cover: why it would, why it wouldn't, and concrete ways to tweak it for broader appeal without losing the brand. Cite URLs where relevant."},
+    {id:'seo',label:'SEO & AI-search pass',glyph:'#',kind:'sec',intent:"Optimize the whole piece (or a section you ask about) for SEO + AI answer-engines.",prompt:"Content:\n\n{{text}}\n\nOptimize this for SEO and AI-search (answer engines). Give: target keywords, named entities/topics to include, heading suggestions, and 2-3 quotable answer-style passages. If I ask about a specific section, focus only on that section."},
+    {id:'similar',label:'Find similar content',glyph:'⌕',kind:'sec',web:true,intent:"Top similar pieces with links so you can review them yourself.",prompt:"Topic:\n\n{{text}}\n\nSurface existing content similar to this so I can review it myself. Give the top 3 by default — title — URL — one line on why it's relevant/how it differs. Offer to find more if I ask."},
+    {id:'platforms',label:'Where else to post?',glyph:'⇲',kind:'sec',web:true,intent:"Other platforms and communities that fit this topic.",prompt:"Topic for {{brand}}:\n\n{{text}}\n\nWhat other platforms and specific communities could this be posted to? List each with a one-line reason it fits."}
   ]},
-  {id:'draft',label:'Draft',glyph:'✎',caption:'Shape the first full version in your voice.',ops:[
-    {id:'generate',label:'Generate full draft',glyph:'✦',kind:'pri',prompt:"{{voiceLine}}\nFormat: {{platform}}. {{guide}}\n\nFrom these notes, write a polished, publication-ready draft for {{brand}}. Apply the voice naturally. Write only the content, no preamble:\n\n{{text}}"},
-    {id:'expand',label:'Expand & deepen',glyph:'+',kind:'sec',prompt:"{{voiceLine}}\nFormat: {{platform}}.\n\nTake this draft and deepen it — add specificity, concrete detail, and texture without padding. Return the improved version:\n\n{{text}}"},
-    {id:'restructure',label:'Restructure for flow',glyph:'⤵',kind:'sec',prompt:"{{voiceLine}}\n\nReorganize this draft for the strongest narrative flow. Keep the voice. Return only the restructured version:\n\n{{text}}"}
+  {id:'draft',label:'Draft',glyph:'✎',caption:'Shape the full version in your voice.',ops:[
+    {id:'generate',label:'Generate full draft',glyph:'✦',kind:'pri',intent:"Write a complete draft. Ask for a single section to draft just that.",prompt:"Notes / outline:\n\n{{text}}\n\nWrite a complete, publication-ready draft for {{brand}} on {{platform}}. {{guide}}\nFollow any outline present. Write only the content, no preamble. (If I ask for a specific section, draft only that section.)"},
+    {id:'voicecheck',label:'Voice & AI-ism check',glyph:'♪',kind:'sec',intent:"Flag off-brand or AI-sounding lines with specific fixes.",prompt:"Draft:\n\n{{text}}\n\nReview against the voice. Flag lines that sound off-brand OR AI-generated (generic phrasing, hedging, empty transitions, listicle tics, 'in conclusion', em-dash overuse). For each, quote it and give a specific fix. Don't rewrite the whole thing."},
+    {id:'expand',label:'Expand & deepen',glyph:'+',kind:'sec',intent:"Add specificity and depth where it helps — no padding.",prompt:"Draft:\n\n{{text}}\n\nDeepen this — add specificity, concrete detail, evidence, and texture where it genuinely helps. No padding. Return the improved version."},
+    {id:'restructure',label:'Restructure / change flow',glyph:'⤵',kind:'sec',intent:"Offer flow styles and restructure to the one you pick.",prompt:"Draft:\n\n{{text}}\n\nFirst, briefly recommend the best structural flow for this piece and why, from: Straight-to-the-point, Suspense, Entertainment, Short & informative, Story-driven, Contrarian, How-to / step-by-step, Listicle. If I've named a style, restructure into it; otherwise restructure into your recommended one. Keep the voice; return the restructured version."},
+    {id:'factcheck',label:'Clean-up & fact check',glyph:'✓',kind:'sec',web:true,intent:"Short sanity pass — verify claims via web, not a rewrite.",prompt:"Draft:\n\n{{text}}\n\nShort, concise sanity pass — NOT a rewrite. Catch anything stated or implied as fact and verify it via web search. List only the items worth checking, each with: the claim, accurate / shaky / wrong, and a source URL. Keep it tight."}
   ]},
-  {id:'optimize',label:'Optimize',glyph:'◇',caption:'Sharpen for discovery — SEO and AI-search (AIO).',ops:[
-    {id:'titles',label:'Headline options',glyph:'◇',kind:'pri',prompt:"{{voiceLine}}\nFor a {{platform}} piece below, write 7 headline options: a mix of curiosity, clarity, and SEO-strength. Number them. Then mark which one you'd pick and why in one line.\n\n{{text}}"},
-    {id:'meta',label:'SEO meta description',glyph:'≡',kind:'sec',prompt:"Write a compelling 150-character SEO meta description for this piece. Return only the description:\n\n{{text}}"},
-    {id:'keywords',label:'Keywords & entities',glyph:'#',kind:'sec',prompt:"Extract target SEO keywords and the named entities/topics an AI answer-engine would index for this piece. Group as KEYWORDS and ENTITIES.\n\n{{text}}"},
-    {id:'aio',label:'AI-search rewrite (AIO)',glyph:'✷',kind:'sec',prompt:"Rewrite the opening 2 paragraphs so an AI answer-engine (ChatGPT, Perplexity, Google AI) would cite this as a clear, authoritative source — direct, factual, quotable. Return only the rewritten opening:\n\n{{text}}"}
+  {id:'ready',label:'Ready to Publish',glyph:'◆',caption:'Adapt for platforms and find where to share it.',ops:[
+    {id:'adapt',label:'Rewrite for a platform',glyph:'⇄',kind:'pri',intent:"Rewrite the same content natively for a platform. Use '→ New draft' to start a fresh entry.",prompt:"Content:\n\n{{text}}\n\nRewrite this natively for {{platform}}. {{guide}}\nKeep the substance and facts; adapt the format, length, and rhythm to the platform. Return only the rewritten version. (Tip: use '→ New draft' to start a separate Draft entry for this platform.)"},
+    {id:'teaser',label:'Social teasers',glyph:'❯',kind:'sec',intent:"Platform-specific teasers that drive to the piece.",prompt:"Content:\n\n{{text}}\n\nWrite teasers that drive people to this piece, native to {{platform}} (ask me for a different platform if you want others). 2-3 options, each scroll-stopping, no clickbait clichés."},
+    {id:'helpful',label:'Where to be helpful',glyph:'⌕',kind:'sec',web:true,intent:"Real threads to genuinely help in, with plain, on-brand comment drafts.",prompt:"My piece:\n\n{{text}}\n\nFind current threads/posts (Reddit, X, LinkedIn, Medium, relevant forums) where I could be genuinely helpful and naturally mention this. For each: the subject, a one-line description, the link, and a comment draft. The drafts must be as plain and genuinely helpful as possible — boring is good — never marketing, no copywriting tricks, aligned with {{brand}}'s voice."}
   ]},
-  {id:'polish',label:'Polish',glyph:'◆',caption:'Tighten the prose and lock the voice.',ops:[
-    {id:'lineedit',label:'Line edit',glyph:'◆',kind:'pri',prompt:"{{voiceLine}}\nLine-edit this for rhythm, clarity, and punch. Keep my voice; cut clichés and hedging. Return only the edited version:\n\n{{text}}"},
-    {id:'voicecheck',label:'Voice check',glyph:'♪',kind:'sec',prompt:"{{voiceLine}}\nReview the draft below against that voice. Flag any lines that sound off-brand or generic, and suggest a fix for each. Be specific.\n\n{{text}}"},
-    {id:'cut',label:'Cut 20%',glyph:'✂',kind:'sec',prompt:"Cut roughly 20% of this without losing meaning or voice. Tighter is better. Return only the trimmed version:\n\n{{text}}"}
-  ]},
-  {id:'distribute',label:'Distribute',glyph:'⇄',caption:'Adapt into platform-native posts, quotes, and comments.',ops:[
-    {id:'adapt',label:'Adapt for format',glyph:'⇄',kind:'pri',prompt:"{{voiceLine}}\nAdapt the piece below into a native {{platform}} post. {{guide}}\nReturn only the adapted version:\n\n{{text}}"},
-    {id:'teaser',label:'Social teaser',glyph:'❯',kind:'sec',prompt:"{{voiceLine}}\nWrite a short, scroll-stopping social teaser that drives clicks to this piece. 2-3 lines.\n\n{{text}}"},
-    {id:'quotes',label:'Pull-quotes',glyph:'❝',kind:'sec',prompt:"Extract 4 short, shareable pull-quotes from this piece. One line each.\n\n{{text}}"},
-    {id:'comments',label:'Comment seeds',glyph:'❮',kind:'sec',prompt:"{{voiceLine}}\nDraft 3 thoughtful comment/reply seeds I can use to spark discussion when this is posted. Conversational, not promotional.\n\n{{text}}"}
-  ]},
-  {id:'ship',label:'Ship',glyph:'✓',caption:'Final review, then it goes out the door.',ops:[
-    {id:'check',label:'Pre-flight checklist',glyph:'✓',kind:'pri',prompt:"Give a tight pre-publish checklist for this {{platform}} piece: headline, hook, structure, CTA, formatting. Mark each PASS or FIX with one line.\n\n{{text}}"},
-    {id:'summary',label:'One-line summary',glyph:'≈',kind:'sec',prompt:"Write a single sharp sentence summarizing this piece, for my own archive.\n\n{{text}}"}
+  {id:'published',label:'Published',glyph:'◇',caption:'Track what changed and what comes next.',ops:[
+    {id:'changed',label:'Anything no longer true?',glyph:'⟳',kind:'pri',web:true,intent:"Web-check whether anything in the piece is now false, dated, or contested. Paste it or give a URL.",prompt:"Published piece (pasted below, or I'll give a URL):\n\n{{text}}\n\nSince this was published, has anything become false, outdated, or contested? Web-check the factual and time-sensitive claims. List what should be updated, each with the issue and a source URL. If nothing, say so."},
+    {id:'sentiment',label:'Comment sentiment',glyph:'☷',kind:'sec',intent:"Score the sentiment of comments you paste (or a URL).",prompt:"Comments (paste them, or give a post URL):\n\n{{text}}\n\nSummarize the overall sentiment as exactly one label: Negative (Mostly or Leaning), Neutral, or Positive (Leaning or Mostly) — e.g. 'Mostly-Positive' or 'Leaning-Negative'. Then give the signals behind the label and the notable recurring themes (praise, objections, questions)."},
+    {id:'followup',label:'Follow-up ideas',glyph:'❏',kind:'sec',intent:"Next-piece ideas drawn from the comments and sentiment.",prompt:"The piece and its comments/sentiment:\n\n{{text}}\n\nIf a follow-up is warranted by the response, propose next-piece ideas I can drop into Idea — each a working title + one line. If a follow-up is NOT warranted, say so plainly and explain why."}
   ]}
 ];
 function clonePipeline(p){return JSON.parse(JSON.stringify(p));}
 let PIPELINE=clonePipeline(DEFAULT_PIPELINE);
 let pipelineNotes='';
 function stageIndex(id){const i=PIPELINE.findIndex(s=>s.id===id);return i<0?0:i;}
+function firstStage(){return (PIPELINE[0]&&PIPELINE[0].id)||'idea';}
+function finalStage(){return (PIPELINE[PIPELINE.length-1]&&PIPELINE[PIPELINE.length-1].id)||'published';}
+// Map the old 7-stage ids onto the new 5-stage pipeline (one-time migration of existing works).
+const STAGE_MAP={spark:'idea',idea:'idea',research:'research',draft:'draft',optimize:'draft',polish:'draft',distribute:'ready',ready:'ready',ship:'published',published:'published'};
+function mapStage(id){return STAGE_MAP[id]||(PIPELINE.findIndex(s=>s.id===id)>=0?id:firstStage());}
 function fillTemplate(tpl,ctx){return String(tpl==null?'':tpl).replace(/\{\{(\w+)\}\}/g,(m,k)=>ctx[k]!=null?ctx[k]:'');}
 
-const platformGuide={
-  medium:'Long-form, narrative, H2 headers, 600-1500 words.',
-  reddit:'Conversational, direct, no fluff, leads with the point.',
-  linkedin:'150-300 words, bold opener, short paragraphs, ends with an insight.',
-  blog:'Practical, clear structure, H2 headers, human-first.',
-  github:'Technical, structured, code blocks where relevant, honest tradeoffs.'
-};
+// Platforms are configurable in Settings; this seeds SETTINGS.platforms on first run.
+const DEFAULT_PLATFORMS=[
+  {id:'medium',label:'Medium',guide:'Long-form, narrative, H2 headers, 600-1500 words.'},
+  {id:'reddit',label:'Reddit',guide:'Conversational, direct, no fluff, leads with the point.'},
+  {id:'linkedin',label:'LinkedIn',guide:'150-300 words, bold opener, short paragraphs, ends with an insight.'},
+  {id:'x',label:'X.com',guide:'Punchy, 1-3 short posts or a thread, lead with the hook, no hashtags spam.'},
+  {id:'blog',label:'Blog',guide:'Practical, clear structure, H2 headers, human-first.'},
+  {id:'github',label:'GitHub',guide:'Technical, structured, code blocks where relevant, honest tradeoffs.'}
+];
+function platforms(){return (SETTINGS.platforms&&SETTINGS.platforms.length)?SETTINGS.platforms:DEFAULT_PLATFORMS;}
+function platFor(id){return platforms().find(p=>p.id===id)||null;}
+function platLabel(id){const p=platFor(id);return p?p.label:cap(id);}
+function platGuide(id){const p=platFor(id);return p?p.guide:'';}
 
 const brands={
   victor:{id:'victor',name:'Victor Chaidez',titleHTML:'Victor<br>Chaidez',tag:'Personal',accent:'#E5330C',accentSoft:'rgba(229,51,12,0.12)',voice:'Direct, analytical, veteran. US Army vet turned remote consultant, slow-traveling Europe with wife and dog. Real numbers, no BS, earned the hard way.'},
@@ -1046,17 +1097,17 @@ const brands={
 let works={
   victor:[
     {id:'w1',title:'Living on $100K with $30K in debt abroad',body:'',stage:'draft',updated:'Today'},
-    {id:'w2',title:'The real cost of slow travel in Europe',body:'',stage:'optimize',updated:'May 28'},
-    {id:'w3',title:'',body:'Voice memo: thoughts on FEIE vs FTC and what I keep getting wrong',stage:'spark',updated:'Today'}
+    {id:'w2',title:'The real cost of slow travel in Europe',body:'',stage:'ready',updated:'May 28'},
+    {id:'w3',title:'',body:'Voice memo: thoughts on FEIE vs FTC and what I keep getting wrong',stage:'idea',updated:'Today'}
   ],
   bricks:[
-    {id:'b1',title:'Albania month one — the honest review',body:'',stage:'polish',updated:'May 30'},
+    {id:'b1',title:'Albania month one — the honest review',body:'',stage:'draft',updated:'May 30'},
     {id:'b2',title:'Traveling the Balkans with a dog',body:'',stage:'draft',updated:'May 25'}
   ],
   zedia:[
-    {id:'z1',title:"I shipped LEDGER — here's what happened",body:'',stage:'distribute',updated:'Jun 1'},
+    {id:'z1',title:"I shipped LEDGER — here's what happened",body:'',stage:'published',updated:'Jun 1'},
     {id:'z2',title:'Why I chose Tauri over Electron',body:'',stage:'research',updated:'Today'},
-    {id:'z3',title:'',body:'ContentOS concept — orchestration not organization',stage:'spark',updated:'Today'}
+    {id:'z3',title:'',body:'ContentOS concept — orchestration not organization',stage:'idea',updated:'Today'}
   ],
   zediatech:[
     {id:'t1',title:'Genesys Cloud reporting — the missing manual',body:'',stage:'draft',updated:'May 20'}
@@ -1065,7 +1116,7 @@ let works={
 
 let cur='victor',platform='medium',filterStage='all',activeWorkId=null,activeStage='draft',deskOpen=true,busy=false,aiContent='',recording=false,mr=null;
 let SETTINGS={provider:'openrouter',apiKey:'',baseUrl:'https://openrouter.ai/api/v1/chat/completions',models:{default:'anthropic/claude-sonnet-4'}};
-let mode='write',useContext=false,useMaster=false,useSearch=false;
+let mode='write',useContext=false,useMaster=false,useSearch=false,useVoice=true;
 let contextFiles={victor:[],bricks:[],zedia:[],zediatech:[]};
 let masterFiles=[];
 let edMode='live',mdBody='',edBlocks=[''],edActive=null,edPendingCaret=null,_lastLiveBlock=null,_imeOn=false,aiDest='desk',_saveT=null,_outRaf=0,_pageStream=null;
@@ -1100,7 +1151,16 @@ function renderSettings(){
   document.getElementById('setCanvaSecret').value=cvs.clientSecret||'';
   updateCanvaStatus(cvs.token?'Connected ✓':'Not connected');
   document.getElementById('setStages').innerHTML=PIPELINE.map(s=>`<div class="set-stage-row"><span class="set-stage-name">${s.label}</span><input class="set-input" list="modelList" data-stage="${s.id}" placeholder="(use default)" value="${(SETTINGS.models&&SETTINGS.models[s.id])||''}"></div>`).join('');
+  _platDraft=JSON.parse(JSON.stringify(platforms()));renderSetPlatforms();
 }
+let _platDraft=[];
+function renderSetPlatforms(){
+  const el=document.getElementById('setPlatforms');if(!el)return;
+  el.innerHTML=_platDraft.map((p,i)=>`<div class="set-plat-row"><input class="set-input set-plat-name" placeholder="Platform name" value="${attr(p.label||'')}" oninput="_platDraft[${i}].label=this.value"><input class="set-input set-plat-guide" placeholder="Format guide the AI follows…" value="${attr(p.guide||'')}" oninput="_platDraft[${i}].guide=this.value"><button class="set-plat-del" title="Remove" onclick="setPlatDel(${i})">✕</button></div>`).join('')||'<div class="set-hint">No platforms — add one.</div>';
+}
+function setPlatAdd(){_platDraft.push({id:'',label:'',guide:''});renderSetPlatforms();}
+function setPlatDel(i){_platDraft.splice(i,1);renderSetPlatforms();}
+function platSlug(s){return String(s||'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'')||('p'+Date.now());}
 async function saveSettings(){
   SETTINGS.provider=document.getElementById('setProvider').value;
   SETTINGS.apiKey=document.getElementById('setKey').value.trim();
@@ -1125,7 +1185,12 @@ async function saveSettings(){
   SETTINGS.canva=SETTINGS.canva||{};
   SETTINGS.canva.clientId=document.getElementById('setCanvaId').value.trim();
   SETTINGS.canva.clientSecret=document.getElementById('setCanvaSecret').value.trim();
+  // Platforms: keep existing ids stable; derive an id for new rows; drop blanks; ensure uniqueness.
+  const seen={},plats=[];
+  for(const p of _platDraft){const label=(p.label||'').trim();if(!label)continue;let id=p.id||platSlug(label);while(seen[id])id=id+'-2';seen[id]=1;plats.push({id:id,label:label,guide:(p.guide||'').trim()});}
+  SETTINGS.platforms=plats.length?plats:JSON.parse(JSON.stringify(DEFAULT_PLATFORMS));
   if(window.COS)await window.COS.saveSettings(SETTINGS);
+  renderPlatforms();
   document.getElementById('setStatus').textContent='Saved ✓';
   setTimeout(()=>{document.getElementById('setStatus').textContent='';closeSettings();},700);
   toast('Settings saved');
@@ -1176,7 +1241,8 @@ async function loadModels(){
   }catch(e){st.textContent='Models load failed — '+(e.message||'network');}
 }
 
-function init(){applyUI();renderBrands();renderMastRail();applyTheme();updateHeaders();renderStageFilter();renderWorks();selectFirstWork();updateVP();updateCtxPip();updateMasterCount();updateMasterPip();updateSearchPip();setupSttProgress();tickClock();setInterval(tickClock,30000);}
+function ensurePlatforms(){if(!SETTINGS.platforms||!SETTINGS.platforms.length)SETTINGS.platforms=JSON.parse(JSON.stringify(DEFAULT_PLATFORMS));}
+function init(){ensurePlatforms();applyUI();renderBrands();renderMastRail();applyTheme();renderPlatforms();updateHeaders();renderStageFilter();renderWorks();selectFirstWork();updateVP();updateVoicePip();updateCtxPip();updateMasterCount();updateMasterPip();updateSearchPip();setupSttProgress();tickClock();setInterval(tickClock,30000);}
 function tickClock(){document.getElementById('issueClock').textContent=new Date().toLocaleDateString('en-US',{month:'short',day:'2-digit',year:'numeric'}).toUpperCase();}
 function cap(s){return s.charAt(0).toUpperCase()+s.slice(1);}
 function fmtWhen(v){
@@ -1205,11 +1271,11 @@ function renderWorks(){
   let list=works[cur];
   if(filterStage!=='all')list=list.filter(w=>w.stage===filterStage);
   const st=document.getElementById('workStack');
-  if(!list.length){st.innerHTML='<div class="work-empty">No works in this stage.<br>Capture a spark to begin.</div>';return;}
+  if(!list.length){st.innerHTML='<div class="work-empty">No works in this stage.<br>Capture an idea to begin.</div>';return;}
   st.innerHTML=list.map(w=>{
     const si=PIPELINE.findIndex(s=>s.id===w.stage);
     const stg=si>=0?PIPELINE[si]:{glyph:'⌫',label:w.stage};
-    const name=w.title||w.body.slice(0,46)||'Untitled spark';
+    const name=w.title||w.body.slice(0,46)||'Untitled';
     return`<div class="work-row ${w.id===activeWorkId?'active':''}" onclick="openWork('${w.id}')"><div class="wr-top"><span class="wr-stage">${stg.glyph} ${stg.label}</span><span class="wr-name">${name}</span></div><div class="wr-meta">Updated ${fmtWhen(w.updated)}</div></div>`;
   }).join('');
 }
@@ -1239,16 +1305,17 @@ function renderRail(){
   }).join('');
   const stg=PIPELINE[ci];
   document.getElementById('railCaption').innerHTML=`<span class="rc-glyph">${stg.glyph}</span><span class="rc-text"><b>${stg.label}</b> — ${stg.caption}</span>`;
-  document.getElementById('sheetKicker').textContent=cap(activeStage)+' — '+cap(platform);
+  document.getElementById('sheetKicker').textContent=cap(activeStage)+' — '+platLabel(platform);
   document.getElementById('deskStageTag').textContent='/ '+stg.label.toUpperCase();
 }
 function goStage(id){const w=getWork();if(w){w.stage=id;w.updated=new Date().toISOString();if(window.COS)window.COS.saveWork(cur,w);}activeStage=id;renderRail();renderDesk();renderWorks();}
-function advanceStage(){const ci=stageIndex(activeStage);if(ci<PIPELINE.length-1)goStage(PIPELINE[ci+1].id);else toast('Already at Ship');}
+function advanceStage(){const ci=stageIndex(activeStage);if(ci<PIPELINE.length-1)goStage(PIPELINE[ci+1].id);else toast('Already at the final stage');}
 
 /* DESK (stage-aware) */
 function renderDesk(){
   const stg=PIPELINE[stageIndex(activeStage)];
-  document.getElementById('deskActions').innerHTML=stg.ops.map(op=>`<button class="act ${op.kind}" onclick="runOp('${op.id}')"><span class="act-glyph">${op.glyph}</span>${op.label}</button>`).join('');
+  if(activeOp&&!stg.ops.find(o=>o.id===activeOp.id)){activeOp=null;chat=[];_chatStreaming=false;}
+  document.getElementById('deskActions').innerHTML=stg.ops.map(op=>`<button class="act ${op.kind} ${activeOp&&activeOp.id===op.id?'sel':''}" data-op="${op.id}" onclick="selectOp('${op.id}')" title="${attr(op.intent||op.label)}"><span class="act-glyph">${op.glyph}</span>${op.label}</button>`).join('');
   const adv=document.getElementById('advanceBtn');
   const ci=stageIndex(activeStage);
   const isFinal=ci>=PIPELINE.length-1;
@@ -1256,6 +1323,7 @@ function renderDesk(){
   adv.disabled=isFinal;
   adv.style.display=isFinal?'none':'block';
   document.getElementById('publishBtn').style.display=isFinal?'block':'none';
+  updateComposerOp();renderChat();
 }
 
 /* ===== Markdown editor: hand-rolled renderer + 3 modes ===== */
@@ -1446,7 +1514,12 @@ function syncFromTarget(ta){if(edMode==='source'){mdBody=ta.value;}else if(edMod
 function mdWrap(pre,post){const ta=edTarget();if(!ta)return;const s=ta.selectionStart,e=ta.selectionEnd,v=ta.value;const sel=v.slice(s,e)||'text';ta.value=v.slice(0,s)+pre+sel+post+v.slice(e);ta.focus();ta.setSelectionRange(s+pre.length,s+pre.length+sel.length);syncFromTarget(ta);}
 function mdPrefix(p){const ta=edTarget();if(!ta)return;const v=ta.value,s=ta.selectionStart;const ls=v.lastIndexOf('\n',s-1)+1;ta.value=v.slice(0,ls)+p+v.slice(ls);ta.focus();ta.setSelectionRange(s+p.length,s+p.length);syncFromTarget(ta);}
 function mdLink(){const ta=edTarget();if(!ta)return;const s=ta.selectionStart,e=ta.selectionEnd,v=ta.value;const sel=v.slice(s,e)||'text';const ins='['+sel+'](url)';ta.value=v.slice(0,s)+ins+v.slice(e);ta.focus();ta.setSelectionRange(s+ins.length-4,s+ins.length-1);syncFromTarget(ta);}
-function setPlat(el,p){platform=p;document.querySelectorAll('.plat-btn').forEach(b=>b.classList.remove('active'));el.classList.add('active');document.getElementById('sheetKicker').textContent=cap(activeStage)+' — '+cap(p);}
+function renderPlatforms(){
+  const wrap=document.getElementById('platWrap');if(!wrap)return;
+  if(!platFor(platform))platform=(platforms()[0]||{id:'medium'}).id;
+  wrap.innerHTML='<span class="plat-label">Format</span>'+platforms().map(p=>`<button class="plat-btn ${p.id===platform?'active':''}" onclick="setPlat(this,'${p.id}')">${esc(p.label)}</button>`).join('');
+}
+function setPlat(el,p){platform=p;document.querySelectorAll('.plat-btn').forEach(b=>b.classList.remove('active'));if(el)el.classList.add('active');const sk=document.getElementById('sheetKicker');if(sk)sk.textContent=cap(activeStage)+' — '+platLabel(p);}
 function toggleDesk(){deskOpen=!deskOpen;document.getElementById('desk').classList.toggle('open',deskOpen);document.getElementById('aiToggle').classList.toggle('on',deskOpen);uiState.deskOpen=deskOpen;saveUIState();}
 
 /* ===== Collapsible + resizable panels ===== */
@@ -1560,8 +1633,8 @@ function toggleContext(){useContext=!useContext;updateCtxPip();}
 function updateCtxPip(){
   const n=(contextFiles[cur]||[]).length;
   const t=document.getElementById('ctxToggle');const pip=document.getElementById('ctxPip');
-  if(useContext&&n>0){t.classList.add('on');pip.textContent='ON · '+n;}
-  else{t.classList.remove('on');pip.textContent=(n>0?'OFF · '+n:'NONE');if(useContext&&n===0)useContext=false;}
+  if(useContext&&n>0){t.classList.add('on');pip.textContent='ON';}
+  else{t.classList.remove('on');pip.textContent=String(n);if(useContext&&n===0)useContext=false;}
 }
 function contextBlock(){
   let out='';
@@ -1636,41 +1709,107 @@ async function webSearchBlock(query){
     return 'LIVE WEB RESULTS (use these for current facts; cite the URLs where relevant):\n'+block+'\n\n';
   }catch(e){return '';}
 }
-async function runOp(opId){
+// ---- conversation-aware model calls (system + messages array) ----
+function chatBodyMsgs(model,messages,system,stream){
+  const s=SETTINGS;
+  const body={model:model,max_tokens:maxTokens(),stream:!!stream};
+  if(s.provider==='anthropic'){if(system)body.system=system;body.messages=messages.map(m=>({role:m.role,content:m.content}));}
+  else{const msgs=[];if(system)msgs.push({role:'system',content:system});for(const m of messages)msgs.push({role:m.role,content:m.content});body.messages=msgs;}
+  if(useSearch&&s.provider==='anthropic')body.tools=[{type:'web_search_20250305',name:'web_search',max_uses:5}];
+  if(useSearch&&s.provider==='openrouter')body.plugins=[{id:'web',max_results:5}];
+  return body;
+}
+async function streamModelChat(messages,model,onToken,system){
+  const s=SETTINGS;
+  const res=await fetch(s.baseUrl,{method:'POST',headers:chatHeaders(),body:JSON.stringify(chatBodyMsgs(model,messages,system,true))});
+  if(!res.ok){let d={};try{d=await res.json();}catch(e){}throw new Error((d.error&&(d.error.message||d.error))||('HTTP '+res.status));}
+  if(!res.body){const t=await res.text();onToken(t);return t;}
+  const reader=res.body.getReader(),dec=new TextDecoder();let buf='',full='';
+  while(true){
+    const r=await reader.read();if(r.done)break;
+    buf+=dec.decode(r.value,{stream:true});let idx;
+    while((idx=buf.indexOf('\n'))>=0){
+      let line=buf.slice(0,idx).trim();buf=buf.slice(idx+1);
+      if(!line||line.startsWith(':')||!line.startsWith('data:'))continue;
+      const data=line.slice(5).trim();if(data==='[DONE]')continue;
+      let j;try{j=JSON.parse(data);}catch(e){continue;}
+      let tok='';
+      if(s.provider==='anthropic'){if(j.type==='content_block_delta'&&j.delta&&j.delta.type==='text_delta')tok=j.delta.text||'';}
+      else{tok=(j.choices&&j.choices[0]&&j.choices[0].delta&&j.choices[0].delta.content)||'';}
+      if(tok){full+=tok;onToken(full,tok);}
+    }
+  }
+  return full;
+}
+
+/* ===== The Desk: select a prompt, then Autogen or chat ===== */
+let activeOp=null,chat=[],_chatStreaming=false,_chatRaf=0;
+function workText(){const title=document.getElementById('titleField').innerText.trim();const body=getBodyMd().trim();return (title?title+'\n\n':'')+body;}
+function opCtx(){const b=brands[cur];return{text:workText(),brand:b.name,platform:platLabel(platform),guide:platGuide(platform)};}
+function buildPreamble(){let s='';const b=brands[cur];if(useVoice&&b&&b.voice)s+='VOICE — you are writing as '+b.name+'. Voice profile: '+b.voice+'\nMatch this voice; never sound generic or obviously AI-generated.\n\n';s+=contextBlock();return s.trim();}
+function setDest(d){aiDest=d;document.getElementById('destDesk').classList.toggle('active',d==='desk');document.getElementById('destPage').classList.toggle('active',d==='page');}
+function selectOp(id){
+  const stg=PIPELINE[stageIndex(activeStage)];const op=stg.ops.find(o=>o.id===id);if(!op)return;
+  activeOp=op;chat=[];_chatStreaming=false;aiContent='';
+  document.querySelectorAll('.act').forEach(b=>b.classList.toggle('sel',b.dataset.op===id));
+  if(op.web&&!useSearch){useSearch=true;updateSearchPip();}
+  updateComposerOp();renderChat();
+  const ta=document.getElementById('composerIn');if(ta)ta.focus();
+}
+function updateComposerOp(){const el=document.getElementById('composerOp');if(!el)return;el.textContent=activeOp?(activeOp.label+(activeOp.intent?' — '+activeOp.intent:'')):'Pick a prompt above to begin.';}
+function renderChat(){
+  const log=document.getElementById('chatLog');if(!log)return;
+  if(!chat.length&&!_chatStreaming){
+    log.innerHTML='<div class="chat-empty">'+(activeOp
+      ?'Hit <b>Autogen</b> to run this on everything you’ve written — or type a directed question below and keep chatting.'
+      :'Pick a prompt above. Then <b>Autogen</b> runs it on your whole draft, or ask a directed question and dig deeper in conversation.')+'</div>';
+    return;
+  }
+  let h=chat.map(m=>m.role==='user'
+    ?'<div class="msg user">'+esc(m.content).replace(/\n/g,'<br>')+'</div>'
+    :'<div class="msg ai md-render">'+(mdToHtml(m.content)||'')+'</div>').join('');
+  if(_chatStreaming)h+='<div class="msg ai md-render" id="chatStream"><span class="spin"></span></div>';
+  log.innerHTML=h;log.scrollTop=log.scrollHeight;
+}
+function renderStreamNode(full){aiContent=full;if(_chatRaf)return;_chatRaf=requestAnimationFrame(()=>{_chatRaf=0;const n=document.getElementById('chatStream');if(!n)return;n.innerHTML=mdToHtml(full)||'';const log=document.getElementById('chatLog');if(log)log.scrollTop=log.scrollHeight;});}
+function setComposerBusy(on){const a=document.getElementById('autogenBtn'),k=document.getElementById('askBtn');if(a)a.disabled=on;if(k)k.disabled=on;}
+async function chatSend(userMsg,toPage){
   if(busy)return;
-  const stg=PIPELINE[stageIndex(activeStage)];
-  const op=stg.ops.find(o=>o.id===opId);if(!op)return;
   if(!SETTINGS.apiKey){toast('Add your API key in Settings');openSettings();return;}
   saveCurrent();
-  const title=document.getElementById('titleField').innerText.trim();
-  const body=getBodyMd().trim();
-  const text=(title?title+'\n\n':'')+body;
-  const b=brands[cur];
-  const ctx={text:text,brand:b.name,voiceLine:'Voice profile for '+b.name+': '+b.voice,platform:platform,guide:platformGuide[platform]};
-  const out=document.getElementById('out');
-  const toPage=(aiDest==='page');
-  busy=true;out.className='out';out.textContent='';aiContent='';
-  const btns=document.querySelectorAll('.act');btns.forEach(x=>x.disabled=true);
-  const fired=[...btns].find(x=>x.textContent.includes(op.label));
-  const orig=fired?fired.innerHTML:'';if(fired)fired.innerHTML='<span class="spin"></span> Working…';
+  let umsg=userMsg;
+  if(useSearch&&!nativeSearch()){const blk=await webSearchBlock((activeOp?activeOp.label+' ':'')+workText().slice(0,160));if(blk)umsg=blk+umsg;}
+  chat.push({role:'user',content:umsg});
+  busy=true;setComposerBusy(true);
+  if(toPage){renderChat();startPageStream();}else{_chatStreaming=true;renderChat();}
+  let acc='';
   try{
-    let prefix='';
-    if(useSearch&&!nativeSearch()){out.textContent='Searching the web…';prefix=await webSearchBlock(title||text.slice(0,160));}
-    out.textContent='';
-    if(toPage){out.className='out empty';out.textContent='Streaming into the page…';startPageStream();}
-    await streamModel(prefix+contextBlock()+fillTemplate(op.prompt,ctx),modelFor(activeStage),(full)=>{aiContent=full;if(toPage)pageStreamUpdate(full);else renderOut(full);});
+    acc=await streamModelChat(chat,modelFor(activeStage),(full)=>{if(toPage)pageStreamUpdate(full);else renderStreamNode(full);},buildPreamble());
     if(toPage)pageStreamFinish();
-    if(!aiContent){out.className='out empty';out.textContent='No response.';}
-    else renderOut(aiContent);
-  }catch(e){if(toPage&&_pageStream)pageStreamFinish();out.className='out empty';out.textContent='AI error — '+(e.message||'check Settings')+'.';}
-  finally{busy=false;btns.forEach(x=>x.disabled=false);if(fired)fired.innerHTML=orig;}
+  }catch(e){acc='⚠ AI error — '+(e.message||'check Settings')+'.';if(toPage&&_pageStream)pageStreamFinish();}
+  _chatStreaming=false;if(!acc)acc='No response.';
+  chat.push({role:'assistant',content:acc});aiContent=acc;
+  busy=false;setComposerBusy(false);renderChat();
 }
-function setDest(d){aiDest=d;document.getElementById('destDesk').classList.toggle('active',d==='desk');document.getElementById('destPage').classList.toggle('active',d==='page');}
-// Render streamed Markdown into the Desk output (rAF-throttled so streaming stays cheap).
-function renderOut(full){aiContent=full;const out=document.getElementById('out');if(!out)return;out.className='out md-render';if(_outRaf)return;_outRaf=requestAnimationFrame(()=>{_outRaf=0;const o=document.getElementById('out');if(!o)return;o.innerHTML=mdToHtml(aiContent)||'';const w=document.querySelector('.out-wrap');if(w)w.scrollTop=w.scrollHeight;});}
+function autogen(){if(busy)return;if(!activeOp){toast('Pick a prompt first');return;}chatSend(fillTemplate(activeOp.prompt,opCtx()),aiDest==='page');}
+function askChat(){
+  if(busy)return;
+  const ta=document.getElementById('composerIn');const q=(ta?ta.value:'').trim();
+  if(!q)return autogen();
+  if(ta)ta.value='';
+  let msg;
+  if(chat.length===0&&activeOp)msg=fillTemplate(activeOp.prompt,opCtx())+"\n\n— From me, focus specifically on this:\n"+q;
+  else if(chat.length===0)msg="Here's what I'm working on:\n\n"+workText()+"\n\nMy question: "+q;
+  else msg=q;
+  chatSend(msg,false);
+}
+function composerKey(e){if(e.key==='Enter'&&(e.metaKey||e.ctrlKey)){e.preventDefault();askChat();}}
+function toggleVoice(){useVoice=!useVoice;updateVoicePip();}
+function updateVoicePip(){const t=document.getElementById('voiceToggle'),p=document.getElementById('voicePip');if(!t||!p)return;t.classList.toggle('on',useVoice);p.textContent=useVoice?'ON':'OFF';}
 function insertOut(mode){
   if(!aiContent){toast('Nothing to use yet');return;}
   let md=aiContent.trim();
+  if(mode==='newdraft'){const id='w'+Date.now();const w={id:id,title:'',body:md,stage:'draft',platform:platform,scheduled:'',due:'',cover:'',updated:new Date().toISOString()};works[cur].unshift(w);if(window.COS)window.COS.saveWork(cur,w);filterStage='all';renderStageFilter();renderWorks();openWork(id);toast('Started a new Draft');return;}
   if(mode==='title'){const nl=md.indexOf('\n');const t=(nl<0?md:md.slice(0,nl)).trim().replace(/^#+\s*/,'');document.getElementById('titleField').innerText=t;onEdit();saveCurrent();toast('Set as headline');return;}
   if(mode==='replace'){
     // Lift a leading "# Heading" into the title field, leave the rest as body.
@@ -1710,11 +1849,11 @@ function pageStreamFinish(){
 }
 function copyOutput(){if(!aiContent){toast('Nothing to copy');return;}navigator.clipboard.writeText(aiContent).then(()=>toast('Copied'));}
 
-function newWork(){const id='w'+Date.now();const w={id:id,title:'',body:'',stage:'spark',platform:platform,scheduled:'',due:'',cover:'',updated:new Date().toISOString()};works[cur].unshift(w);if(window.COS)window.COS.saveWork(cur,w);renderWorks();openWork(id);document.getElementById('titleField').focus();toast('New work — Spark');}
+function newWork(){const id='w'+Date.now();const w={id:id,title:'',body:'',stage:firstStage(),platform:platform,scheduled:'',due:'',cover:'',updated:new Date().toISOString()};works[cur].unshift(w);if(window.COS)window.COS.saveWork(cur,w);renderWorks();openWork(id);document.getElementById('titleField').focus();toast('New work — '+PIPELINE[0].label);}
 function openCapture(){document.getElementById('overlay').classList.add('open');setTimeout(()=>document.getElementById('capTA').focus(),120);}
 function closeCapture(){document.getElementById('overlay').classList.remove('open');document.getElementById('capTA').value='';if(recording)toggleRec();document.getElementById('recStatus').textContent='';}
 function overlayClick(e){if(e.target===e.currentTarget)closeCapture();}
-function saveCapture(){const t=document.getElementById('capTA').value.trim();if(!t){toast('Nothing to save');return;}const id='s'+Date.now();const w={id:id,title:'',body:t,stage:'spark',platform:platform,updated:new Date().toISOString()};works[cur].unshift(w);if(window.COS)window.COS.appendCapture(cur,w);closeCapture();filterStage='all';renderStageFilter();renderWorks();openWork(id);toast('Captured → Spark');}
+function saveCapture(){const t=document.getElementById('capTA').value.trim();if(!t){toast('Nothing to save');return;}const id='s'+Date.now();const w={id:id,title:'',body:t,stage:firstStage(),platform:platform,updated:new Date().toISOString()};works[cur].unshift(w);if(window.COS)window.COS.appendCapture(cur,w);closeCapture();filterStage='all';renderStageFilter();renderWorks();openWork(id);toast('Captured → '+PIPELINE[0].label);}
 /* ---- local speech-to-text: record → 16k WAV → on-device transcribe ---- */
 let _sttWarmed=false;
 function pcmToWav(samples,rate){
@@ -1852,9 +1991,9 @@ function renderGuide(){
   document.getElementById('guideBody').innerHTML=
     '<div class="g-sec"><div class="g-h">The idea</div><p>Every piece of content is a <b>Work</b>. You walk it left-to-right down the pipeline; each stage has its own AI tools in <b>The Desk</b> on the right. Brands are fully siloed — voice, works, and context never bleed across them. Everything saves as plain Markdown + JSON in your vault, so the files outlive the app.</p></div>'+
     '<div class="g-sec"><div class="g-h">The pipeline</div>'+stages+'<p class="g-note">This workflow is a starting point, not a cage — it is data-driven and will become fully customizable (add, remove, reorder stages) in a later update.</p></div>'+
-    '<div class="g-sec"><div class="g-h">The Desk</div><p>Open a stage and The Desk shows that stage&#39;s operations. Each call is grounded in the brand&#39;s <b>Voice</b>, plus any <b>Context</b> files you toggle on. <b>Master Context</b> is the one place context crosses brands — use it sparingly.</p></div>'+
+    '<div class="g-sec"><div class="g-h">The Desk</div><p>Open a stage and The Desk lists that stage&#39;s prompts. Click one to open it — nothing runs yet. Hit <b>Autogen</b> to run it on everything you&#39;ve written, or type a directed question and <b>Ask</b>, then keep chatting to dig deeper or explain something back. Toggle <b>Voice</b>, <b>Context</b>, <b>Master</b>, and <b>Web</b> per call; insert any reply into the page with the buttons below.</p></div>'+
     '<div class="g-sec"><div class="g-h">Writing modes</div><p><b>Live</b> renders your Markdown but shows the block you&#39;re editing as raw source. <b>Source</b> is pure Markdown. <b>Reading</b> is the clean rendered view. Switch anytime with the toggle above the editor.</p></div>'+
-    '<div class="g-sec"><div class="g-h">Shipping</div><p>Walk a Work to <b>Ship</b> and hit <b>Publish</b> — it copies the final and writes a clean Markdown file to <code>vault/published</code>. The ✓ button lists everything you&#39;ve shipped.</p></div>';
+    '<div class="g-sec"><div class="g-h">Publishing</div><p>Walk a Work to <b>Ready to Publish</b> to adapt it for each platform, then on <b>Published</b> hit <b>Publish</b> — it copies the final and writes a clean Markdown file to <code>vault/published</code>, and helps you track what to revisit. The ✓ button lists everything you&#39;ve published.</p></div>';
 }
 function openGuide(){renderGuide();document.getElementById('guideOverlay').classList.add('open');if(!uiState.guideSeen){uiState.guideSeen=true;saveUIState();}}
 function closeGuide(){document.getElementById('guideOverlay').classList.remove('open');}
@@ -1933,6 +2072,8 @@ function renderWorkflow(){
     '<div class="wf-row2"><div class="wf-fld" style="flex:2"><label>Task name</label><input class="wf-in" value="'+attr(o.label)+'" oninput="wfOpField(\'label\',this.value)"></div>'+
     '<div class="wf-fld" style="flex:0 0 80px"><label>Glyph</label><input class="wf-in" value="'+attr(o.glyph)+'" oninput="wfOpField(\'glyph\',this.value)"></div>'+
     '<div class="wf-fld" style="flex:0 0 150px"><label>Priority</label><div class="wf-kind"><button class="'+(o.kind==='pri'?'on':'')+'" onclick="wfSetKind(\'pri\')">Primary</button><button class="'+(o.kind!=='pri'?'on':'')+'" onclick="wfSetKind(\'sec\')">Secondary</button></div></div></div>'+
+    '<div class="wf-row2"><div class="wf-fld" style="flex:1"><label>What it does (shown in the composer)</label><input class="wf-in" value="'+attr(o.intent||'')+'" oninput="wfOpField(\'intent\',this.value)"></div>'+
+    '<div class="wf-fld" style="flex:0 0 150px"><label>Web search</label><div class="wf-kind"><button class="'+(o.web?'on':'')+'" onclick="wfSetWeb(true)">Pre-enable</button><button class="'+(!o.web?'on':'')+'" onclick="wfSetWeb(false)">Off</button></div></div></div>'+
     '<div class="wf-fld"><label>AI instruction (template)</label><textarea class="wf-ta" id="wfPrompt" oninput="wfOpField(\'prompt\',this.value)">'+esc(o.prompt)+'</textarea>'+
     '<div class="wf-tokens">'+WF_TOKENS.map(t=>'<span class="wf-tok" onclick="wfInsertToken(\''+t+'\')">'+t+'</span>').join('')+'</div></div>'):'')+
     '</div>';
@@ -1940,6 +2081,7 @@ function renderWorkflow(){
 function wfStageField(f,v){pipeDraft[pdStage][f]=v;wfMark();if(f==='label'){const el=document.getElementById('wf-st-'+pdStage);if(el)el.textContent=v;}}
 function wfOpField(f,v){pipeDraft[pdStage].ops[pdOp][f]=v;wfMark();if(f==='label'){const el=document.getElementById('wf-op-'+pdOp);if(el)el.textContent=v;}}
 function wfSetKind(k){pipeDraft[pdStage].ops[pdOp].kind=k;wfMark();renderWorkflow();}
+function wfSetWeb(b){pipeDraft[pdStage].ops[pdOp].web=!!b;wfMark();renderWorkflow();}
 function wfInsertToken(t){const ta=document.getElementById('wfPrompt');if(!ta)return;const a=ta.selectionStart,b=ta.selectionEnd,v=ta.value;ta.value=v.slice(0,a)+t+v.slice(b);ta.focus();ta.setSelectionRange(a+t.length,a+t.length);wfOpField('prompt',ta.value);}
 function wfSelStage(i){if(pdStage!==i){pdStage=i;pdOp=0;renderWorkflow();}}
 function wfSelOp(i){if(pdOp!==i){pdOp=i;renderWorkflow();}}
@@ -1954,7 +2096,7 @@ function wfReset(){if(!confirm('Reset the entire workflow to the shipped default
 function wfSave(){
   for(const s of pipeDraft){if(!s.label||!s.label.trim()){toast('Every stage needs a name');return;}if(!s.ops.length){toast('Stage "'+s.label+'" has no tasks');return;}}
   PIPELINE=clonePD();pipelineNotes=pipeNotesDraft;
-  if(window.COS)window.COS.savePipeline({notes:pipelineNotes,stages:PIPELINE});
+  if(window.COS)window.COS.savePipeline({version:PIPELINE_VERSION,notes:pipelineNotes,stages:PIPELINE});
   pipeDirty=false;updateWfDirty();
   filterStage='all';
   if(activeStage&&PIPELINE.findIndex(s=>s.id===activeStage)<0)activeStage=PIPELINE[0].id;
@@ -2047,9 +2189,9 @@ function closePublished(){document.getElementById('pubOverlay').classList.remove
 function pubOverlayClick(e){if(e.target===e.currentTarget)closePublished();}
 function renderPublished(){
   document.getElementById('pubBrand').textContent=brands[cur].name.toUpperCase();
-  const list=(works[cur]||[]).filter(w=>w.stage==='ship');
+  const list=(works[cur]||[]).filter(w=>w.stage===finalStage());
   const el=document.getElementById('pubBody');
-  if(!list.length){el.innerHTML='<div class="ctx-empty" style="padding:24px 16px">Nothing shipped yet for '+brands[cur].name+'.<br>Walk a work to the Ship stage, then hit Publish in The Desk.</div>';return;}
+  if(!list.length){el.innerHTML='<div class="ctx-empty" style="padding:24px 16px">Nothing published yet for '+brands[cur].name+'.<br>Walk a work to the Published stage, then hit Publish in The Desk.</div>';return;}
   el.innerHTML=list.map(w=>{
     const name=(w.title||stripTags(w.body).slice(0,46)||'Untitled').replace(/</g,'&lt;');
     const logs=pubLog.filter(r=>r.work===w.id);
@@ -2104,7 +2246,7 @@ function renderPublishHub(){
        :'<button class="ph-btn" onclick="closePublishHub();openSettings()">Configure…</button>')+'</div>';}).join('');
   document.getElementById('phBody').innerHTML=
     '<div class="ph-sec">Export file → vault/published</div><div class="ph-row"><button class="ph-btn" onclick="doExport(\'md\')">Markdown</button><button class="ph-btn" onclick="doExport(\'html\')">HTML</button><button class="ph-btn" onclick="doExport(\'txt\')">Plain text</button><button class="ph-btn" onclick="revealVault()">Reveal folder</button></div>'+
-    '<div class="ph-sec">Copy formatted for platform</div><div class="ph-row">'+['medium','linkedin','reddit','blog','github'].map(p=>'<button class="ph-btn" onclick="copyForPlatform(\''+p+'\')">'+cap(p)+'</button>').join('')+'</div>'+
+    '<div class="ph-sec">Copy formatted for platform</div><div class="ph-row">'+platforms().map(p=>'<button class="ph-btn" onclick="copyForPlatform(\''+p.id+'\')">'+esc(p.label)+'</button>').join('')+'</div>'+
     '<div class="ph-sec">Post to the web</div>'+dest+
     '<div class="ph-results" id="phResults"></div>';
 }
@@ -2116,7 +2258,7 @@ async function doExport(ext){
 }
 function copyForPlatform(p){
   const w=pubHubWork;const text=(p==='linkedin')?plainText(w):exportMarkdown(w).trim();
-  navigator.clipboard.writeText(text).then(()=>{phResult('Copied for '+cap(p),null);toast('Copied for '+cap(p));}).catch(()=>toast('Copy failed'));
+  navigator.clipboard.writeText(text).then(()=>{phResult('Copied for '+platLabel(p),null);toast('Copied for '+platLabel(p));}).catch(()=>toast('Copy failed'));
 }
 function recordPublish(dest,mode,url){const rec={work:pubHubWork.id,brand:cur,title:workTitle(pubHubWork),dest:dest,mode:mode,url:url||'',at:new Date().toISOString()};pubLog.unshift(rec);if(window.COS)window.COS.savePublishLog(pubLog);}
 async function publishTo(dest,mode){
@@ -2225,14 +2367,14 @@ function renderDash(list){
   const stats='<div class="dash-stats">'+PIPELINE.map(s=>'<div class="dash-stat"><div class="n">'+list.filter(w=>w.stage===s.id).length+'</div><div class="l">'+esc(s.label)+'</div></div>').join('')+'</div>';
   const recent=[...list].sort((a,b)=>wMtime(b)-wMtime(a)).slice(0,6);
   const upcoming=list.filter(w=>{const d=parseDay(w.scheduled);return d&&d.getTime()>=t0&&d.getTime()<=t0+14*DAY;}).sort((a,b)=>parseDay(a.scheduled)-parseDay(b.scheduled));
-  const overdue=list.filter(w=>{const d=parseDay(w.due);return d&&d.getTime()<t0&&w.stage!=='ship';}).sort((a,b)=>parseDay(a.due)-parseDay(b.due));
-  const stalled=list.filter(w=>w.stage!=='ship'&&wMtime(w)&&(t0-wMtime(w))>14*DAY).sort((a,b)=>wMtime(a)-wMtime(b)).slice(0,8);
+  const overdue=list.filter(w=>{const d=parseDay(w.due);return d&&d.getTime()<t0&&w.stage!==finalStage();}).sort((a,b)=>parseDay(a.due)-parseDay(b.due));
+  const stalled=list.filter(w=>w.stage!==finalStage()&&wMtime(w)&&(t0-wMtime(w))>14*DAY).sort((a,b)=>wMtime(a)-wMtime(b)).slice(0,8);
   const card=(title,items,field)=>'<div class="dash-card"><div class="dash-ch">'+title+' · '+items.length+'</div>'+(items.length?items.map(w=>dashItem(w,field)).join(''):'<div class="dash-empty">Nothing here.</div>')+'</div>';
   return stats+'<div class="dash-grid">'+card('Recently updated',recent,'updated')+card('Upcoming · 14d',upcoming,'scheduled')+card('Overdue',overdue,'due')+card('Stalled · 14d+',stalled,'updated')+'</div>';
 }
 /* board */
 function boardCard(w){
-  const name=esc(w.title||stripTags(w.body).slice(0,50)||'Untitled spark');
+  const name=esc(w.title||stripTags(w.body).slice(0,50)||'Untitled');
   const badges=(w.platform?'<span class="pbadge">'+esc(w.platform)+'</span>':'')+(w.scheduled?'<span>↗ '+esc(w.scheduled)+'</span>':'')+(w.due?'<span>⌛ '+esc(w.due)+'</span>':'');
   const cv=w.cover?'<img class="pcard-cover" src="'+coverUrl(w.brand,w.cover)+'">':'';
   return '<div class="pcard" draggable="true" style="border-left-color:'+(brands[w.brand]?brands[w.brand].accent:'#888')+'" ondragstart="pDragStart(event,\''+w.brand+'\',\''+w.id+'\')" onclick="planOpen(\''+w.brand+'\',\''+w.id+'\')">'+cv+'<div class="pt2">'+name+'</div><div class="pm">'+brandChip(w.brand)+badges+'</div></div>';
@@ -2475,13 +2617,13 @@ async function saveMasterCard(i){const f=masterFiles[i];if(window.COS)await wind
 async function deleteMaster(i){const f=masterFiles[i];if(!confirm('Delete master file "'+f.name+'"?'))return;if(window.COS)await window.COS.deleteMasterFile(f.name);masterFiles.splice(i,1);renderMaster();toast('Deleted');}
 function toggleMaster(){useMaster=!useMaster;updateMasterPip();}
 function toggleSearch(){useSearch=!useSearch;updateSearchPip();if(useSearch&&!nativeSearch()&&!SETTINGS.searchKey)toast('Add a Tavily search key in Settings for this provider');}
-function updateSearchPip(){const t=document.getElementById('searchToggle'),p=document.getElementById('searchPip');if(!t||!p)return;t.classList.toggle('on',useSearch);p.textContent=useSearch?(nativeSearch()?'ON · native':'ON · tavily'):'OFF';}
+function updateSearchPip(){const t=document.getElementById('searchToggle'),p=document.getElementById('searchPip');if(!t||!p)return;t.classList.toggle('on',useSearch);p.textContent=useSearch?'ON':'OFF';}
 function updateMasterPip(){
   const n=masterFiles.length;
   const t=document.getElementById('masterToggle');const pip=document.getElementById('masterPip');
   if(!t||!pip)return;
-  if(useMaster&&n>0){t.classList.add('on');pip.textContent='ON · '+n;}
-  else{t.classList.remove('on');pip.textContent=(n>0?'OFF · '+n:'NONE');if(useMaster&&n===0)useMaster=false;}
+  if(useMaster&&n>0){t.classList.add('on');pip.textContent='ON';}
+  else{t.classList.remove('on');pip.textContent=String(n);if(useMaster&&n===0)useMaster=false;}
 }
 function updateMasterCount(){const el=document.getElementById('masterCount');if(el)el.textContent=masterFiles.length?(''+masterFiles.length):'—';}
 
@@ -2490,7 +2632,14 @@ async function loadAllFromVault(){
   if(data){ for(const b in data){ if(data[b]) works[b]=data[b]; } }
   const s=await window.COS.loadSettings();
   if(s) SETTINGS=Object.assign(SETTINGS,s);
-  const pl=await window.COS.loadPipeline(); if(pl&&Array.isArray(pl.stages)&&pl.stages.length){PIPELINE=pl.stages;pipelineNotes=pl.notes||'';}
+  const pl=await window.COS.loadPipeline();
+  if(pl&&Array.isArray(pl.stages)&&pl.stages.length&&(pl.version|0)>=PIPELINE_VERSION){PIPELINE=pl.stages;pipelineNotes=pl.notes||'';}
+  else{ // forced upgrade: no saved pipeline, or an older version → install the new default
+    PIPELINE=clonePipeline(DEFAULT_PIPELINE);pipelineNotes=(pl&&pl.notes)||'';
+    if(window.COS.savePipeline)window.COS.savePipeline({version:PIPELINE_VERSION,notes:pipelineNotes,stages:PIPELINE});
+  }
+  // One-time remap of existing works onto the new stage ids.
+  for(const b in works){if(!works[b])continue;for(const w of works[b]){const ns=mapStage(w.stage);if(ns!==w.stage){w.stage=ns;if(window.COS.saveWork)window.COS.saveWork(b,w);}}}
   const plog=await window.COS.loadPublishLog(); if(plog&&plog.length)pubLog=plog;
   const mx=await window.COS.loadMaster(); if(mx) masterFiles=mx;
   for(const b in brands){
