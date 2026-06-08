@@ -16,6 +16,9 @@ src-tauri/icons/
 # Claude local settings (permissions, machine-specific)
 .claude/
 
+# Claude project memory — internal, kept local only, never published
+CLAUDE.md
+
 # Secrets — never commit a vault or any settings.json (contains the API key)
 settings.json
 vault/
