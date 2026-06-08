@@ -10,12 +10,25 @@ A local-first **content orchestration platform** — a Mac desktop app (Tauri 2)
 piece of content is a *Work* that moves down a pipeline:
 
 ```
-Spark → Research → Draft → Optimize (SEO/AIO) → Polish → Distribute → Ship
+Idea → Research → Draft → Ready to Publish → Published
 ```
 
-Each stage is its own station with its own AI tools. Brands are fully siloed. Everything
-you create lives as plain Markdown + JSON inside a vault folder you choose — delete the app
-and your whole creative history stays on disk, readable by any editor.
+Each stage is its own station with its own AI operations:
+
+- **Idea** — capture the raw spark and pressure-test it (does it fit here, angles to explore,
+  spin into a series, will it land, outline for the platform).
+- **Research** — validate and map the landscape (validate & broaden, SEO & AI-search pass, find
+  similar content, where else to post).
+- **Draft** — shape the full version in your voice (generate draft, voice & AI-ism check, expand
+  & deepen, restructure, clean-up & fact check).
+- **Ready to Publish** — adapt for platforms and find where to share it (rewrite for a platform,
+  social teasers, where to be helpful).
+- **Published** — track what changed and what comes next (anything no longer true, comment
+  sentiment, follow-up ideas).
+
+Brands are fully siloed. Everything you create lives as plain Markdown + JSON inside a vault
+folder you choose — delete the app and your whole creative history stays on disk, readable by
+any editor.
 
 ---
 
@@ -43,7 +56,8 @@ ContentOS/
     sample/ my-blog/ …    ← one folder per workspace
       workspace.json  ← workspace name, tag, accent
       works/        ← one .md per Work (frontmatter + body)
-      context/      ← voice profiles, story, reference
+      context/      ← reference library (.md) + voice-profile.json
+      voice/        ← voice sample files (.md)
   inbox/            ← raw captures also land here
   master/           ← reserved for the cross-brand layer
 ```
@@ -51,7 +65,7 @@ ContentOS/
 ## The menu-bar capture
 
 ContentOS installs a **menu-bar icon**. Click it (or `⌘⇧C`) to pop a small capture window
-from anywhere — type a thought, pick a brand, hit `⌘↵`. It lands as a new Spark without
+from anywhere — type a thought, pick a brand, hit `⌘↵`. It lands as a new Idea without
 opening the full app.
 
 ---
@@ -64,7 +78,7 @@ Click the **⚙ gear** (bottom-left of the masthead) to open Settings. Configure
 - **API key** — written to `vault/settings.json`, never bundled in the app
 - **Endpoint** — auto-filled per provider, editable for custom routes
 - **Default model** — e.g. `anthropic/claude-sonnet-4`
-- **Per-stage model overrides** — run Draft on a heavy model, Polish on a cheaper one, etc.
+- **Per-stage model overrides** — run Draft on a heavy model, Research on a cheaper one, etc.
 
 Save and The Desk is live. Until a key is set, hitting any operation pops Settings open.
 Your key lives in the vault as plain JSON — move the vault, keep your config; delete the
@@ -93,9 +107,8 @@ portable.
 
 ## Roadmap (where this goes next)
 
-- Research stage: real web search wired into the operations.
 - The Master layer: unlock cross-brand context for the "tell the whole story" moment.
-- Voice memo transcription on capture.
+- Windows and Linux builds (currently macOS-first).
 
 ---
 
