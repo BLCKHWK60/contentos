@@ -1,6 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<!--
+  ContentOS — © 2026 ZediaTech LLC (Zedia Labs). All rights reserved.
+  Proprietary & source-available: inspection only. No copying, modification,
+  redistribution, or resale without written permission. Owner/operator: Victor Chaidez.
+  Licensing: licensing@zedialabs.com · zedialabs.com
+-->
 <meta charset="UTF-8">
 <title>ContentOS</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -109,6 +115,7 @@ html,body{height:100%;background:var(--paper);color:var(--ink);font-family:var(-
 .mast-icon{flex:1;padding:10px;background:transparent;border:none;border-right:var(--rule2) solid var(--line);cursor:pointer;font-size:13px;color:var(--ink-2);transition:all var(--ease)}
 .mast-icon:last-child{border-right:none}
 .mast-icon:hover{background:var(--ink);color:var(--paper-hi)}
+.mast-credit{text-align:center;padding:8px 14px;border-top:var(--rule2) solid var(--line);font-family:var(--mono);font-size:8px;font-weight:700;letter-spacing:1px;line-height:1.5;text-transform:uppercase;color:var(--ink-3)}
 
 /* INDEX */
 .index{border-right:var(--rule) solid var(--line);display:flex;flex-direction:column;overflow:hidden;background:var(--paper);animation:rise 400ms cubic-bezier(0.2,0,0,1) 60ms both}
@@ -366,6 +373,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 .ph-btn:hover{background:var(--ink);color:var(--paper-hi)}
 .ph-btn.pri{background:var(--accent);color:var(--paper-hi);border-color:var(--accent)}
 .ph-btn.pri:hover{background:var(--ink);border-color:var(--ink)}
+.card-color{width:30px;height:24px;padding:0;border:var(--rule) solid var(--line);background:none;cursor:pointer}
 .ph-dest{display:flex;align-items:center;gap:8px;border:var(--rule) solid var(--line);padding:8px 11px;margin-bottom:7px}
 .ph-dlabel{flex:1;font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:0.3px;text-transform:uppercase;color:var(--ink)}
 .ph-hint{display:block;font-size:9px;font-weight:400;color:var(--ink-3);letter-spacing:0.3px;text-transform:none;margin-top:2px}
@@ -552,6 +560,9 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 /* MODAL + TOAST */
 .overlay{position:fixed;inset:0;background:rgba(21,17,10,0.55);backdrop-filter:blur(2px);display:flex;align-items:center;justify-content:center;z-index:1000;opacity:0;pointer-events:none;transition:opacity var(--ease)}
 .overlay.open{opacity:1;pointer-events:all}
+/* secondary dialogs launched from inside another modal must stack above it */
+#coConfirmOverlay{z-index:1200}
+#factoryOverlay,#inputOverlay{z-index:1100}
 .modal{width:520px;background:var(--paper-hi);border:var(--rule) solid var(--line);box-shadow:var(--shadow-strong);transform:translate(6px,6px);transition:transform 200ms cubic-bezier(0.2,0,0,1)}
 .overlay.open .modal{transform:translate(0,0)}
 .modal-head{display:flex;align-items:stretch;border-bottom:var(--rule) solid var(--line);height:42px}
@@ -655,7 +666,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
   <div class="issue-bar">
     <div class="issue-seg">ContentOS</div>
     <div class="issue-seg">Issue Nº01</div>
-    <div class="issue-seg accentseg" id="issueBrand">VICTOR CHAIDEZ</div>
+    <div class="issue-seg accentseg" id="issueBrand">ContentOS</div>
     <div class="issue-spacer"></div>
     <div class="issue-clock" id="issueClock">—</div>
   </div>
@@ -677,6 +688,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
           <button class="mast-icon" title="Vault" onclick="openVault()">🗂</button>
           <button class="mast-icon" title="Published" onclick="openPublished()">✓</button>
         </div>
+        <div class="mast-credit" title="© 2026 ZediaTech LLC — owned and operated by Victor Chaidez">ContentOS by Zedia Labs — ZediaTech LLC</div>
       </div>
       <div class="mast-rail" id="mastRail"></div>
       <div class="rz" id="mhRz" onmousedown="startRz(event,'masthead')"></div>
@@ -707,8 +719,6 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
         </div>
         <div class="plat-wrap" id="platWrap"><span class="plat-label">Format</span></div>
         <div class="page-meta">
-          <div class="meta-cell" id="wc">0 W</div>
-          <button class="ai-toggle" id="mediaBtn" onclick="openMediaStudio()" title="Media studio">🖼</button>
           <button class="ai-toggle on" id="aiToggle" onclick="toggleDesk()">✦ The Desk</button>
         </div>
       </div>
@@ -744,6 +754,9 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
             <div class="view-sub">Injected into every operation for this brand — this is how The Desk sounds like you.</div>
             <textarea class="voice-ta" id="voiceTA" placeholder="Describe this brand's voice: tone, perspective, who it speaks to, what it never does…"></textarea>
             <button class="btn-ink" onclick="saveVoice()">Save Voice Profile</button>
+            <div class="view-sub" style="margin-top:26px">Voice files — sample posts, transcripts, anything written the way you sound. Injected with the Voice toggle, alongside the profile.</div>
+            <button class="ctx-add" onclick="addVoiceFile()">+ Add voice file</button>
+            <div id="voiceList"></div>
           </div>
           <div class="view" id="contextView" style="display:none">
             <div class="view-kicker">Context Library</div>
@@ -815,7 +828,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
   <div class="modal">
     <div class="modal-head">
       <div class="modal-title">⚡ Quick Capture</div>
-      <div class="modal-brand" id="modalBrand">VICTOR CHAIDEZ</div>
+      <div class="modal-brand" id="modalBrand">ContentOS</div>
       <button class="modal-x" onclick="closeCapture()">✕</button>
     </div>
     <div class="modal-body">
@@ -910,6 +923,10 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
         <span class="rec-status" id="setStatus"></span>
         <button class="save-cap" onclick="saveSettings()">Save Settings</button>
       </div>
+      <div style="margin-top:18px;padding-top:14px;border-top:var(--rule) solid var(--line);text-align:center">
+        <div class="set-hint">ContentOS by Zedia Labs — ZediaTech LLC</div>
+        <div class="set-hint" style="margin-top:4px">© 2026 ZediaTech LLC · Owned and operated by Victor Chaidez · Proprietary</div>
+      </div>
     </div>
   </div>
 </div>
@@ -917,7 +934,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
   <div class="modal set-modal">
     <div class="modal-head">
       <div class="modal-title">✓ Published</div>
-      <div class="modal-brand" id="pubBrand">VICTOR CHAIDEZ</div>
+      <div class="modal-brand" id="pubBrand">ContentOS</div>
       <button class="modal-x" onclick="closePublished()">✕</button>
     </div>
     <div class="modal-body set-body" id="pubBody"></div>
@@ -1104,6 +1121,10 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 
 <script src="bridge.js"></script>
 <script>
+/* ContentOS — © 2026 ZediaTech LLC (Zedia Labs). All rights reserved.
+   Proprietary & source-available: inspection only. No copying, modification,
+   redistribution, or resale without written permission. Owner/operator: Victor Chaidez.
+   Licensing: licensing@zedialabs.com · zedialabs.com */
 /* ============================================================
    PIPELINE — the orchestration model. Stages and their AI
    operations are pure data. Add/remove stages or ops here and
@@ -1189,12 +1210,13 @@ let brands={},works={};
 function slugify(s){return String(s||'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'')||('ws'+Date.now());}
 function makeBrand(id,meta){meta=meta||{};const accent=meta.accent||'#1452E8';const name=meta.name||id;return{id:id,name:name,titleHTML:esc(name).replace(/\s+/,'<br>'),tag:meta.tag||'Workspace',accent:accent,accentSoft:hexA(accent,0.12),voice:meta.voice||''};}
 function tutorialWorks(){return TUTORIAL_WORKS.map(t=>({id:t.id,title:t.title,body:t.body,stage:t.stage,platform:'medium',scheduled:'',due:'',cover:'',updated:new Date().toISOString()}));}
-function seedExampleInMemory(){brands={};brands[EXAMPLE_BRAND.id]=makeBrand(EXAMPLE_BRAND.id,EXAMPLE_BRAND);works={};works[EXAMPLE_BRAND.id]=tutorialWorks();contextFiles={};contextFiles[EXAMPLE_BRAND.id]=[];cur=EXAMPLE_BRAND.id;}
+function seedExampleInMemory(){brands={};brands[EXAMPLE_BRAND.id]=makeBrand(EXAMPLE_BRAND.id,EXAMPLE_BRAND);works={};works[EXAMPLE_BRAND.id]=tutorialWorks();contextFiles={};contextFiles[EXAMPLE_BRAND.id]=[];voiceFiles={};voiceFiles[EXAMPLE_BRAND.id]=[];cur=EXAMPLE_BRAND.id;}
 
 let cur='',platform='medium',filterStage='all',activeWorkId=null,activeStage='draft',deskOpen=true,busy=false,aiContent='',recording=false,mr=null;
 let SETTINGS={provider:'openrouter',apiKey:'',baseUrl:'https://openrouter.ai/api/v1/chat/completions',models:{default:'anthropic/claude-sonnet-4'}};
 let mode='write',useContext=false,useMaster=false,useSearch=false,useVoice=true;
 let contextFiles={};
+let voiceFiles={};
 let masterFiles=[];
 let edMode='live',mdBody='',edBlocks=[''],edActive=null,edPendingCaret=null,_lastLiveBlock=null,_imeOn=false,aiDest='desk',_saveT=null,_outRaf=0,_pageStream=null;
 function providerDefaults(p){if(p==='anthropic')return{baseUrl:'https://api.anthropic.com/v1/messages',model:'claude-sonnet-4-20250514'};if(p==='openrouter')return{baseUrl:'https://openrouter.ai/api/v1/chat/completions',model:'anthropic/claude-sonnet-4'};return{baseUrl:'',model:''};}
@@ -1508,7 +1530,7 @@ function getBodyMd(){
 }
 function setBodyMd(md){mdBody=md||'';edBlocks=splitBlocks(mdBody);edActive=null;edPendingCaret=null;_pageStream=null;renderEditor();}
 function loadWorkBody(w){let b=w.body||'';if(looksHtml(b))b=htmlToMd(b);setBodyMd(b);}
-function onEdit(){const t=getBodyMd().trim();const w=t?t.split(/\s+/).length:0;document.getElementById('wc').textContent=w+' W';scheduleSave();}
+function onEdit(){scheduleSave();}
 
 function setEdMode(m){getBodyMd();edMode=m;if(m==='live'){edBlocks=splitBlocks(mdBody);edActive=null;edPendingCaret=null;}renderEditor();}
 function renderEditor(){
@@ -1668,6 +1690,30 @@ function switchMode(el,m){
 function renderVoiceView(){
   document.getElementById('voiceViewTitle').textContent=brands[cur].name;
   document.getElementById('voiceTA').value=brands[cur].voice;
+  const list=voiceFiles[cur]||[];const el=document.getElementById('voiceList');if(!el)return;
+  el.innerHTML=list.length?list.map((f,i)=>`<div class="ctx-card"><div class="ctx-card-head"><input class="ctx-name" value="${f.name.replace(/"/g,'&quot;')}" onchange="renameVoiceFile(${i},this.value)"><button class="ctx-del" onclick="deleteVoiceCard(${i})" title="Delete">✕</button></div><textarea class="ctx-body" oninput="voiceFiles['${cur}'][${i}].body=this.value">${(f.body||'').replace(/</g,'&lt;')}</textarea><button class="ctx-save" onclick="saveVoiceCard(${i})">Save file</button></div>`).join(''):'<div class="ctx-empty">No voice files yet.<br>Add writing samples or transcripts in this voice — the AI emulates them when Voice is on.</div>';
+}
+function addVoiceFile(){
+  openInput('Voice file name','e.g. sample-post, transcript',async(name)=>{
+    if(!name)return;
+    const safe=name.replace(/[^\w\- ]/g,'').trim()||'note';
+    (voiceFiles[cur]=voiceFiles[cur]||[]).unshift({name:safe,body:''});
+    renderVoiceView();
+    if(window.COS)await window.COS.saveVoiceFile(cur,safe,'');
+  });
+}
+function renameVoiceFile(i,val){voiceFiles[cur][i].name=val.replace(/[^\w\- ]/g,'').trim()||'note';}
+async function saveVoiceCard(i){
+  const f=voiceFiles[cur][i];
+  if(window.COS)await window.COS.saveVoiceFile(cur,f.name,f.body);
+  toast('Saved — '+f.name);
+}
+async function deleteVoiceCard(i){
+  const f=voiceFiles[cur][i];
+  if(!(await coConfirm('Delete voice file "'+f.name+'"?',{title:'Delete voice file',confirmLabel:'Delete'})))return;
+  if(window.COS)await window.COS.deleteVoiceFile(cur,f.name);
+  voiceFiles[cur].splice(i,1);renderVoiceView();
+  toast('Deleted');
 }
 async function saveVoice(){
   const v=document.getElementById('voiceTA').value.trim();
@@ -1823,7 +1869,7 @@ async function streamModelChat(messages,model,onToken,system){
 let activeOp=null,chat=[],_chatStreaming=false,_chatRaf=0;
 function workText(){const title=document.getElementById('titleField').innerText.trim();const body=getBodyMd().trim();return (title?title+'\n\n':'')+body;}
 function opCtx(){const b=brands[cur];return{text:workText(),brand:b.name,platform:platLabel(platform),guide:platGuide(platform)};}
-function buildPreamble(){let s='';const b=brands[cur];if(useVoice&&b&&b.voice)s+='VOICE — you are writing as '+b.name+'. Voice profile: '+b.voice+'\nMatch this voice; never sound generic or obviously AI-generated.\n\n';s+=contextBlock();return s.trim();}
+function buildPreamble(){let s='';const b=brands[cur];if(useVoice&&b){let vb=b.voice?('Voice profile: '+b.voice+'\n'):'';const vf=(voiceFiles[cur]||[]).filter(f=>f.body&&f.body.trim());if(vf.length){let body=vf.map(f=>'### '+f.name+'\n'+stripTags(f.body)).join('\n\n');if(body.length>6000)body=body.slice(0,6000)+'…';vb+='Writing samples in this voice (emulate their rhythm and diction; do not copy verbatim):\n'+body+'\n';}if(vb)s+='VOICE — you are writing as '+b.name+'. '+vb+'Match this voice; never sound generic or obviously AI-generated.\n\n';}s+=contextBlock();return s.trim();}
 function setDest(d){aiDest=d;document.getElementById('destDesk').classList.toggle('active',d==='desk');document.getElementById('destPage').classList.toggle('active',d==='page');}
 function selectOp(id){
   const stg=PIPELINE[stageIndex(activeStage)];const op=stg.ops.find(o=>o.id===id);if(!op)return;
@@ -2017,7 +2063,7 @@ async function saveWsEdit(){
     let id=slugify(name),base=id,n=2;const taken={};Object.keys(brands).forEach(k=>taken[k]=1);(SETTINGS.deletedBrands||[]).forEach(k=>taken[k]=1);
     while(taken[id])id=base+'-'+(n++);
     const meta={name:name,tag:tag,accent:accent,voice:''};
-    brands[id]=makeBrand(id,meta);works[id]=[];contextFiles[id]=[];
+    brands[id]=makeBrand(id,meta);works[id]=[];contextFiles[id]=[];voiceFiles[id]=[];
     SETTINGS.deletedBrands=(SETTINGS.deletedBrands||[]).filter(x=>x!==id);
     if(window.COS){if(window.COS.createBrand)await window.COS.createBrand(id,meta);if(window.COS.saveSettings)await window.COS.saveSettings(SETTINGS);}
     closeWsEdit();switchBrand(id);
@@ -2618,6 +2664,7 @@ function renderTable(container,list){
 
 /* ===== Visual / Media layer ===== */
 let msTab='lib',msMedia=[],cardSize='og';
+let cardStyle={bg:'#EAE6D9',title:'#15110A',accent:null}; // accent:null = follow brand accent
 const CARD_SIZES={og:[1200,630],square:[1080,1080],story:[1080,1920]};
 async function addMediaFile(file){const buf=new Uint8Array(await file.arrayBuffer());const base=(file.name||'image.png').replace(/[^\w.\-]/g,'_');const name=Date.now().toString(36)+'-'+base;if(window.COS)await window.COS.saveMedia(cur,name,buf);return name;}
 async function addMediaBytes(bytes,ext){const name=Date.now().toString(36)+'-img.'+(ext||'png');if(window.COS)await window.COS.saveMedia(cur,name,bytes);return name;}
@@ -2697,23 +2744,32 @@ async function saveImageRef(url){
 /* social card (on-device Canvas) */
 function renderMsCard(container){
   const w=getWork();
-  container.innerHTML='<div class="ms-form"><div class="ph-row" style="margin-bottom:10px">'+Object.keys(CARD_SIZES).map(k=>'<button class="ph-btn'+(cardSize===k?' pri':'')+'" onclick="setCardSize(\''+k+'\')">'+k.toUpperCase()+' '+CARD_SIZES[k][0]+'×'+CARD_SIZES[k][1]+'</button>').join('')+'</div>'+
+  container.innerHTML='<div class="ms-form"><div class="ph-row" id="cardSizeRow" style="margin-bottom:10px">'+Object.keys(CARD_SIZES).map(k=>'<button class="ph-btn'+(cardSize===k?' pri':'')+'" data-sz="'+k+'" onclick="setCardSize(\''+k+'\')">'+k.toUpperCase()+' '+CARD_SIZES[k][0]+'×'+CARD_SIZES[k][1]+'</button>').join('')+'</div>'+
     '<label class="set-label">Title</label><input class="wf-in" id="cardTitle" value="'+attr(w?workTitle(w):'')+'" oninput="drawCard()">'+
     '<label class="set-label" style="margin-top:8px">Kicker</label><input class="wf-in" id="cardKicker" value="'+attr(brands[cur].name.toUpperCase())+'" oninput="drawCard()">'+
+    '<div class="ph-row" id="cardColorRow" style="margin-top:10px;align-items:center;gap:14px;flex-wrap:wrap">'+
+      '<label class="set-label" style="margin:0;display:flex;align-items:center;gap:6px">BG <input type="color" class="card-color" value="'+cardStyle.bg+'" oninput="cardColor(\'bg\',this.value)"></label>'+
+      '<label class="set-label" style="margin:0;display:flex;align-items:center;gap:6px">TEXT <input type="color" class="card-color" value="'+cardStyle.title+'" oninput="cardColor(\'title\',this.value)"></label>'+
+      '<label class="set-label" style="margin:0;display:flex;align-items:center;gap:6px">ACCENT <input type="color" class="card-color" value="'+(cardStyle.accent||brands[cur].accent)+'" oninput="cardColor(\'accent\',this.value)"></label>'+
+      '<button class="ph-btn" onclick="resetCardColors()">Reset</button>'+
+    '</div>'+
     '<div style="margin-top:12px"><canvas id="cardCanvas" style="max-width:100%;border:var(--rule) solid var(--line)"></canvas></div>'+
     '<div class="ph-row" style="margin-top:10px"><button class="ph-btn" onclick="cardDownload()">Download PNG</button><button class="ph-btn" onclick="cardSave()">Save to media</button><button class="ph-btn pri" onclick="cardSetCover()">Save + set cover</button></div></div>';
   if(document.fonts&&document.fonts.ready)document.fonts.ready.then(drawCard);
   setTimeout(drawCard,60);
 }
-function setCardSize(k){cardSize=k;drawCard();}
+function setCardSize(k){cardSize=k;document.querySelectorAll('#cardSizeRow .ph-btn').forEach(b=>b.classList.toggle('pri',b.dataset.sz===k));drawCard();}
+function cardColor(key,val){cardStyle[key]=val;drawCard();}
+function resetCardColors(){cardStyle={bg:'#EAE6D9',title:'#15110A',accent:null};const c=document.querySelectorAll('#cardColorRow .card-color');if(c[0])c[0].value='#EAE6D9';if(c[1])c[1].value='#15110A';if(c[2])c[2].value=brands[cur].accent;drawCard();}
 function wrapText(x,text,px,py,maxW,lh){const words=(text||'').split(/\s+/);let line='',y=py;for(const wd of words){const t=line?line+' '+wd:wd;if(x.measureText(t).width>maxW&&line){x.fillText(line,px,y);line=wd;y+=lh;}else line=t;}if(line)x.fillText(line,px,y);return y;}
+/* © ZediaTech LLC (Zedia Labs) — proprietary. Victor Chaidez. */
 function drawCard(){
   const cv=document.getElementById('cardCanvas');if(!cv)return;const sz=CARD_SIZES[cardSize],W=sz[0],H=sz[1];cv.width=W;cv.height=H;
-  const x=cv.getContext('2d'),acc=brands[cur].accent;
-  x.fillStyle='#EAE6D9';x.fillRect(0,0,W,H);x.fillStyle=acc;x.fillRect(0,0,W,Math.round(H*0.022));x.fillRect(0,H-Math.round(H*0.022),W,Math.round(H*0.022));
+  const x=cv.getContext('2d'),acc=cardStyle.accent||brands[cur].accent,bg=cardStyle.bg||'#EAE6D9',titleCol=cardStyle.title||'#15110A';
+  x.fillStyle=bg;x.fillRect(0,0,W,H);x.fillStyle=acc;x.fillRect(0,0,W,Math.round(H*0.022));x.fillRect(0,H-Math.round(H*0.022),W,Math.round(H*0.022));
   const pad=Math.round(W*0.07);
   x.fillStyle=acc;x.font='700 '+Math.round(W*0.026)+'px "Space Mono",monospace';x.fillText(((document.getElementById('cardKicker')||{}).value||'').toUpperCase(),pad,Math.round(H*0.17));
-  x.fillStyle='#15110A';const fs=Math.round(W*0.07);x.font='800 '+fs+'px "Bricolage Grotesque",sans-serif';
+  x.fillStyle=titleCol;const fs=Math.round(W*0.07);x.font='800 '+fs+'px "Bricolage Grotesque",sans-serif';
   wrapText(x,(document.getElementById('cardTitle')||{}).value||'',pad,Math.round(H*0.30),W-pad*2,fs*1.06);
   x.fillStyle='#8C8472';x.font='400 '+Math.round(W*0.02)+'px "Space Mono",monospace';x.fillText('CONTENTOS',pad,H-Math.round(H*0.07));
 }
@@ -2860,9 +2916,11 @@ async function loadAllFromVault(){
     try{
       const vp=await window.COS.loadVoice(b); if(vp&&vp.voice) brands[b].voice=vp.voice;
       const cx=await window.COS.loadContext(b); if(cx) contextFiles[b]=cx;
+      const vf=await window.COS.loadVoiceFiles(b); voiceFiles[b]=vf||[];
     }catch(e){}
   }
 }
+/* © ZediaTech LLC (Zedia Labs) — proprietary. Victor Chaidez. */
 (async function boot(){
   let persisted=false,failed=false;
   if(window.COS&&window.COS.isTauri){

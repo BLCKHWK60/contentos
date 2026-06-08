@@ -1,3 +1,6 @@
+// ContentOS — © 2026 ZediaTech LLC (Zedia Labs). All rights reserved. Proprietary.
+// Owner/operator: Victor Chaidez. Licensing: licensing@zedialabs.com · zedialabs.com
+//
 // Local speech-to-text: on-device transcription via parakeet-rs (ONNX) and
 // (later) whisper-rs. Models are downloaded to the app-data dir, never bundled.
 use std::fs;

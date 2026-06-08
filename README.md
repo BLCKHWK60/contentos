@@ -1,5 +1,8 @@
 # ContentOS
 
+*© 2026 ZediaTech LLC (Zedia Labs) — proprietary, source-available. Owned and operated by
+Victor Chaidez. Public for inspection only; see [LICENSE](LICENSE).*
+
 A local-first **content orchestration platform** — a Mac desktop app (Tauri 2) where every
 piece of content is a *Work* that moves down a pipeline:
 
@@ -90,3 +93,18 @@ portable.
 - Research stage: real web search wired into the operations.
 - The Master layer: unlock cross-brand context for the "tell the whole story" moment.
 - Voice memo transcription on capture.
+
+---
+
+## License
+
+ContentOS is **proprietary** software, made **source-available for inspection and evaluation
+only**. It is not open-source.
+
+You may view and study the source. You may **not** copy, modify, redistribute, sell, or use it
+(in whole or in part) in another product without the prior written permission of ZediaTech LLC.
+"ContentOS", "Zedia Labs", and "ZediaTech" are marks of ZediaTech LLC; no trademark rights are
+granted. See [LICENSE](LICENSE) for the full terms.
+
+© 2026 ZediaTech LLC (Zedia Labs). All rights reserved. Owned and operated by Victor Chaidez.
+Licensing inquiries: licensing@zedialabs.com · https://zedialabs.com

@@ -1,3 +1,5 @@
+// ContentOS — © 2026 ZediaTech LLC (Zedia Labs). All rights reserved. Proprietary.
+// Owner/operator: Victor Chaidez. Licensing: licensing@zedialabs.com · zedialabs.com
 fn main() {
     // On macOS, embed Info.plist (with NSMicrophoneUsageDescription) directly into
     // the binary's __TEXT,__info_plist section so the bare `tauri dev` binary — not

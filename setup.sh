@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 # ContentOS — one-shot setup for macOS
+# © 2026 ZediaTech LLC (Zedia Labs). All rights reserved. Proprietary & source-available.
+# Owner/operator: Victor Chaidez. Licensing: licensing@zedialabs.com · zedialabs.com
 set -e
 
 echo "▶ ContentOS setup"

@@ -1,3 +1,7 @@
+// ContentOS — © 2026 ZediaTech LLC (Zedia Labs). All rights reserved.
+// Proprietary & source-available: inspection only. No copying, modification,
+// redistribution, or resale without written permission. Owner/operator: Victor Chaidez.
+// Licensing: licensing@zedialabs.com · zedialabs.com
 use tauri::{
     menu::{Menu, MenuItem, PredefinedMenuItem},
     tray::{MouseButton, TrayIconBuilder, TrayIconEvent},
@@ -16,6 +20,7 @@ fn show_window(app: &tauri::AppHandle, label: &str) {
     }
 }
 
+// © ZediaTech LLC (Zedia Labs) — proprietary. Victor Chaidez.
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()

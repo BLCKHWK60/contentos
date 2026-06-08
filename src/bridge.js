@@ -1,4 +1,9 @@
 /* ============================================================
+   ContentOS — © 2026 ZediaTech LLC (Zedia Labs). All rights reserved.
+   Proprietary & source-available: inspection only. No copying, modification,
+   redistribution, or resale without written permission. Owner/operator: Victor Chaidez.
+   Licensing: licensing@zedialabs.com · zedialabs.com
+   ------------------------------------------------------------
    ContentOS — storage bridge
    In the Tauri app this reads/writes real files under a vault
    folder you choose. In a plain browser it no-ops so the UI
@@ -16,6 +21,7 @@
   const isTauri = !!(T && T.fs);
   const safeId = (s) => (s || "").replace(/[^\w.\-]/g, "_");
 
+  // © ZediaTech LLC (Zedia Labs) — proprietary. Victor Chaidez.
   const COS = {
     isTauri,
     vault: null,
@@ -248,6 +254,34 @@
       const { fs, path } = T;
       const safe = name.replace(/[^\w\- ]/g, "").trim();
       const p = await path.join(this.vault, "brands", brand, "context", safe + ".md");
+      try { await fs.remove(p); } catch (e) {}
+    },
+    async loadVoiceFiles(brand) {
+      if (!isTauri || !this.vault) return null;
+      const { fs, path } = T;
+      const dir = await path.join(this.vault, "brands", brand, "voice");
+      let entries = [];
+      try { entries = await fs.readDir(dir); } catch (e) { return []; }
+      const out = [];
+      for (const e of entries) {
+        if (!e.name || !e.name.endsWith(".md")) continue;
+        try { out.push({ name: e.name.replace(/\.md$/, ""), body: await fs.readTextFile(await path.join(dir, e.name)) }); } catch (e2) {}
+      }
+      return out;
+    },
+    async saveVoiceFile(brand, name, body) {
+      if (!isTauri || !this.vault) return;
+      const { fs, path } = T;
+      const dir = await path.join(this.vault, "brands", brand, "voice");
+      await fs.mkdir(dir, { recursive: true }).catch(() => {});
+      const safe = name.replace(/[^\w\- ]/g, "").trim() || "note";
+      await fs.writeTextFile(await path.join(dir, safe + ".md"), body || "");
+    },
+    async deleteVoiceFile(brand, name) {
+      if (!isTauri || !this.vault) return;
+      const { fs, path } = T;
+      const safe = name.replace(/[^\w\- ]/g, "").trim();
+      const p = await path.join(this.vault, "brands", brand, "voice", safe + ".md");
       try { await fs.remove(p); } catch (e) {}
     },
 

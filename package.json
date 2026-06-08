@@ -2,6 +2,9 @@
   "name": "contentos",
   "version": "0.3.0",
   "description": "ContentOS — content orchestration platform",
+  "author": "Victor Chaidez (Zedia Labs / ZediaTech LLC)",
+  "license": "SEE LICENSE IN LICENSE",
+  "homepage": "https://zedialabs.com",
   "private": true,
   "scripts": {
     "tauri": "tauri",

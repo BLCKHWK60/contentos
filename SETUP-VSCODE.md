@@ -20,8 +20,8 @@ Verified against the Claude Code docs (June 2026).
 ```bash
 # from wherever you downloaded it
 tar -xzf contentos-tauri.tar.gz
-mv contentos ~/Nexus/   # or wherever you keep projects
-cd ~/Nexus/contentos
+mv contentos ~/projects/   # or wherever you keep projects
+cd ~/projects/contentos
 ```
 
 (Optional but recommended) make it a git repo so Claude Code's checkpoints and commits work:

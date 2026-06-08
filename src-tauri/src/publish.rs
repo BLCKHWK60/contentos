@@ -1,3 +1,6 @@
+// ContentOS — © 2026 ZediaTech LLC (Zedia Labs). All rights reserved. Proprietary.
+// Owner/operator: Victor Chaidez. Licensing: licensing@zedialabs.com · zedialabs.com
+//
 // Publishing helpers: a CORS-free HTTP command (used for all destination APIs and
 // OAuth token exchange) and a tiny localhost loopback to capture OAuth redirects.
 use std::collections::HashMap;

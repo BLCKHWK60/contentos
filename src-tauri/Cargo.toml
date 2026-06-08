@@ -1,8 +1,12 @@
+# ContentOS — © 2026 ZediaTech LLC (Zedia Labs). All rights reserved.
+# Proprietary & source-available (inspection only). Owner/operator: Victor Chaidez.
+# Licensing: licensing@zedialabs.com · zedialabs.com
 [package]
 name = "contentos"
 version = "0.3.0"
 description = "ContentOS — content orchestration platform"
-authors = []
+authors = ["Victor Chaidez <licensing@zedialabs.com>"]
+license-file = "../LICENSE"
 edition = "2021"
 
 [lib]
