@@ -3,6 +3,9 @@
 *© 2026 ZediaTech LLC (Zedia Labs) — proprietary, source-available. Owned and operated by
 Victor Chaidez. Public for inspection only; see [LICENSE](LICENSE).*
 
+<img width="3456" height="1968" alt="content-os-demo" src="https://github.com/user-attachments/assets/e4936131-185a-4c82-99ba-3378735876ae" />
+
+
 A local-first **content orchestration platform** — a Mac desktop app (Tauri 2) where every
 piece of content is a *Work* that moves down a pipeline:
 
