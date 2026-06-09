@@ -1,7 +1,7 @@
 # ContentOS
 
 *© 2026 ZediaTech LLC (Zedia Labs) — proprietary, source-available. Owned and operated by
-Victor Chaidez. Public for inspection only; see [LICENSE](LICENSE).*
+Victor Chaidez. Public for personal use only; see [LICENSE](LICENSE).*
 
 <img width="3456" height="1968" alt="content-os-demo" src="https://github.com/user-attachments/assets/e4936131-185a-4c82-99ba-3378735876ae" />
 
@@ -114,8 +114,8 @@ portable.
 
 ## License
 
-ContentOS is **proprietary** software, made **source-available for inspection and evaluation
-only**. It is not open-source.
+ContentOS is **proprietary** software, made **source-available for inspection and evaluation for 
+personal use only**. It is not open-source.
 
 You may view and study the source. You may **not** copy, modify, redistribute, sell, or use it
 (in whole or in part) in another product without the prior written permission of ZediaTech LLC.
